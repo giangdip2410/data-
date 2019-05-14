@@ -1,0 +1,25 @@
+ubuntu下运行chisels生产verilog
+
+1 :安装好对应的package: https://github.com/freechipsproject/chisel3
+
+2 mkdir max2
+  cd max2
+  vim build.sbt
+
+3 在build.sbt写下这样的文件配置
+  scalaVersion := "2.11.12"
+
+resolvers ++= Seq(
+  Resolver.sonatypeRepo("snapshots"),
+  Resolver.sonatypeRepo("releases")
+)
+
+libraryDependencies += "edu.berkeley.cs" %% "chisel" % "latest.release"
+
+4 写一个scala程序
+
+5 命令行运行sbt
+  终端出现>的时候，输入run
+
+  
+

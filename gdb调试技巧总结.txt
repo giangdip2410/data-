@@ -1,0 +1,22 @@
+1 .#include <stdio.h>
+
+#define MAX_LEN 80
+
+int main (int argc, char *argv[])
+{
+  char a_word[MAX_LEN];
+
+  printf ("What's your name?\n");
+  fgets (a_word, MAX_LEN, stdin);
+  printf("Hey, %sI just really wanted to say hello to you.\nI hope you have a wonderful day.", a_word);
+
+  return 0;
+}
+
+//调试
+//gcc -g -o int_hello interactive_hello.c
+//vim in.txt //在 in.txt写一些东西
+//然后 cgdb int_hello
+//然后 b 13；设置断点
+//然后set args int_hello  < in.txt
+//然后run 
