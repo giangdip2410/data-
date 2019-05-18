@@ -1,0 +1,32 @@
+1 chisel代码 
+class HiLoMultiplier() extends Module { 
+  val io = new Bundle { 
+    val A  = UInt(INPUT, 16) 
+    val B  = UInt(INPUT, 16) 
+    val Hi = UInt(OUTPUT, 16) 
+    val Lo = UInt(OUTPUT, 16) 
+  } 
+  val mult = io.A * io.B 
+  io.Lo := mult(15, 0) 
+  io.Hi := mult(31, 16) 
+}
+ 
+ 翻译成的verilog代码
+ module HiLoMultiplier( 
+    input [15:0] io_A, 
+    input [15:0] io_B, 
+    output[15:0] io_Hi, 
+    output[15:0] io_Lo); 
+ 
+  wire[15:0] T0; 
+  wire[31:0] mult; // Chisel infers this to be 32 bits 
+  wire[15:0] T1; 
+ 
+  assign io_Lo = T0; //1）
+  assign T0 = mult[4'hf:1'h0]; //2） 
+  assign mult = io_A * io_B; //3)
+  assign io_Hi = T1; //4)
+  assign T1 = mult[5'h1f:5'h10]; //5)
+endmodule
+//注意1） 2） 3） 4） 5） 并行执行
+ 
