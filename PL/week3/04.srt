@@ -1,0 +1,626 @@
+WEBVTT
+
+1
+00:00:04.940 --> 00:00:07.872
+In this segment we start our study of 
+data types. 
+
+2
+00:00:07.872 --> 00:00:12.839
+This is the language concept we'll use in 
+ML to make our own one of types which is 
+
+3
+00:00:12.839 --> 00:00:15.353
+a really important feature in 
+programming. 
+
+4
+00:00:15.353 --> 00:00:20.081
+but ML does it in a very different way 
+than other languages you've probably 
+
+5
+00:00:20.081 --> 00:00:22.834
+seen. 
+So it'll take us a while to build up the 
+
+6
+00:00:22.834 --> 00:00:25.946
+ideas we need. 
+So what we're going to do is we're going 
+
+7
+00:00:25.946 --> 00:00:30.914
+to introduce our third kind of binding. 
+So far we've seen variable bindings with 
+
+8
+00:00:30.914 --> 00:00:35.402
+val, function bindings with fun, now data 
+type bindings which start with the 
+
+9
+00:00:35.402 --> 00:00:38.624
+keyword data type. 
+These pack a lot more punch into one 
+
+10
+00:00:38.624 --> 00:00:42.697
+binding, so I have to tell you the 
+different things that happen when you use 
+
+11
+00:00:42.697 --> 00:00:46.204
+a data-type binding. 
+So, what you do here, as you see on the 
+
+12
+00:00:46.204 --> 00:00:49.857
+slide, is you write some type name, 
+any name you want like MI type, is just a 
+
+13
+00:00:49.857 --> 00:00:54.214
+silly example to show you the pieces. 
+Then an equals, then a bunch of 
+
+14
+00:00:54.214 --> 00:00:57.162
+possibilities. 
+These are separated by the pipe 
+
+15
+00:00:57.162 --> 00:01:02.160
+character, which you can think of as or. 
+So, this says, I want a new type Mytype. 
+
+16
+00:01:02.160 --> 00:01:07.658
+And the way you make values of MyType is 
+either, they carry an int, star int, or 
+
+17
+00:01:07.658 --> 00:01:10.618
+they carry a string, or they carry 
+nothing. 
+
+18
+00:01:10.618 --> 00:01:15.059
+So they are one of types. 
+Every value of MyType is either going to 
+
+19
+00:01:15.059 --> 00:01:18.161
+have a pair of int's or a string or 
+nothing. 
+
+20
+00:01:18.161 --> 00:01:22.320
+And we could have any number of 
+possibilities that we want. 
+
+21
+00:01:22.320 --> 00:01:27.045
+Now, what I haven't explained yet are 
+these things you see in the capital 
+
+22
+00:01:27.045 --> 00:01:29.310
+letters: 
+TwoInts, and Str, and Pizza. 
+
+23
+00:01:29.310 --> 00:01:34.294
+I chose pizza just to emphasize that 
+there's, you, these can be any names that 
+
+24
+00:01:34.294 --> 00:01:37.272
+you want. 
+It's conventional to capitalize them. 
+
+25
+00:01:37.272 --> 00:01:41.867
+Some people use all capitals. 
+but I'll just capitalize them like you 
+
+26
+00:01:41.867 --> 00:01:44.910
+see here. 
+and these we call the constructors. 
+
+27
+00:01:44.910 --> 00:01:50.078
+So what is happening when you introduce a 
+data type binding, is that we are adding 
+
+28
+00:01:50.078 --> 00:01:54.553
+multiple things to our environment, 
+both our static environment, and our 
+
+29
+00:01:54.553 --> 00:01:58.334
+dynamic environment. 
+We're introducing this new type name, 
+
+30
+00:01:58.334 --> 00:02:02.240
+mytype. 
+And we're introducing the constructors, 
+
+31
+00:02:02.240 --> 00:02:06.594
+TwoInts, STIR, and Pizza. 
+And these constructors have a couple 
+
+32
+00:02:06.594 --> 00:02:10.150
+purposes. 
+But for now, they're just functions that 
+
+33
+00:02:10.150 --> 00:02:14.940
+given values of the correct arguments, 
+return something of MyType. 
+
+34
+00:02:14.940 --> 00:02:21.488
+So two ints, as a constructor is now in 
+our environment and is a function of type 
+
+35
+00:02:21.488 --> 00:02:26.743
+int STR int arrow MyType. 
+If you give it a pair of ints you will 
+
+36
+00:02:26.743 --> 00:02:31.675
+get back a MyType. 
+STR is a function from string to MyType. 
+
+37
+00:02:31.675 --> 00:02:36.687
+And pizza is not a function because it 
+doesn't carry anything. 
+
+38
+00:02:36.687 --> 00:02:40.287
+It already is a value of type MyType. 
+Alright. 
+
+39
+00:02:40.287 --> 00:02:44.832
+So, lets try this out in the repple I 
+have the same example here. 
+
+40
+00:02:44.832 --> 00:02:49.312
+Here's a data type binding. 
+And then I just have a bunch of variable 
+
+41
+00:02:49.312 --> 00:02:53.067
+bindings that are using the constructors 
+in various ways. 
+
+42
+00:02:53.067 --> 00:02:57.942
+So let's just load this up and use it, 
+and see if what we get back makes a 
+
+43
+00:02:57.942 --> 00:03:01.241
+little bit of sense. 
+Alright? 
+
+44
+00:03:01.241 --> 00:03:05.508
+So, what the repple prints out is first, 
+it evaluated the data type binding. 
+
+45
+00:03:05.508 --> 00:03:10.005
+And it'll just print the whole thing 
+because it is relevant to what we see in 
+
+46
+00:03:10.005 --> 00:03:14.618
+the rest of the file, in the rest of our 
+program that we now have a type MyType 
+
+47
+00:03:14.618 --> 00:03:19.231
+and it has constructors, pizza, STR which 
+takes a string and two ints of in star 
+
+48
+00:03:19.231 --> 00:03:21.826
+int. 
+The order of constructors in our binding 
+
+49
+00:03:21.826 --> 00:03:24.824
+doesn't matter. 
+So as usual, the repple has chosen to 
+
+50
+00:03:24.824 --> 00:03:28.630
+alphabetize them for us just like it does 
+with record field names. 
+
+51
+00:03:28.630 --> 00:03:32.742
+Then when I said val A equals STR high, 
+that makes sense. 
+
+52
+00:03:32.742 --> 00:03:38.587
+STR as a constructor, is a function from 
+type string error MyType So, if we call 
+
+53
+00:03:38.587 --> 00:03:44.432
+it with a string, we get back a MyType 
+and that's why you see here in the repple 
+
+54
+00:03:44.432 --> 00:03:48.600
+that val A does, indeed, have MyType But 
+what's the value? 
+
+55
+00:03:48.600 --> 00:03:55.498
+Well it turns it is STR of high. 
+These constructor if you can also think 
+
+56
+00:03:55.498 --> 00:04:01.420
+of as tags as things that are actually 
+there in the values to say what kind of 
+
+57
+00:04:01.420 --> 00:04:05.779
+MyType we have. 
+Here we have the STR kind of MyType and 
+
+58
+00:04:05.779 --> 00:04:10.442
+the underlying value, the underlying 
+string, is the string high. 
+
+59
+00:04:10.442 --> 00:04:14.278
+So, that's why A is bound to the value, 
+STR of high. 
+
+60
+00:04:14.278 --> 00:04:18.340
+So, constructor applied to value is the 
+value. 
+
+61
+00:04:18.340 --> 00:04:20.728
+Alright. 
+If you had just said STR without an 
+
+62
+00:04:20.728 --> 00:04:25.187
+argument well, that is just a function 
+from string to MyType that's why valve B 
+
+63
+00:04:25.187 --> 00:04:29.274
+here is a function from string to MyType. 
+This is a common programming error. 
+
+64
+00:04:29.274 --> 00:04:32.724
+You probably didn't mean that. 
+You probably meant STR applied to 
+
+65
+00:04:32.724 --> 00:04:35.378
+something. 
+But it does type check, and it just does 
+
+66
+00:04:35.378 --> 00:04:37.820
+something that you probably weren't 
+expecting. 
+
+67
+00:04:37.820 --> 00:04:41.450
+On the other hand, with pizza, that makes 
+perfect sense. 
+
+68
+00:04:41.450 --> 00:04:46.292
+Pizza is a value of type mytype. 
+So, if I have that as my expression for 
+
+69
+00:04:46.292 --> 00:04:50.730
+C, then C is going to be pizza. 
+The same way A will be STR of high. 
+
+70
+00:04:50.730 --> 00:04:55.739
+Alright, D similarly, if you want to use 
+the two ints constructor, we'll pass it 
+
+71
+00:04:55.739 --> 00:04:59.017
+in int STR int. 
+So, in this case, we'd evaluate one plus 
+
+72
+00:04:59.017 --> 00:05:03.655
+two to three, three plus four to seven, 
+pass that resulting pair to two ints. 
+
+73
+00:05:03.655 --> 00:05:07.490
+And so, the result is this value, two 
+ints of three comma seven. 
+
+74
+00:05:07.490 --> 00:05:10.208
+All right. 
+Once you have these values you can use 
+
+75
+00:05:10.208 --> 00:05:13.592
+them however you want. 
+So if you say val E equals A, of course 
+
+76
+00:05:13.592 --> 00:05:18.030
+we look up A in the dynamic environment. 
+We get STR of high and that is now the 
+
+77
+00:05:18.030 --> 00:05:21.247
+result of E as well. 
+Just like it has been with everything 
+
+78
+00:05:21.247 --> 00:05:23.910
+else, that we've seen in the course. 
+All right. 
+
+79
+00:05:23.910 --> 00:05:27.737
+So there are a few examples. 
+Let's go back to the slides and consider 
+
+80
+00:05:27.737 --> 00:05:31.246
+even some more. 
+Okay, so anytime you have a value of type 
+
+81
+00:05:31.246 --> 00:05:35.031
+my type, its going to be made from one of 
+the constructors. 
+
+82
+00:05:35.031 --> 00:05:39.535
+That's why it's a one of type. 
+And the value you get back really does 
+
+83
+00:05:39.535 --> 00:05:43.124
+have two parts. 
+It has what I'll call the tag part, that 
+
+84
+00:05:43.124 --> 00:05:46.780
+remembers which constructor you used to 
+make this value. 
+
+85
+00:05:46.780 --> 00:05:53.477
+And then it has the corresponding data. 
+So for example, if you this expression, 
+
+86
+00:05:53.477 --> 00:05:59.081
+two ints three plus four, five plus four, 
+that evaluates to something with tag part 
+
+87
+00:05:59.081 --> 00:06:02.772
+two ints And corresponding data part, 
+seven comma nine. 
+
+88
+00:06:02.772 --> 00:06:07.420
+Similarly STR if true then hi, else, bye. 
+would evaluate to STR of hi. 
+
+89
+00:06:07.420 --> 00:06:11.282
+Okay. 
+So we now know how to build data type 
+
+90
+00:06:11.282 --> 00:06:14.550
+values. 
+But whenever we introduce a new type in 
+
+91
+00:06:14.550 --> 00:06:20.114
+our language we need a way to build the 
+pieces and we need a way to access them. 
+
+92
+00:06:20.114 --> 00:06:25.120
+For one of types and data types, like 
+mytype really are one of those types. 
+
+93
+00:06:25.120 --> 00:06:28.250
+There are two aspects to accessing the 
+value. 
+
+94
+00:06:28.250 --> 00:06:32.005
+We need some way to check which kind of 
+thing we have, 
+
+95
+00:06:32.005 --> 00:06:35.551
+which variant of mytype we have, ie, 
+what's the tag? 
+
+96
+00:06:35.551 --> 00:06:39.907
+Which constructor made it? 
+And then we also need a way to get the 
+
+97
+00:06:39.907 --> 00:06:44.544
+underlying data, if there is any. 
+For pizza there isn't, but for two ints 
+
+98
+00:06:44.544 --> 00:06:48.152
+and STR there is. 
+So this is a moment where it is worth 
+
+99
+00:06:48.152 --> 00:06:53.081
+looking at the other one of types we've 
+seen, lists and options and seeing that 
+
+100
+00:06:53.081 --> 00:06:56.699
+they have these two aspects for accessing 
+the values also. 
+
+101
+00:06:56.699 --> 00:07:01.502
+Null which tells you whether a list is 
+empty or not and esum which tells you 
+
+102
+00:07:01.502 --> 00:07:05.807
+whether an option issome or none are the 
+variant checking functions. 
+
+103
+00:07:05.807 --> 00:07:07.616
+All right. 
+That's all they do. 
+
+104
+00:07:07.616 --> 00:07:12.170
+They tell you which tag is it the empty 
+list or is it not the empty list. 
+
+105
+00:07:12.170 --> 00:07:15.907
+Is it none or is it some? 
+Where as the head, tail, and val of 
+
+106
+00:07:15.907 --> 00:07:18.725
+functions we've seen, those extract the 
+data. 
+
+107
+00:07:18.725 --> 00:07:22.311
+Head returns part of a list. 
+Tail returns part of a list. 
+
+108
+00:07:22.311 --> 00:07:26.409
+Valid returns the thing under the sun. 
+Now we have an issue here. 
+
+109
+00:07:26.409 --> 00:07:31.276
+What if you apply head to the empty list, 
+or val of to none, well those raise 
+
+110
+00:07:31.276 --> 00:07:35.920
+exceptions for the wrong variant. 
+So now that we have data type bindings. 
+
+111
+00:07:35.920 --> 00:07:42.364
+One thing ML could have done is said that 
+when you introduce a data type binding, 
+
+112
+00:07:42.364 --> 00:07:45.466
+like data type, mytype, equals, all that 
+stuff, 
+
+113
+00:07:45.466 --> 00:07:51.464
+in addition to getting the constructors, 
+those functions two ints and STR in the 
+
+114
+00:07:51.464 --> 00:07:55.393
+constant pizza, 
+you would also get functions for checking 
+
+115
+00:07:55.393 --> 00:08:00.012
+variants and extracting data. 
+Maybe it would add to the environment 
+
+116
+00:08:00.012 --> 00:08:05.527
+functions like is STR of type MyType 
+arrow bool, take it to MyType and return 
+
+117
+00:08:05.527 --> 00:08:09.249
+true if that value was made from the STR 
+constructor. 
+
+118
+00:08:09.249 --> 00:08:12.490
+And get STR data, of type mytype arrow 
+string, 
+
+119
+00:08:12.490 --> 00:08:17.591
+that would get you the underlying value, 
+if it is a STR and raise an exception 
+
+120
+00:08:17.591 --> 00:08:20.756
+otherwise. 
+These would be direct analogies of how 
+
+121
+00:08:20.756 --> 00:08:24.631
+head and null work. 
+Null is like isStr, head is like 
+
+122
+00:08:24.631 --> 00:08:27.666
+getStrData Alright? 
+That would make sense. 
+
+123
+00:08:27.666 --> 00:08:30.507
+It would be a perfectly reasonable 
+language. 
+
+124
+00:08:30.507 --> 00:08:35.674
+It would probably be easier to teach you 
+right now, but instead ML did something 
+
+125
+00:08:35.674 --> 00:08:39.549
+much better, and we'll start studying it 
+in the next segment. 

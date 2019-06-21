@@ -1,0 +1,454 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.940
+. 
+
+2
+00:00:04.940 --> 00:00:09.443
+Alright in this lecture I want to show 
+you something kind of neat about tuples, 
+
+3
+00:00:09.443 --> 00:00:13.886
+and to use that to introduce this really 
+important concept in programming 
+
+4
+00:00:13.886 --> 00:00:18.209
+languages called syntactic sugar. 
+So let me just show this to you in the 
+
+5
+00:00:18.209 --> 00:00:21.644
+repple. 
+we have already seen how to build pairs. 
+
+6
+00:00:21.644 --> 00:00:25.623
+Here's a pair. 
+Three plus one, four plus two creates the 
+
+7
+00:00:25.623 --> 00:00:30.688
+pair (4,6), no problem. 
+And, similarly, we could create a record, 
+
+8
+00:00:30.688 --> 00:00:34.765
+maybe with a field second of four2, plus 
+two and a field first of three1. 
+
+9
+00:00:34.765 --> 00:00:35.825
+plus one. 
+Alright? 
+
+10
+00:00:35.825 --> 00:00:40.292
+So nothing unusual there. 
+We see the tuples and records are 
+
+11
+00:00:40.292 --> 00:00:44.834
+similar, but different. 
+But now, suppose I did something kind of 
+
+12
+00:00:44.834 --> 00:00:49.907
+strange, and I made a record. 
+But I made the field names, say, one and 
+
+13
+00:00:49.907 --> 00:00:52.708
+two, 
+in whatever order I want, because the 
+
+14
+00:00:52.708 --> 00:00:55.737
+order never matters. 
+Something like this. 
+
+15
+00:00:55.737 --> 00:00:58.177
+Watch this. 
+Oh isn't that weird. 
+
+16
+00:00:58.177 --> 00:01:04.608
+I made a record with field names one and 
+two and the repple printed it out as a 
+
+17
+00:01:04.608 --> 00:01:09.431
+pair, (6,5), and it printed the type as 
+int * int. 
+
+18
+00:01:09.431 --> 00:01:13.852
+Its like it turned my record into a tuple 
+or something. 
+
+19
+00:01:13.852 --> 00:01:19.820
+Of course this is no problem, right? If I 
+wanted to say, take a hash one of a pair, 
+
+20
+00:01:19.820 --> 00:01:26.971
+and add to that hash two of another pair. 
+Oop. 
+
+21
+00:01:26.971 --> 00:01:29.876
+underscore not plus, 
+there we go. 
+
+22
+00:01:29.876 --> 00:01:36.349
+I get nine of type int and you know for 
+hash one and hash two it doesn't really 
+
+23
+00:01:36.349 --> 00:01:39.668
+matter. 
+Hash two can mean get the second 
+
+24
+00:01:39.668 --> 00:01:44.648
+component of a pair or it can say get 
+field two of a record. 
+
+25
+00:01:44.648 --> 00:01:47.552
+Right? 
+So it doesn't seem to matter. 
+
+26
+00:01:47.552 --> 00:01:54.772
+and just to show that you really can give 
+numeric field names to records if I had a 
+
+27
+00:01:54.772 --> 00:02:01.199
+record like this with three and one, 
+alright, 
+
+28
+00:02:01.199 --> 00:02:07.941
+well that prints as a normal record. 
+it has type one:bool three:string. 
+
+29
+00:02:09.109 --> 00:02:16.031
+But if I had something with three equals 
+hi, one equals true, two equals, say, 
+
+30
+00:02:16.031 --> 00:02:20.605
+three plus two. 
+Now I have a triple, (true, five, hi,) 
+
+31
+00:02:20.605 --> 00:02:24.980
+bool * int * string. 
+And what I want to convince you is that 
+
+32
+00:02:24.980 --> 00:02:30.332
+this is because there is no such thing as 
+tuples in ML, there are only records and 
+
+33
+00:02:30.332 --> 00:02:35.447
+tuples are just a way, a different way of 
+writing records that you as a programmer 
+
+34
+00:02:35.447 --> 00:02:39.551
+can use whenever you want. 
+And the repple always chooses to use of a 
+
+35
+00:02:39.551 --> 00:02:43.774
+[INAUDIBLE] and this is because tuples 
+are just "syntactic sugar" for records. 
+
+36
+00:02:43.774 --> 00:02:46.510
+So lets unpack that idea little bit here. 
+Okay. 
+
+37
+00:02:46.510 --> 00:02:49.831
+Previously, I taught you tuples as though 
+they're in ML. 
+
+38
+00:02:49.831 --> 00:02:53.214
+We gave syntax, 
+we gave type-checking rules, and we gave 
+
+39
+00:02:53.214 --> 00:02:56.556
+evaluation rules. 
+But we could've done something else 
+
+40
+00:02:56.556 --> 00:02:59.682
+instead. 
+I could've taught you records first, even 
+
+41
+00:02:59.682 --> 00:03:04.593
+though they're a little more complicated, 
+and then told you that there's some 
+
+42
+00:03:04.593 --> 00:03:07.910
+special syntax for writing certain kinds 
+of records. 
+
+43
+00:03:07.910 --> 00:03:13.013
+That whenever you write the syntax for 
+building a tuple, e1 comma up to en, in 
+
+44
+00:03:13.013 --> 00:03:18.116
+parentheses, that that's just another way 
+of writing the record with field names 
+
+45
+00:03:18.116 --> 00:03:21.370
+one up to n, and with the corresponding 
+expressions. 
+
+46
+00:03:21.370 --> 00:03:25.685
+And whenever you write the type for a 
+tuple type with those stars in between 
+
+47
+00:03:25.685 --> 00:03:29.049
+the component pieces, 
+that's just another way of writing the 
+
+48
+00:03:29.049 --> 00:03:32.300
+record type where, again, the field names 
+are one through N. 
+
+49
+00:03:32.300 --> 00:03:37.281
+In other words, tuples are nothing more 
+and nothing less than records with 
+
+50
+00:03:37.281 --> 00:03:40.705
+particular field names. 
+And that is how the ML Language 
+
+51
+00:03:40.705 --> 00:03:44.281
+definition actually works. 
+That all there is about tuples are 
+
+52
+00:03:44.281 --> 00:03:48.795
+special syntax that you can use when 
+writing programs, and that we print when 
+
+53
+00:03:48.795 --> 00:03:51.432
+we write the results of things in the 
+rupple. 
+
+54
+00:03:51.432 --> 00:03:56.122
+So you really can write things like the 
+record one equals four, two equals seven, 
+
+55
+00:03:56.122 --> 00:03:58.349
+three equals nine. 
+It's terrible style. 
+
+56
+00:03:58.349 --> 00:04:02.746
+I don't know why you would do this. 
+The tuple syntax is easier to read, it's 
+
+57
+00:04:02.746 --> 00:04:06.711
+what people expect. 
+I just showed you this for the purpose of 
+
+58
+00:04:06.711 --> 00:04:10.580
+teaching you this idea. 
+But it really is that in ML we have 
+
+59
+00:04:10.580 --> 00:04:15.400
+records, tuples are just a particular way 
+of writing particular records. 
+
+60
+00:04:15.400 --> 00:04:18.723
+So, 
+what we say in programming language 
+
+61
+00:04:18.723 --> 00:04:23.530
+speak, is that tuples are just syntactic 
+sugar for records with fields named one, 
+
+62
+00:04:23.530 --> 00:04:26.535
+two, up to N. 
+So, I'm going to use this phrase a lot in 
+
+63
+00:04:26.535 --> 00:04:29.720
+the course, so let's understand exactly 
+what it means. 
+
+64
+00:04:29.720 --> 00:04:32.560
+Syntactic because we can describe the 
+semantics, 
+
+65
+00:04:32.560 --> 00:04:37.590
+the evaluation rules and typing rules for 
+tuples, completely in terms of something 
+
+66
+00:04:37.590 --> 00:04:38.241
+else. 
+Right? 
+
+67
+00:04:38.241 --> 00:04:40.075
+We do this. 
+Just you wrote this. 
+
+68
+00:04:40.075 --> 00:04:43.744
+It's like you wrote that. 
+And then we can use all the semantic 
+
+69
+00:04:43.744 --> 00:04:46.643
+rules we have for a different language 
+construct. 
+
+70
+00:04:46.643 --> 00:04:49.720
+So that's why it's called syntactic when 
+we do this. 
+
+71
+00:04:49.720 --> 00:04:52.975
+We call it sugar because it makes the 
+language sweeter. 
+
+72
+00:04:52.975 --> 00:04:56.940
+It's a pleasant thing to use and see. 
+So we call it syntactic sugar. 
+
+73
+00:04:56.940 --> 00:04:59.974
+We're going to see many more examples of 
+this. there, 
+
+74
+00:04:59.974 --> 00:05:04.116
+syntacic sugar is great because it 
+simplifies our understanding of the 
+
+75
+00:05:04.116 --> 00:05:07.092
+language. 
+Once you understand how tuples are really 
+
+76
+00:05:07.092 --> 00:05:11.409
+a form of records, you understand 
+everything there is to know about tuples, 
+
+77
+00:05:11.409 --> 00:05:15.494
+as long as you understand records. 
+They also simplify implementing the 
+
+78
+00:05:15.494 --> 00:05:18.469
+language. 
+The ML implementation just has to convert 
+
+79
+00:05:18.469 --> 00:05:23.254
+tuples into the corresponding records and 
+there isn't as much duplicative work to 
+
+80
+00:05:23.254 --> 00:05:25.646
+do. 
+We only have to implement one kind of 
+
+81
+00:05:25.646 --> 00:05:27.603
+each of type, instead of two. 
+Okay. 
+
+82
+00:05:27.603 --> 00:05:30.904
+So this is far from the only example 
+we'll see. 
+
+83
+00:05:30.904 --> 00:05:35.953
+there are other examples of syntactic 
+sugar and actu, we, we've already seen 
+
+84
+00:05:35.953 --> 00:05:39.702
+one other. 
+You can think of e1 and also e2 as being 
+
+85
+00:05:39.702 --> 00:05:43.489
+syntactic sugar for, 
+if e1, then e2, else false. 
+
+86
+00:05:43.489 --> 00:05:46.632
+Right? 
+We can explain everything there is to 
+
+87
+00:05:46.632 --> 00:05:52.347
+explain about and also, in terms of that 
+syntactic transformation in terms of an 
+
+88
+00:05:52.347 --> 00:05:55.918
+if-then-else. 
+And also is better styled, but we can 
+
+89
+00:05:55.918 --> 00:06:00.990
+define its semantics in terms of another 
+concept, we already understand. 
+
+90
+00:06:00.990 --> 00:06:05.562
+So that's syntactic sugar. 
+And now we understand the truth about 
+
+91
+00:06:05.562 --> 00:06:06.420
+tuples 

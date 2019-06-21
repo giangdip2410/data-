@@ -1,0 +1,454 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.940
+[MUSIC] 
+
+2
+00:00:04.940 --> 00:00:07.905
+Okay. In this segment, I want to talk 
+about shadowing. 
+
+3
+00:00:07.905 --> 00:00:12.467
+Shadowing is when you add a variable to 
+an environment when before you added it, 
+
+4
+00:00:12.467 --> 00:00:15.033
+that variable was already in the 
+environment. 
+
+5
+00:00:15.033 --> 00:00:19.482
+So, to do this, we're going to end up 
+having multiple variable bindings for the 
+
+6
+00:00:19.482 --> 00:00:23.417
+same variable in the same file. 
+that can be a little bit confusing. 
+
+7
+00:00:23.417 --> 00:00:27.580
+It's usually poor style to do that, 
+although it does come up with certain 
+
+8
+00:00:27.580 --> 00:00:30.317
+idioms. 
+But it's going to be a great way to make 
+
+9
+00:00:30.317 --> 00:00:33.340
+sure that we really understand how 
+environments work. 
+
+10
+00:00:33.340 --> 00:00:37.664
+So, I'm not going to give you any new 
+rules, there's no new syntax or no new 
+
+11
+00:00:37.664 --> 00:00:42.228
+type checking or evaluation rules here. 
+We're just going to use this idea of 
+
+12
+00:00:42.228 --> 00:00:46.672
+shadowing to really explain how 
+environment and variable bindings work so 
+
+13
+00:00:46.672 --> 00:00:51.176
+that we have that solid foundation we 
+need when we go to add things to the 
+
+14
+00:00:51.176 --> 00:00:54.479
+language. 
+So, let's just start here by adding this 
+
+15
+00:00:54.479 --> 00:00:59.464
+binding, val a = 10 to our environment. 
+And so, we know now that in the static 
+
+16
+00:00:59.464 --> 00:01:04.028
+environment, a will have type int. 
+And in the dynamic environment, a will be 
+
+17
+00:01:04.028 --> 00:01:07.722
+bounded at the value of ten. 
+And so, of course, if we then continued 
+
+18
+00:01:07.722 --> 00:01:11.592
+in our file with a * 2 b would have the 
+value 20. 
+
+19
+00:01:11.592 --> 00:01:16.315
+I'm going to ignore the static 
+environment here just for expediency but, 
+
+20
+00:01:16.315 --> 00:01:18.579
+of course, that's, that's relevant as 
+well. 
+
+21
+00:01:18.579 --> 00:01:22.810
+[COUGH] So now, the interesting thing 
+happens if we say, val a = 5, 
+
+22
+00:01:22.810 --> 00:01:27.054
+alright? 
+And the thing I really want to emphasize, 
+
+23
+00:01:27.054 --> 00:01:30.490
+is that 
+b is still bound to twenty. 
+
+24
+00:01:30.490 --> 00:01:37.213
+And, in fact, if I next said val c = b, 
+even though right here, I had an 
+
+25
+00:01:37.213 --> 00:01:42.120
+environment where a maps to 5 and b maps 
+to 20, 
+
+26
+00:01:42.120 --> 00:01:48.274
+now I have an environment where a maps to 
+5, b maps to 20, and c maps to 20. 
+
+27
+00:01:48.274 --> 00:01:54.138
+Because we know that the way you evaluate 
+this expression b is you look it up in 
+
+28
+00:01:54.138 --> 00:02:00.148
+the dynamic environment, you get 20 and 
+then you extend the dynamic environment 
+
+29
+00:02:00.148 --> 00:02:03.174
+so that now c maps to that result, 
+alright? 
+
+30
+00:02:03.174 --> 00:02:08.888
+So, the fact that b was earlier created 
+by evaluating a * 2 is no longer 
+
+31
+00:02:08.888 --> 00:02:12.274
+relevant. 
+That was back in an environment where a 
+
+32
+00:02:12.274 --> 00:02:15.378
+mapped to ten. 
+We got twenty, we extended our 
+
+33
+00:02:15.378 --> 00:02:19.682
+environment so that indeed a mapped to 10 
+and b mapped to 20. 
+
+34
+00:02:19.682 --> 00:02:25.184
+And that's the end of the story. 
+The fact that we had a * 2 is no longer 
+
+35
+00:02:25.184 --> 00:02:28.712
+relevant. 
+And I should emphasize as well, that this 
+
+36
+00:02:28.712 --> 00:02:32.310
+val = 5, this is not an assignment 
+statement, 
+
+37
+00:02:32.310 --> 00:02:38.163
+okay? There's absolutely no way in ML to 
+mutate or change the fact that a mapped 
+
+38
+00:02:38.163 --> 00:02:43.065
+to 10 in the previous environment. 
+All we get is in the subsequent 
+
+39
+00:02:43.065 --> 00:02:48.113
+environment, a is now shadowed. 
+We have a different mapping for a in a 
+
+40
+00:02:48.113 --> 00:02:52.322
+different environment and a is now five. 
+So, that's the idea. 
+
+41
+00:02:52.322 --> 00:02:56.374
+Let's just do a little more examples to 
+make sure we got it. 
+
+42
+00:02:56.374 --> 00:03:02.046
+If I now say val d = a I'm going to end 
+up with an environment with all the 
+
+43
+00:03:02.046 --> 00:03:06.908
+things I did have and now d maps to five 
+because a maps to five in this 
+
+44
+00:03:06.908 --> 00:03:11.770
+environment where I am. 
+If I now say, what about val a = a + 1. 
+
+45
+00:03:11.770 --> 00:03:16.598
+Again, there's no such thing as an 
+assignment and this makes perfect sense. 
+
+46
+00:03:16.598 --> 00:03:21.687
+The way a variable binding works is we 
+evaluate the expression in the current 
+
+47
+00:03:21.687 --> 00:03:25.472
+dynamic environment. 
+So, a maps to five, we add one to that, 
+
+48
+00:03:25.472 --> 00:03:30.431
+we get six and then we create a new 
+dynamic environment where a maps to six 
+
+49
+00:03:30.431 --> 00:03:35.194
+along with everything else we had 
+previously, but we're now shadowing the 
+
+50
+00:03:35.194 --> 00:03:40.675
+fact that a maps to five in an earlier 
+environment or a mapped to ten in an even 
+
+51
+00:03:40.675 --> 00:03:47.151
+earlier environment, 
+okay? So indeed, if we now say, val = a * 
+
+52
+00:03:47.151 --> 00:03:52.862
+2 f will map to twelve. 
+I should emphasize as well that something 
+
+53
+00:03:52.862 --> 00:03:57.253
+you cannot do is a forward reference and 
+we know why for the same reasons. 
+
+54
+00:03:57.253 --> 00:04:02.001
+So, if I had this code here, it would not 
+type check and the reason why is when I 
+
+55
+00:04:02.001 --> 00:04:07.163
+have to go to type check, this expression 
+f - 3, f is not yet in the environment. 
+
+56
+00:04:07.163 --> 00:04:11.674
+So, when I look it up in the static 
+environment, it's not there and now we've 
+
+57
+00:04:11.674 --> 00:04:15.471
+got a type error message. 
+So, that's the example I wanted to show, 
+
+58
+00:04:15.471 --> 00:04:21.100
+let's real quick try it out and make sure 
+that I typed everything in correctly. 
+
+59
+00:04:21.100 --> 00:04:28.960
+Oh, semicolon. 
+Let's there we go, we'll try this again. 
+
+60
+00:04:28.960 --> 00:04:32.710
+Notice I didn't panic when I got an error 
+message, there we go. 
+
+61
+00:04:32.710 --> 00:04:37.555
+And we see all the values I saw but for 
+those earlier a's the read of all print 
+
+62
+00:04:37.555 --> 00:04:42.206
+loop is trying to be helpful and just 
+say, you know, this value can't possibly 
+
+63
+00:04:42.206 --> 00:04:45.532
+be relevant to you. 
+I know it's shadowed in the dynamic 
+
+64
+00:04:45.532 --> 00:04:49.161
+environment you now have down here where 
+a is bound to six. 
+
+65
+00:04:49.161 --> 00:04:54.060
+So, rather than show you what a was back 
+up in this earlier environment, I'll just 
+
+66
+00:04:54.060 --> 00:04:55.792
+print hidden value. 
+Alright. 
+
+67
+00:04:55.792 --> 00:05:01.398
+So, that is the code example, let's go 
+back to the slides here and show you 
+
+68
+00:05:01.398 --> 00:05:08.606
+again that in the key example here, when 
+you have something like val, a = 1, b = 
+
+69
+00:05:08.606 --> 00:05:15.012
+a, a = 2, that in the environment you end 
+up with b is bound to one and a is bound 
+
+70
+00:05:15.012 --> 00:05:18.289
+to two. 
+There's actually two reasons for this, 
+
+71
+00:05:18.289 --> 00:05:23.821
+either one of which would be enough. 
+the first reason is that we evaluated 
+
+72
+00:05:23.821 --> 00:05:28.864
+that expression we used for b, 
+that expression a on the right hand side 
+
+73
+00:05:28.864 --> 00:05:33.978
+of the equals, eagerly back when we 
+evaluated the variable binding for b. 
+
+74
+00:05:33.978 --> 00:05:39.092
+So, after we've done that expression 
+evaluation, b is bound to one and it 
+
+75
+00:05:39.092 --> 00:05:44.561
+doesn't matter how we got that one. 
+It will never effect the fact that we got 
+
+76
+00:05:44.561 --> 00:05:50.055
+a one and that's the end of the story. 
+The second reason b will stay bound to 
+
+77
+00:05:50.055 --> 00:05:54.284
+one is that that second val2 = 2 is not 
+an assignment statement. 
+
+78
+00:05:54.284 --> 00:06:00.017
+The earlier a, the a that leads to the 
+environment that is used to evaluate b is 
+
+79
+00:06:00.017 --> 00:06:03.673
+still one. 
+All we do is create a second variable b 
+
+80
+00:06:03.673 --> 00:06:09.205
+that shadows it. 
+So, it turns out, this is the reason I'm 
+
+81
+00:06:09.205 --> 00:06:15.896
+so insistent on not having use commands 
+in your RPL more than once for the same 
+
+82
+00:06:15.896 --> 00:06:18.626
+file. 
+Because if you say use multiple times for 
+
+83
+00:06:18.626 --> 00:06:22.867
+the same file, you're going to repeat 
+whatever bindings were there the first 
+
+84
+00:06:22.867 --> 00:06:27.282
+time you said use for the file and they 
+are still there the second time you said 
+
+85
+00:06:27.282 --> 00:06:30.371
+use for the file. 
+And while it's legal in ML to have that 
+
+86
+00:06:30.371 --> 00:06:33.996
+sort of shadowing and to reintroduce 
+those bindings, it can be really 
+
+87
+00:06:33.996 --> 00:06:36.834
+confusing, right? 
+Maybe you took a binding out but it's 
+
+88
+00:06:36.834 --> 00:06:41.089
+still there because of the previous use 
+or maybe you have some strange shadowing 
+
+89
+00:06:41.089 --> 00:06:44.767
+that makes it look like your code is 
+correct when, in fact, you're it's, it's 
+
+90
+00:06:44.767 --> 00:06:48.603
+wrong because of how the shadowing 
+happened to work for the multiple use 
+
+91
+00:06:48.603 --> 00:06:49.181
+statements. 

@@ -1,0 +1,761 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.934
+[SOUND] In this segment, I want to show 
+some more examples of using nested 
+
+2
+00:00:04.934 --> 00:00:07.470
+pattern matching. 
+So let's just do it. 
+
+3
+00:00:07.470 --> 00:00:10.691
+Let's jump over here and let's write some 
+code. 
+
+4
+00:00:10.691 --> 00:00:16.037
+The first example I want to write is a 
+function that I'll call non-decreasing. 
+
+5
+00:00:16.037 --> 00:00:20.902
+it's just going to take a list of 
+integers and return a [INAUDIBLE]. 
+
+6
+00:00:20.902 --> 00:00:25.905
+And true means that, at no point in the 
+list, do you find a number that is 
+
+7
+00:00:25.905 --> 00:00:28.990
+smaller than the number that comes before 
+it. 
+
+8
+00:00:28.990 --> 00:00:33.932
+Alright, so if we did this our old 
+fashioned way with simple pattern 
+
+9
+00:00:33.932 --> 00:00:38.220
+matching we might case on whether the 
+list is empty or not. 
+
+10
+00:00:38.220 --> 00:00:44.062
+x colon onto x is prime. 
+And the empty list, that's definitely 
+
+11
+00:00:44.062 --> 00:00:46.869
+true. 
+You never see a decreasing situation. 
+
+12
+00:00:46.869 --> 00:00:51.280
+But in this case, I kind of need to look 
+at the next element as well. 
+
+13
+00:00:51.280 --> 00:00:56.600
+And so you might, now do another pattern 
+match on that tail of the list. 
+
+14
+00:00:56.600 --> 00:01:02.370
+And if that were empty, well this would 
+be the situation, where you have a one 
+
+15
+00:01:02.370 --> 00:01:05.667
+element list. 
+And that's also non-decreasing. 
+
+16
+00:01:05.667 --> 00:01:11.212
+Otherwise, you would add that next 
+element of the list, and then really, the 
+
+17
+00:01:11.212 --> 00:01:14.659
+tail. 
+And you would have to say, make sure that 
+
+18
+00:01:14.659 --> 00:01:19.605
+X is less than or equal to Y and also 
+that, we were non-decreasing. 
+
+19
+00:01:19.605 --> 00:01:22.378
+Actually, 
+and a common bug would be to say y is 
+
+20
+00:01:22.378 --> 00:01:26.188
+prime, that's actually wrong, you 
+actually need x is prime, in order to 
+
+21
+00:01:26.188 --> 00:01:30.330
+make sure you're checking every position, 
+and not just every other position. 
+
+22
+00:01:30.330 --> 00:01:34.579
+So this would work, but these nested case 
+expressions are a little clumsy. 
+
+23
+00:01:34.579 --> 00:01:39.237
+And with nested patterns, we can express 
+what I consider to be a more direct and 
+
+24
+00:01:39.237 --> 00:01:42.555
+elegant algorithm. 
+So in, the empty list case is just fine. 
+
+25
+00:01:42.555 --> 00:01:46.107
+I have no problem with that. 
+But now, let's use nested pattern 
+
+26
+00:01:46.107 --> 00:01:48.960
+matching to handle the one element case 
+directly. 
+
+27
+00:01:48.960 --> 00:01:54.798
+So this pattern will match when x's is 
+some head of the list, which we can match 
+
+28
+00:01:54.798 --> 00:01:59.980
+against x, and then the rest of the list 
+matches against the empty list. 
+
+29
+00:01:59.980 --> 00:02:04.432
+So this pattern will match exactly 
+against one element lists. 
+
+30
+00:02:04.432 --> 00:02:09.293
+So we can just write true. 
+And then, if that does not match, now we 
+
+31
+00:02:09.293 --> 00:02:14.611
+can have another pattern, which is maybe, 
+let's say, head cons onto neck. 
+
+32
+00:02:14.611 --> 00:02:18.638
+Get it, get it? 
+That's the thing in the list after the 
+
+33
+00:02:18.638 --> 00:02:20.310
+head. 
+Maybe on to rest, 
+
+34
+00:02:20.310 --> 00:02:26.688
+okay? and this pattern matches all lists 
+that have two or more elements cause head 
+
+35
+00:02:26.688 --> 00:02:32.911
+will match the first, neck will match the 
+second, and rest will match the rest of 
+
+36
+00:02:32.911 --> 00:02:36.567
+the list. 
+And now we can just check that indeed 
+
+37
+00:02:36.567 --> 00:02:42.557
+head is less than or equal to neck. 
+And also non-decreasing, neck cons onto 
+
+38
+00:02:42.557 --> 00:02:47.560
+rest, all right, something like that. 
+And that is it. 
+
+39
+00:02:47.560 --> 00:02:51.887
+That's our whole function, and the type 
+checker will actually make sure that our 
+
+40
+00:02:51.887 --> 00:02:54.267
+patterns are exhaustive, 
+and indeed they are. 
+
+41
+00:02:54.267 --> 00:02:58.649
+We have a case for the empty list, a case 
+for the one-element list, and a case for 
+
+42
+00:02:58.649 --> 00:03:01.408
+all lists that have two or more elements. 
+All right? 
+
+43
+00:03:01.408 --> 00:03:05.573
+So that's another example of massive 
+pattern matching that I actually rather 
+
+44
+00:03:05.573 --> 00:03:08.224
+like. 
+one little thing we can do to clean this 
+
+45
+00:03:08.224 --> 00:03:10.604
+up. 
+Whenever you have a variable that you're 
+
+46
+00:03:10.604 --> 00:03:14.283
+not using in the corresponding branch, 
+you can also write underscore. 
+
+47
+00:03:14.283 --> 00:03:17.556
+That's a slightly better style. 
+What it does, is it's just like a 
+
+48
+00:03:17.556 --> 00:03:21.428
+variable pattern, it always matches, but 
+it doesn't actually introduce a variable. 
+
+49
+00:03:21.428 --> 00:03:23.799
+And that makes your code a little easier 
+to read. 
+
+50
+00:03:23.799 --> 00:03:27.622
+It says to the reader of your code, that 
+you don't actually need what's in that 
+
+51
+00:03:27.622 --> 00:03:31.163
+position, you just need that it's there. 
+All right, so that's fine. 
+
+52
+00:03:31.163 --> 00:03:35.991
+Now let's do another example. 
+this one's a little sillier but it shows 
+
+53
+00:03:35.991 --> 00:03:39.298
+something that I find quite common and 
+convenient. 
+
+54
+00:03:39.298 --> 00:03:43.928
+I'm going to define a little data type 
+for the sine of a number, so p for 
+
+55
+00:03:43.928 --> 00:03:48.557
+positive, n for negative, z for zero. 
+And now what I want to do is write a 
+
+56
+00:03:48.557 --> 00:03:52.460
+little function, multsin, it's going to 
+take a pair of integers. 
+
+57
+00:03:52.460 --> 00:03:55.418
+And it's going to return. 
+So it takes two integers. 
+
+58
+00:03:55.418 --> 00:03:59.737
+It's going to return the sign of the 
+number you would get if you multiplied 
+
+59
+00:03:59.737 --> 00:04:03.346
+those numbers together. 
+But it's not actually going to do the 
+
+60
+00:04:03.346 --> 00:04:06.465
+multiplication. 
+I'm going to define a little helper 
+
+61
+00:04:06.465 --> 00:04:12.352
+function here inside my function that 
+just tells you the sign of a number. 
+
+62
+00:04:12.352 --> 00:04:16.032
+and so if you have zero then you end up 
+with z. 
+
+63
+00:04:16.032 --> 00:04:20.708
+Otherwise, you get positive of x is 
+greater than zero, is negative, and I'm 
+
+64
+00:04:20.708 --> 00:04:26.524
+going to use that to figure out the sign 
+that you get when you multiply X1 and X2. 
+
+65
+00:04:26.524 --> 00:04:32.628
+Now it turns out there's in the extreme 
+nine different cases based on the sign of 
+
+66
+00:04:32.628 --> 00:04:37.317
+X1 and the sign of X2. 
+Three possibilities for each, three times 
+
+67
+00:04:37.317 --> 00:04:41.552
+three is nine. 
+and if I tried to do this with nested 
+
+68
+00:04:41.552 --> 00:04:45.055
+case expressions it would get a little 
+messy. 
+
+69
+00:04:45.055 --> 00:04:51.517
+But what if I just pattern matched on the 
+pair, of calling sign with X1 and calling 
+
+70
+00:04:51.517 --> 00:04:55.326
+sign with X2? 
+And now what I could do right here is 
+
+71
+00:04:55.326 --> 00:05:00.329
+simply have my nine cases. 
+So I could have z comma z and have a case 
+
+72
+00:05:00.329 --> 00:05:02.684
+for that. 
+I could have p comma z. 
+
+73
+00:05:02.684 --> 00:05:08.129
+I could have n comma z and so on. 
+And I would continue that for nine cases. 
+
+74
+00:05:08.129 --> 00:05:13.942
+And it would, the code would read like a 
+nice table of exactly what the answers 
+
+75
+00:05:13.942 --> 00:05:19.387
+should be for each combination. 
+But we can do even let, better than that 
+
+76
+00:05:19.387 --> 00:05:23.140
+when we realize that patterns are matched 
+in order. 
+
+77
+00:05:23.140 --> 00:05:28.376
+And so we know that if either thing is Z, 
+the result will be Z, because if you 
+
+78
+00:05:28.376 --> 00:05:33.885
+multiply anything by zero you get zero. 
+And so let's use these nested patterns to 
+
+79
+00:05:33.885 --> 00:05:37.965
+clean that up a bit. 
+And let's say that if I have this first 
+
+80
+00:05:37.965 --> 00:05:40.799
+pattern. 
+So if the sign of X1 is zero, then no 
+
+81
+00:05:40.799 --> 00:05:45.070
+matter what the sign of X2 is. 
+So I could have a variable here like Y, 
+
+82
+00:05:45.070 --> 00:05:49.526
+or I could use underscore since I don't 
+actually care what that sign is. 
+
+83
+00:05:49.526 --> 00:05:52.558
+And that's it. 
+That's three of my nine cases, just 
+
+84
+00:05:52.558 --> 00:05:55.220
+handled like that. 
+And here's another three. 
+
+85
+00:05:55.220 --> 00:05:59.025
+If the second position is z, then the 
+entire thing is z. 
+
+86
+00:05:59.025 --> 00:06:02.139
+So I've already handled six of my nine 
+cases. 
+
+87
+00:06:02.139 --> 00:06:05.807
+And now, in handling, the other, the 
+remaining cases. 
+
+88
+00:06:05.807 --> 00:06:10.097
+I can use the fact that I now know 
+neither position will be z, 
+
+89
+00:06:10.097 --> 00:06:13.211
+because I've already handled all those 
+cases. 
+
+90
+00:06:13.211 --> 00:06:17.155
+so another possibility is if both things 
+are positive. 
+
+91
+00:06:17.155 --> 00:06:21.999
+Then the result is positive. 
+Another possibility is if both things are 
+
+92
+00:06:21.999 --> 00:06:24.560
+negative, 
+then the result is positive. 
+
+93
+00:06:24.560 --> 00:06:30.120
+And there's two more cases, N comma P 
+which would be negative, and P comma N 
+
+94
+00:06:30.120 --> 00:06:37.095
+which would be negative. 
+And, not only do I have a nice table 
+
+95
+00:06:37.095 --> 00:06:43.120
+here, but my type checker will again 
+check I haven't left anything out and 
+
+96
+00:06:43.120 --> 00:06:46.732
+that's pretty neat. 
+by the way, you can do this slightly 
+
+97
+00:06:46.732 --> 00:06:49.784
+differently. 
+You could just here at the end use a 
+
+98
+00:06:49.784 --> 00:06:54.641
+single wildcard which will match anything 
+including a pair and say hey, in all 
+
+99
+00:06:54.641 --> 00:06:59.623
+remaining cases, the answer is negative. 
+Now you'd better get rid of these or the 
+
+100
+00:06:59.623 --> 00:07:03.982
+type checker will complain that you have 
+unreachable, impossible cases. 
+
+101
+00:07:03.982 --> 00:07:08.030
+and now whether this as I now have it 
+written, is better style. 
+
+102
+00:07:08.030 --> 00:07:13.010
+Or the one where I don't have this line, 
+and instead I have these two as better 
+
+103
+00:07:13.010 --> 00:07:17.548
+style, is really a matter of taste. 
+The way I have it now is a little bit 
+
+104
+00:07:17.548 --> 00:07:20.070
+shorter. 
+It kind of reads nicely, it says, 
+
+105
+00:07:20.070 --> 00:07:24.798
+otherwise the result is negative. 
+But you are giving up a little bit of the 
+
+106
+00:07:24.798 --> 00:07:27.950
+type checkers helpfulness, because if I 
+wrote this. 
+
+107
+00:07:27.950 --> 00:07:34.011
+The type checker will still say that this 
+pattern match is exhaustive, but my 
+
+108
+00:07:34.011 --> 00:07:40.152
+code's now wrong, because I forgot the 
+case of N comma N, whereas if I leave 
+
+109
+00:07:40.152 --> 00:07:46.056
+this case out and do it this way, here, 
+the type checker will, in fact, give a 
+
+110
+00:07:46.056 --> 00:07:50.937
+warning, telling me that the N comma N 
+case has been forgotten. 
+
+111
+00:07:50.937 --> 00:07:55.740
+In fact, lemme show you that. 
+Use more nested patterns dot SML. 
+
+112
+00:07:55.740 --> 00:07:59.910
+And in fact, up here, it says, warning, 
+match non-exhaustive. 
+
+113
+00:07:59.910 --> 00:08:05.690
+And then you can go and look at it, and 
+try to puzzle out which case you forgot, 
+
+114
+00:08:05.690 --> 00:08:08.910
+okay? 
+But nonetheless, let's just leave it as 
+
+115
+00:08:08.910 --> 00:08:14.657
+this one, since that's the shortest 
+version and sometimes people like to see 
+
+116
+00:08:14.657 --> 00:08:18.648
+nice and short code. 
+Let me finish up with one more much 
+
+117
+00:08:18.648 --> 00:08:22.201
+simpler example. 
+which is just to compute the length of a 
+
+118
+00:08:22.201 --> 00:08:26.379
+list, so we've done this plenty of times, 
+at least things very similar to it. 
+
+119
+00:08:26.379 --> 00:08:30.724
+If you have the empty list then return 
+zero, otherwise x pull in, x is prime, 
+
+120
+00:08:30.724 --> 00:08:34.401
+one plus line of x is prime. 
+And this is just another example even 
+
+121
+00:08:34.401 --> 00:08:38.968
+though there's not anything particularly 
+nested or fancy here, where I would argue 
+
+122
+00:08:38.968 --> 00:08:43.481
+it's a little better style to go ahead 
+and put this underscore here to emphasize 
+
+123
+00:08:43.481 --> 00:08:47.937
+that we don't care about the value at the 
+head of the list, we just care that we 
+
+124
+00:08:47.937 --> 00:08:52.060
+have a non-empty list, and we do need the 
+tail because we need to call Len 
+
+125
+00:08:52.060 --> 00:08:54.227
+recursively, with x as prime. 
+All right, 
+
+126
+00:08:54.227 --> 00:08:59.148
+so those are examples, let me switch back 
+to the slides very briefly here to just 
+
+127
+00:08:59.148 --> 00:09:04.251
+talk a little bit more about style and 
+how these nested patterns lead to elegant 
+
+128
+00:09:04.251 --> 00:09:08.018
+and concise code, and give you an 
+intuition on how to look for 
+
+129
+00:09:08.018 --> 00:09:10.570
+opportunities for nested pattern 
+matching. 
+
+130
+00:09:10.570 --> 00:09:15.121
+And the first is to try to avoid, where 
+convenient, nested case expressions. 
+
+131
+00:09:15.121 --> 00:09:19.303
+If instead of having nested case 
+expressions, you can just have more 
+
+132
+00:09:19.303 --> 00:09:23.608
+branches using nested pattern matching, 
+it often leads to simpler code. 
+
+133
+00:09:23.608 --> 00:09:28.159
+We saw that with unzip three in the 
+previous segment, and we saw that with 
+
+134
+00:09:28.159 --> 00:09:32.218
+non decreasing in this segment. 
+That's not to say that nested case 
+
+135
+00:09:32.218 --> 00:09:36.892
+expressions are always a bad idea. 
+It's just a good hint to yourself to look 
+
+136
+00:09:36.892 --> 00:09:40.090
+and see if nested patterns might be a 
+little better. 
+
+137
+00:09:40.090 --> 00:09:44.361
+Another very common idiom is to match 
+against a couple of data types. 
+
+138
+00:09:44.361 --> 00:09:49.004
+So instead of pattern matching against 
+one data type, and then another data 
+
+139
+00:09:49.004 --> 00:09:53.586
+type, and then another one, go ahead and 
+match against a couple all at once. 
+
+140
+00:09:53.586 --> 00:09:58.043
+We just saw that with the malt sign 
+example where I matched against two 
+
+141
+00:09:58.043 --> 00:10:01.699
+things of type sgn. 
+We also saw that in the zip3 example. 
+
+142
+00:10:01.699 --> 00:10:05.949
+Where we actually matched against a 
+triple of lists and that was in the 
+
+143
+00:10:05.949 --> 00:10:09.019
+previous segment. 
+And finally, as a separate issue of 
+
+144
+00:10:09.019 --> 00:10:12.797
+style, I do encourage you to use wild 
+cards instead of variables. 
+
+145
+00:10:12.797 --> 00:10:16.162
+A variable and a wild card both match 
+against everything. 
+
+146
+00:10:16.162 --> 00:10:20.944
+The difference is the variable actually 
+introduces a local binding for the thing 
+
+147
+00:10:20.944 --> 00:10:23.660
+it matched against. 
+And the wild card does not. 
+
+148
+00:10:23.660 --> 00:10:27.309
+And when you don't need that 
+corresponding data in the branch, 
+
+149
+00:10:27.309 --> 00:10:31.370
+wildcard concisely communicates that to 
+the person reading your code. 
+
+150
+00:10:31.370 --> 00:10:35.761
+That is instant pattern matching. 
+In the next segment, we'll take a step 
+
+151
+00:10:35.761 --> 00:10:40.339
+back, and give a more precise definition 
+of how nested pattern matching is 
+
+152
+00:10:40.339 --> 00:10:43.865
+actually defined in ML and similar 
+programming languages. 

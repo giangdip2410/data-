@@ -1,0 +1,601 @@
+WEBVTT
+
+1
+00:00:04.420 --> 00:00:07.420
+It in this segment I want to introduce
+
+2
+00:00:07.420 --> 00:00:12.475
+the last major language construct will use just a little bit on homework one and that's
+
+3
+00:00:12.475 --> 00:00:15.820
+options and to motivate this I'm going to go back to
+
+4
+00:00:15.820 --> 00:00:20.530
+this function we've seen before for computing the maximum of a list.
+
+5
+00:00:20.530 --> 00:00:22.300
+So this old_max function,
+
+6
+00:00:22.300 --> 00:00:26.830
+old because we've seen it before takes in an int list and returns an int.
+
+7
+00:00:26.830 --> 00:00:31.810
+And we like it in many ways it's efficient and how it does it's recursion and everything.
+
+8
+00:00:31.810 --> 00:00:34.720
+But I never liked how it treated the empty list.
+
+9
+00:00:34.720 --> 00:00:37.510
+There's no such thing as the maximum integer in
+
+10
+00:00:37.510 --> 00:00:41.830
+an empty list and returning zero was always an awkward workaround.
+
+11
+00:00:41.830 --> 00:00:45.970
+Now you could try to return a really negative number or something but I'd prefer to
+
+12
+00:00:45.970 --> 00:00:50.745
+say that you should not try to compute the max of an empty list. So what should we do?
+
+13
+00:00:50.745 --> 00:00:52.750
+Well there's a few things we could try to do.
+
+14
+00:00:52.750 --> 00:00:55.295
+We could say that's a runtime exception.
+
+15
+00:00:55.295 --> 00:00:58.630
+And and we should raise an exception just like if you try to divide by
+
+16
+00:00:58.630 --> 00:01:03.075
+zero or take the head of an empty list and we'll see exceptions at some point.
+
+17
+00:01:03.075 --> 00:01:08.110
+But in this segment I want to actually try to return something useful.
+
+18
+00:01:08.110 --> 00:01:11.260
+So another thing we could do given the constructs we already have
+
+19
+00:01:11.260 --> 00:01:14.740
+is to change Max so it doesn't return an int it
+
+20
+00:01:14.740 --> 00:01:17.910
+returns an int list and what we do is if you pass
+
+21
+00:01:17.910 --> 00:01:21.220
+it the empty list will give back the empty list in the past that
+
+22
+00:01:21.220 --> 00:01:24.445
+the non-empty list would return a one element list
+
+23
+00:01:24.445 --> 00:01:28.900
+holding the maximum of all the numbers that were in the argument.
+
+24
+00:01:28.900 --> 00:01:31.720
+And that would work but it's poor style.
+
+25
+00:01:31.720 --> 00:01:34.840
+And the reason why it's poor style is this returning
+
+26
+00:01:34.840 --> 00:01:39.490
+zero or one thing is common enough in programming that ML has
+
+27
+00:01:39.490 --> 00:01:44.560
+a different type and a different set of language constructs that's designed for this and
+
+28
+00:01:44.560 --> 00:01:46.870
+it's better style to use it so that
+
+29
+00:01:46.870 --> 00:01:49.895
+users of your function understand that's how it works.
+
+30
+00:01:49.895 --> 00:01:52.600
+Whereas a list can hold any number of elements when you have
+
+31
+00:01:52.600 --> 00:01:56.570
+the zero or one situation you want to use an option instead.
+
+32
+00:01:56.570 --> 00:02:00.340
+So it's pretty easy to understand options and the way
+
+33
+00:02:00.340 --> 00:02:04.355
+I like to explain them is by analogy with lists.
+
+34
+00:02:04.355 --> 00:02:06.921
+So we're going to have a new kind of way to build a type,
+
+35
+00:02:06.921 --> 00:02:11.140
+the same way we could write t list for any type t we can
+
+36
+00:02:11.140 --> 00:02:15.620
+now write t option for any type t. And these are different types.
+
+37
+00:02:15.620 --> 00:02:16.990
+Options are not lists.
+
+38
+00:02:16.990 --> 00:02:18.340
+Lists are not options.
+
+39
+00:02:18.340 --> 00:02:21.535
+It's just an analogy to make it easy to teach. All right.
+
+40
+00:02:21.535 --> 00:02:25.105
+So just like with lists we had a way to build lists
+
+41
+00:02:25.105 --> 00:02:28.965
+and ways to access the pieces we have the same thing with options.
+
+42
+00:02:28.965 --> 00:02:31.275
+There's two ways to build an option.
+
+43
+00:02:31.275 --> 00:02:35.440
+You can write NONE in all capital letters and that builds
+
+44
+00:02:35.440 --> 00:02:40.635
+an option that holds zero items the same way bracket bracket builds an empty list.
+
+45
+00:02:40.635 --> 00:02:45.010
+Or you can write SOME in all capital letters and then an expression.
+
+46
+00:02:45.010 --> 00:02:47.470
+And the way that will evaluate is you evaluate
+
+47
+00:02:47.470 --> 00:02:50.440
+the expression e to some value and if that value has
+
+48
+00:02:50.440 --> 00:02:56.230
+type t you end up with a t option much like creating a one element list.
+
+49
+00:02:56.230 --> 00:03:00.410
+So that's how you build it when you have some of something like some of three.
+
+50
+00:03:00.410 --> 00:03:04.584
+That's an int option and you can't use it like an int because it's not an int,
+
+51
+00:03:04.584 --> 00:03:06.450
+it's something holding an int.
+
+52
+00:03:06.450 --> 00:03:12.400
+So when you have an option you have to access it using these last two built in functions.
+
+53
+00:03:12.400 --> 00:03:14.240
+They're really just library functions.
+
+54
+00:03:14.240 --> 00:03:19.454
+The first one is called is some and it takes in an option and returns true,
+
+55
+00:03:19.454 --> 00:03:23.055
+if it's a sum and false if it's a none.
+
+56
+00:03:23.055 --> 00:03:27.395
+So it's a lot like null for lists except it's actually inverted.
+
+57
+00:03:27.395 --> 00:03:29.905
+We returned true for the non-empty case,
+
+58
+00:03:29.905 --> 00:03:31.675
+for the one element case.
+
+59
+00:03:31.675 --> 00:03:34.985
+Then we have one more construct and that's valOf.
+
+60
+00:03:34.985 --> 00:03:37.540
+And that's the thing that takes an option and gets
+
+61
+00:03:37.540 --> 00:03:40.879
+the thing out from underneath the sum. All right?
+
+62
+00:03:40.879 --> 00:03:45.065
+So that will raise an exception if the argument to valOf is none.
+
+63
+00:03:45.065 --> 00:03:46.255
+If the argument is some,
+
+64
+00:03:46.255 --> 00:03:48.150
+you'll get the piece back.
+
+65
+00:03:48.150 --> 00:03:49.930
+That's all there is to options.
+
+66
+00:03:49.930 --> 00:03:53.221
+So now let's use this to implement a better version of max.
+
+67
+00:03:53.221 --> 00:03:55.685
+And I've actually already written it out this time.
+
+68
+00:03:55.685 --> 00:03:58.120
+So this is, I'm going to show you two ways so this is
+
+69
+00:03:58.120 --> 00:04:00.880
+the first way so I've called it max1 and
+
+70
+00:04:00.880 --> 00:04:07.090
+this is now a function that's going to take in an int list and return an int option.
+
+71
+00:04:07.090 --> 00:04:10.630
+All right? So if the argument xs is
+
+72
+00:04:10.630 --> 00:04:14.735
+null then what I want this function to do is evaluate to none.
+
+73
+00:04:14.735 --> 00:04:16.120
+That's exactly what I have here.
+
+74
+00:04:16.120 --> 00:04:17.740
+So I'm always returning an option,
+
+75
+00:04:17.740 --> 00:04:20.875
+in this case it's none.
+
+76
+00:04:20.875 --> 00:04:24.370
+How about I recursively figure out the max of
+
+77
+00:04:24.370 --> 00:04:29.140
+the tl and I'll store that in tl_ans because we've learned our lesson there. All right?
+
+78
+00:04:29.140 --> 00:04:34.400
+Now I need to remember that the value and tl_ans is an int option.
+
+79
+00:04:34.400 --> 00:04:38.545
+So the only way I can access it is with isSome and valOf.
+
+80
+00:04:38.545 --> 00:04:44.200
+So what I could do is say if it's a sum and it's value is
+
+81
+00:04:44.200 --> 00:04:50.755
+greater than the head of the list then that's the maximum return tl_ans.
+
+82
+00:04:50.755 --> 00:04:55.930
+Otherwise either tl_ans is none because a tl of
+
+83
+00:04:55.930 --> 00:05:01.270
+xs was the empty list or the head of the list is bigger than the rest of the list.
+
+84
+00:05:01.270 --> 00:05:04.540
+And in either case what I want to do is return this option.
+
+85
+00:05:04.540 --> 00:05:10.120
+I want to build an option out of hd xs and construct the option itself with sum.
+
+86
+00:05:10.120 --> 00:05:14.290
+By the way this is the first time I've ever shown you end also.
+
+87
+00:05:14.290 --> 00:05:17.245
+This is really just something it takes two booleans and
+
+88
+00:05:17.245 --> 00:05:21.270
+computes their conjunction and I'll explain that in more detail in the next segment.
+
+89
+00:05:21.270 --> 00:05:24.520
+Can't always get everything in exactly the right order. All right.
+
+90
+00:05:24.520 --> 00:05:27.815
+So this max will work. It works great.
+
+91
+00:05:27.815 --> 00:05:29.710
+How about we try to run it? You'll see that I've already
+
+92
+00:05:29.710 --> 00:05:32.465
+got the second version implemented here as well.
+
+93
+00:05:32.465 --> 00:05:34.900
+So what you see in this file are
+
+94
+00:05:34.900 --> 00:05:38.079
+three functions old_max which takes an int list and returns an int,
+
+95
+00:05:38.079 --> 00:05:43.390
+max1 and max2 which both take an int list and return an int option.
+
+96
+00:05:43.390 --> 00:05:46.270
+So if I call max1 with say the list three,
+
+97
+00:05:46.270 --> 00:05:49.491
+seven, five, I get back some of seven.
+
+98
+00:05:49.491 --> 00:05:56.210
+What I cannot do is say take that and try to add 1 to it.
+
+99
+00:05:56.210 --> 00:06:01.125
+That doesn't type check because what I got back was not an int I got an int option.
+
+100
+00:06:01.125 --> 00:06:07.705
+What I have to do instead is valOf max1 of three, seven, five.
+
+101
+00:06:07.705 --> 00:06:11.170
+And then I could add one to that and that would work fine.
+
+102
+00:06:11.170 --> 00:06:15.900
+If I say max1 of empty list I get back none and if I try
+
+103
+00:06:15.900 --> 00:06:20.490
+to say valOf that I get not a type error but actually
+
+104
+00:06:20.490 --> 00:06:25.470
+a runtime exception just saying that uncaught exception option
+
+105
+00:06:25.470 --> 00:06:27.959
+just like if you tried to take hd of the empty list you get
+
+106
+00:06:27.959 --> 00:06:30.650
+uncaught exception empty. All right.
+
+107
+00:06:30.650 --> 00:06:33.760
+So that was a good solution of max1.
+
+108
+00:06:33.760 --> 00:06:37.070
+It works in a way that clients can understand.
+
+109
+00:06:37.070 --> 00:06:40.410
+Let me show you a second version that's a little bit better in
+
+110
+00:06:40.410 --> 00:06:44.155
+terms of implementation but works exactly the same way for clients.
+
+111
+00:06:44.155 --> 00:06:46.530
+What I don't love about Max1 although it's
+
+112
+00:06:46.530 --> 00:06:49.290
+okay there's nothing wrong with doing it this way is
+
+113
+00:06:49.290 --> 00:06:55.824
+every time I come back from the recursion I'm checking whether it's a some or none.
+
+114
+00:06:55.824 --> 00:06:58.970
+And that none case was only for the empty list.
+
+115
+00:06:58.970 --> 00:07:03.093
+So at the very last recursive call I'm returning none,
+
+116
+00:07:03.093 --> 00:07:06.120
+for the one on one list I return a some and then another
+
+117
+00:07:06.120 --> 00:07:09.910
+some and then another some and I'm checking for none every time.
+
+118
+00:07:09.910 --> 00:07:11.540
+All right. So you can avoid that.
+
+119
+00:07:11.540 --> 00:07:16.180
+So here's a second version of max2 that is arguably a little cleaner.
+
+120
+00:07:16.180 --> 00:07:18.630
+And what it does is of course if you pass it
+
+121
+00:07:18.630 --> 00:07:22.785
+the empty list it would return none because that's the right thing to do.
+
+122
+00:07:22.785 --> 00:07:27.555
+Otherwise let's create a recursive helper function
+
+123
+00:07:27.555 --> 00:07:33.360
+that will take care of computing the max of what we now know is a non-empty list.
+
+124
+00:07:33.360 --> 00:07:40.365
+Right. So what this function does is take in a list that it assumes is not empty.
+
+125
+00:07:40.365 --> 00:07:44.520
+And this function has type int list arrow int.
+
+126
+00:07:44.520 --> 00:07:47.490
+And since xs is never empty it can just do
+
+127
+00:07:47.490 --> 00:07:51.300
+the natural thing and that natural thing is to just test 0.
+
+128
+00:07:51.300 --> 00:07:55.830
+If it's the one element list then return that one element.
+
+129
+00:07:55.830 --> 00:07:58.320
+Otherwise recursively figure out the max of
+
+130
+00:07:58.320 --> 00:08:02.555
+the tl and then compare it with the hd and return the right thing.
+
+131
+00:08:02.555 --> 00:08:05.700
+And since I only ever call max non-empty with
+
+132
+00:08:05.700 --> 00:08:09.840
+a non-empty list either right here to start the recursion or
+
+133
+00:08:09.840 --> 00:08:13.680
+recursively here because in the case that I am almost
+
+134
+00:08:13.680 --> 00:08:18.145
+empty I do not recursively call it on the empty list I just immediately return,
+
+135
+00:08:18.145 --> 00:08:20.190
+this will never raise an exception.
+
+136
+00:08:20.190 --> 00:08:25.500
+So when down here I called max non empty on xs I will get back
+
+137
+00:08:25.500 --> 00:08:33.064
+an int which is the maximum element of the list but then max2 can't just return that int,
+
+138
+00:08:33.064 --> 00:08:37.615
+it has to return an int option so it uses some to return the result.
+
+139
+00:08:37.615 --> 00:08:41.200
+All right? And we can check that that works as well.
+
+140
+00:08:41.200 --> 00:08:42.810
+So let's just try Max2 of three, seven,
+
+141
+00:08:42.810 --> 00:08:46.050
+five in which it gets seven.
+
+142
+00:08:46.050 --> 00:08:47.595
+You see that there at the bottom,
+
+143
+00:08:47.595 --> 00:08:49.435
+some of 7 excuse me,
+
+144
+00:08:49.435 --> 00:08:53.370
+whereas max2 of empty list still returns none.
+
+145
+00:08:53.370 --> 00:08:55.920
+All right? So either max1 or max2 work.
+
+146
+00:08:55.920 --> 00:08:59.355
+I prefer max2 just a little bit but they're both fine style.
+
+147
+00:08:59.355 --> 00:09:01.530
+And now we've seen how to use options and
+
+148
+00:09:01.530 --> 00:09:04.005
+how they're a lot like lists except instead of having
+
+149
+00:09:04.005 --> 00:09:06.150
+any number of elements they just always have
+
+150
+00:09:06.150 --> 00:09:09.500
+zero elements or one element and that's options.

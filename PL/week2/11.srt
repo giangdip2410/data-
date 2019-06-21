@@ -1,0 +1,760 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:03.798
+[SOUND]. 
+In this segment, I want to demonstrate 
+
+2
+00:00:03.798 --> 00:00:10.186
+why it's important to avoid doing 
+recursive computations repeatedly and I 
+
+3
+00:00:10.186 --> 00:00:16.920
+want to show you that let expressions are 
+the natural way to avoid that problem. 
+
+4
+00:00:16.920 --> 00:00:19.582
+So, to do this, I'm going to use a small 
+example here. 
+
+5
+00:00:19.582 --> 00:00:21.918
+So let me show you what this code is 
+doing. 
+
+6
+00:00:21.918 --> 00:00:25.178
+it's, it's a bad example. 
+It's not going to work well, so I've 
+
+7
+00:00:25.178 --> 00:00:28.004
+called it bad max. 
+And the idea is to take a list of 
+
+8
+00:00:28.004 --> 00:00:30.938
+integers, and return the maximum number, 
+in the list. 
+
+9
+00:00:30.938 --> 00:00:33.926
+Now, that doesn't make any sense if the 
+list is empty. 
+
+10
+00:00:33.926 --> 00:00:37.784
+So, in that case, I really ought to do 
+something like raise an exception, 
+
+11
+00:00:37.784 --> 00:00:42.034
+or in the next segment, I'll show you 
+another option for how to deal with that. 
+
+12
+00:00:42.034 --> 00:00:46.471
+But since that's not my point here if the 
+list is empty, I'll just return to zero. 
+
+13
+00:00:46.471 --> 00:00:50.908
+Now this is terrible style, but it's not 
+my point and, its not what's bad about 
+
+14
+00:00:50.908 --> 00:00:53.439
+this function that I'm emphasizing here, 
+okay? 
+
+15
+00:00:53.439 --> 00:00:57.313
+So ignore that case. 
+Otherwise, if the element, if the list 
+
+16
+00:00:57.313 --> 00:01:00.100
+has just one element, so the tail is 
+null, 
+
+17
+00:01:00.100 --> 00:01:04.071
+then return that one element, the head of 
+the one element list. 
+
+18
+00:01:04.071 --> 00:01:09.618
+That's the maximum of one element list. 
+Otherwise, if the head is greater than 
+
+19
+00:01:09.618 --> 00:01:13.470
+the max of the rest of the list, return 
+the head. 
+
+20
+00:01:13.470 --> 00:01:17.060
+Otherwise, turn, return the max of the 
+tail of the list. 
+
+21
+00:01:17.060 --> 00:01:22.009
+So this actually ignoring the empty list 
+case does work correctly, okay, 
+
+22
+00:01:22.009 --> 00:01:27.587
+and yet it's still a horrible algorithm. 
+And to show you that I'm going to use a 
+
+23
+00:01:27.587 --> 00:01:31.700
+couple of helper functions I wrote, count 
+up and count down. 
+
+24
+00:01:31.700 --> 00:01:36.371
+So here they are in the file. 
+We don't need to go through them they 
+
+25
+00:01:36.371 --> 00:01:42.437
+just basically include all the numbers 
+from the to inclusive either from smaller 
+
+26
+00:01:42.437 --> 00:01:47.666
+to larger, or from larger to smaller. 
+So just know that when I come here and 
+
+27
+00:01:47.666 --> 00:01:52.150
+test out bad max here. 
+So, here I am in my REPL, 
+
+28
+00:01:52.150 --> 00:01:57.199
+and let's get everything loaded up here. 
+I also already have it fixed, so you're 
+
+29
+00:01:57.199 --> 00:02:01.801
+going to see a good max here as well, 
+that also has type int list arrow int. 
+
+30
+00:02:01.801 --> 00:02:06.340
+So we're still working on bad max. 
+So suppose I do bad max countdown. 
+
+31
+00:02:06.340 --> 00:02:08.471
+let's say from 30 to one. 
+Okay? 
+
+32
+00:02:08.471 --> 00:02:11.340
+So it turns out the maximum of that is 
+30, 
+
+33
+00:02:11.340 --> 00:02:15.234
+and sure enough, if I said 30 to two, it 
+would still be 30. 
+
+34
+00:02:15.234 --> 00:02:18.512
+And of course, this is a perfectly good 
+function, 
+
+35
+00:02:18.512 --> 00:02:22.406
+I could make a 30,000 element list, and 
+ask the max of it. 
+
+36
+00:02:22.406 --> 00:02:26.094
+Computers are fast these days. 
+I get 30,000, no trouble. 
+
+37
+00:02:26.094 --> 00:02:29.168
+Okay? 
+Now, what if I tried counting up instead? 
+
+38
+00:02:29.168 --> 00:02:32.447
+So, you know, if I want to count up from 
+one to ten, 
+
+39
+00:02:32.447 --> 00:02:34.291
+that's fine. 
+The max is ten. 
+
+40
+00:02:34.291 --> 00:02:38.253
+One to twenty, it's fine. 
+I did test this out ahead of time. 
+
+41
+00:02:38.253 --> 00:02:39.210
+Watch this. 
+25, 
+
+42
+00:02:39.210 --> 00:02:43.022
+you see a little delay there, just a 
+little bit of one. 
+
+43
+00:02:43.022 --> 00:02:46.336
+How about 28? 
+A little bit more of one. 
+
+44
+00:02:46.336 --> 00:02:50.560
+if you tried 30,000 you would be here for 
+a very, very long time. 
+
+45
+00:02:50.560 --> 00:02:53.712
+In fact even at 30, it seems to have 
+quite a delay. 
+
+46
+00:02:53.712 --> 00:02:56.927
+In fact, I don't even want to wait for it 
+to finish. 
+
+47
+00:02:56.927 --> 00:02:59.701
+Although, we'll finish here in a few 
+seconds. 
+
+48
+00:02:59.701 --> 00:03:02.980
+So what's going on here? 
+Let's look back at our code. 
+
+49
+00:03:02.980 --> 00:03:06.134
+It's that count up-case that isn't going 
+well. 
+
+50
+00:03:06.134 --> 00:03:11.757
+So lets think about what happens when the 
+bigger number's are near the end of the 
+
+51
+00:03:11.757 --> 00:03:14.615
+list. 
+So we come in here, we have like a 30 
+
+52
+00:03:14.615 --> 00:03:18.217
+element list. 
+It's not empty, so we don't do list then 
+
+53
+00:03:18.217 --> 00:03:21.072
+zero. 
+It's not almost empty, so we don't do 
+
+54
+00:03:21.072 --> 00:03:23.928
+this. 
+So what we end up doing, is computing 
+
+55
+00:03:23.928 --> 00:03:28.210
+what's the maximum of a 29 element list. 
+Well that's no problem. 
+
+56
+00:03:28.210 --> 00:03:33.716
+That'll eventually come back and say 29. 
+and then, we'll say oh, it's, sorry, it's 
+
+57
+00:03:33.716 --> 00:03:38.611
+30 because we have 2 through 30. 
+So then when we come back and we have 
+
+58
+00:03:38.611 --> 00:03:41.670
+that 30, we'll end up computing bad max 
+again. 
+
+59
+00:03:41.670 --> 00:03:46.698
+So, naively, you might think oh, so the 
+count up version is going to twice as 
+
+60
+00:03:46.698 --> 00:03:50.654
+slow as the count down version. 
+Well, no that's not the case. 
+
+61
+00:03:50.654 --> 00:03:55.884
+Because in that recursive call, where we 
+have a 29 element list, we're going to 
+
+62
+00:03:55.884 --> 00:03:59.170
+end up calling bad max twice, on 28 
+element lists. 
+
+63
+00:03:59.170 --> 00:04:03.936
+But if we call it one twice on a 29 
+element list and each of those calls it 
+
+64
+00:04:03.936 --> 00:04:09.079
+twice on the twenty-eighth element list 
+and each of those call it twice on the 27 
+
+65
+00:04:09.079 --> 00:04:14.221
+element list you can see this is actually 
+doubling at each level so its not twice 
+
+66
+00:04:14.221 --> 00:04:19.364
+as many calls its actually exponentially 
+more calls and that is a huge difference. 
+
+67
+00:04:19.364 --> 00:04:23.503
+So let me try to make this point a little 
+better with some slides. 
+
+68
+00:04:23.503 --> 00:04:27.463
+here is our code here 
+And don't worry about the calls to null 
+
+69
+00:04:27.463 --> 00:04:30.658
+and head and tail. 
+It turns out those all do just a little 
+
+70
+00:04:30.658 --> 00:04:33.522
+bit of work. 
+They take the beginning of the list, and 
+
+71
+00:04:33.522 --> 00:04:37.818
+they either just say whether it's empty 
+or not, or return the first element or 
+
+72
+00:04:37.818 --> 00:04:40.462
+just return a reference to the rest of 
+the list. 
+
+73
+00:04:40.462 --> 00:04:43.877
+So those are all fast. 
+It's those recursive calls that bad max, 
+
+74
+00:04:43.877 --> 00:04:47.881
+we have to be careful about. 
+And here's what it looks like. 
+
+75
+00:04:47.881 --> 00:04:54.527
+In the countdown case, bad max of 50 49 
+48 calls bad max of 49 48 which calls bad 
+
+76
+00:04:54.527 --> 00:04:59.532
+max of 48 and so on. 
+And if we had a 50 element list, we would 
+
+77
+00:04:59.532 --> 00:05:04.320
+end up doing about 50 calls. 
+But in the count upcase. 
+
+78
+00:05:04.320 --> 00:05:09.160
+We end up, way if we start with our list 
+making two calls. 
+
+79
+00:05:09.160 --> 00:05:13.974
+Right, once for in the, between the if 
+and the then, and once in the else. 
+
+80
+00:05:13.974 --> 00:05:19.399
+And each of those replace the word next 
+two calls and each of those replace the 
+
+81
+00:05:19.399 --> 00:05:22.857
+next two calls. 
+So it looks like one, two, four, eight. 
+
+82
+00:05:22.857 --> 00:05:27.740
+If you ever double the number one 50 
+times, you'd get an enormous number, 
+
+83
+00:05:27.740 --> 00:05:32.486
+which is why even for 30 we saw a 
+noticeable pause before we finished. 
+
+84
+00:05:32.486 --> 00:05:38.047
+I also want to point out that counting up 
+here is not just the only case that has 
+
+85
+00:05:38.047 --> 00:05:41.370
+this problem. 
+If you just have the biggest number, 
+
+86
+00:05:41.370 --> 00:05:46.090
+more then 50 elements from the beginning 
+of your list, it's going to take forever 
+
+87
+00:05:46.090 --> 00:05:49.117
+to compute. 
+So if you had a 3,000 element list, yes 
+
+88
+00:05:49.117 --> 00:05:52.990
+count down is very fast. 
+But even if those numbers were randomly 
+
+89
+00:05:52.990 --> 00:05:57.832
+shuffled, chances are the maximum element 
+is not going to be close enough to the 
+
+90
+00:05:57.832 --> 00:06:00.980
+beginning of the list for it to compute 
+efficiently. 
+
+91
+00:06:00.980 --> 00:06:03.763
+Okay so it looks like ML has a problem, 
+right? 
+
+92
+00:06:03.763 --> 00:06:08.154
+It looks like recursion is terrible, we 
+should have used a four loop or 
+
+93
+00:06:08.154 --> 00:06:11.247
+something. 
+Of course that's not how I feel, what we 
+
+94
+00:06:11.247 --> 00:06:14.896
+just need to do is avoid doing these 
+repeated computations. 
+
+95
+00:06:14.896 --> 00:06:19.720
+And we know how to avoid doing repeated 
+computation. What we can do is do that 
+
+96
+00:06:19.720 --> 00:06:22.751
+computation and store the result in the 
+variable. 
+
+97
+00:06:22.751 --> 00:06:27.328
+And this is the last use I'm showing in 
+this section of the course of led 
+
+98
+00:06:27.328 --> 00:06:29.863
+expressions, 
+and why they're so important. 
+
+99
+00:06:29.863 --> 00:06:34.750
+So all I want to do is avoid computing 
+bad max twice by remembering its answer. 
+
+100
+00:06:34.750 --> 00:06:37.584
+In a variable. 
+So that's what good max does. 
+
+101
+00:06:37.584 --> 00:06:42.793
+So I really shouldn't call it good max 
+because it's still doing the empty list 
+
+102
+00:06:42.793 --> 00:06:46.880
+case completely wrong. 
+But ignoring that, for nonempty lists it 
+
+103
+00:06:46.880 --> 00:06:50.968
+does the right thing. 
+So if the tail of the list is empty, then 
+
+104
+00:06:50.968 --> 00:06:55.781
+just return the head of the list. 
+In the else case, compute the maximum of 
+
+105
+00:06:55.781 --> 00:07:00.923
+the rest of the list and remember it. 
+Here I've just stored a variable tail 
+
+106
+00:07:00.923 --> 00:07:04.550
+ans, just to remember what it is. 
+And now, let's use that. 
+
+107
+00:07:04.550 --> 00:07:08.500
+They say if the head of the list is 
+greater than tail ants, then return head. 
+
+108
+00:07:08.500 --> 00:07:14.550
+Otherwise don't call good max again, just 
+return tail ends and this will work 
+
+109
+00:07:14.550 --> 00:07:18.715
+absolutely fine. 
+So if I just try good max, oh look my 
+
+110
+00:07:18.715 --> 00:07:23.745
+answer for 30 did finish. 
+Good max I get 30 right away and I can 
+
+111
+00:07:23.745 --> 00:07:27.360
+even count up to 3,000, 
+it will work just fine. 
+
+112
+00:07:27.360 --> 00:07:33.646
+Countdown still works correctly as well. 
+It didn't actually need this, because in 
+
+113
+00:07:33.646 --> 00:07:37.944
+the countdown case, 
+well, it's taking a minute here I think 
+
+114
+00:07:37.944 --> 00:07:40.883
+just because I've created such a large 
+list. 
+
+115
+00:07:40.883 --> 00:07:44.890
+We'll look into that later and I'll fix 
+the code up for you. 
+
+116
+00:07:44.890 --> 00:07:51.984
+Let's go back to the slides. 
+Oh, did I oh I know what's going on here. 
+
+117
+00:07:51.984 --> 00:07:55.586
+I did figure it out. 
+By the way, control C control C to break 
+
+118
+00:07:55.586 --> 00:07:58.701
+an infinite loop. 
+When you call countdown, you're supposed 
+
+119
+00:07:58.701 --> 00:08:02.581
+to put the larger number first. 
+if you do it the other way, countdown 
+
+120
+00:08:02.581 --> 00:08:06.079
+itself is going into an infinite loop 
+because of how I wrote it. 
+
+121
+00:08:06.079 --> 00:08:08.994
+Good backs never got called. 
+There we go all fixed. 
+
+122
+00:08:08.994 --> 00:08:12.580
+Okay back to the slides always fun to 
+mess up on the fly. 
+
+123
+00:08:12.580 --> 00:08:14.725
+Alright. 
+So, why is that happening? 
+
+124
+00:08:14.725 --> 00:08:19.342
+Why is bad max taking so much longer? 
+Well, you can just work out the 
+
+125
+00:08:19.342 --> 00:08:22.658
+arithmetic. 
+Suppose that the amount of work bad max 
+
+126
+00:08:22.658 --> 00:08:27.274
+does, ignoring the recursion, is say, 
+takes one ten millionth of a second. 
+
+127
+00:08:27.274 --> 00:08:30.461
+I have no idea if that's anywhere close 
+to right. 
+
+128
+00:08:30.461 --> 00:08:33.842
+But one ten millionth of a second seems 
+pretty fast. 
+
+129
+00:08:33.842 --> 00:08:36.768
+Right? 
+Well, then in the case where we made 50 
+
+130
+00:08:36.768 --> 00:08:41.774
+recursive calls, it's going to finish in 
+50 one millionth, ten millionths of a 
+
+131
+00:08:41.774 --> 00:08:42.597
+second. 
+Right. 
+
+132
+00:08:42.597 --> 00:08:46.270
+Or half a millionth of a second, faster 
+than humans can tell. 
+
+133
+00:08:46.270 --> 00:08:51.293
+But if we do it in the count up order. 
+We have to multiply that one in ten 
+
+134
+00:08:51.293 --> 00:08:55.482
+million, by 2 to the 50th. 
+And if you work out the arithmatic, that 
+
+135
+00:08:55.482 --> 00:09:00.320
+answer for a 50-element list, is going to 
+take about three and a half years, and 
+
+136
+00:09:00.320 --> 00:09:03.801
+for a 55-element list it would take over 
+a century. 
+
+137
+00:09:03.801 --> 00:09:08.403
+So I always like to emphasize that it's 
+not about computers getting faster, if 
+
+138
+00:09:08.403 --> 00:09:11.058
+you don't write you code in an efficient 
+way. 
+
+139
+00:09:11.058 --> 00:09:15.306
+And in a language that encourages 
+recursive functions, you need to avoid 
+
+140
+00:09:15.306 --> 00:09:20.203
+doing unnecessary recursion that leads to 
+this exponential blowup where you go one, 
+
+141
+00:09:20.203 --> 00:09:22.620
+two, four, eight, sixteen. 
+Okay. 
+
+142
+00:09:22.620 --> 00:09:27.160
+Once we've fixed our code like you see 
+here, then everything works great, 
+
+143
+00:09:27.160 --> 00:09:32.296
+because we only ever call good max once 
+on the whole list, then the tail of the 
+
+144
+00:09:32.296 --> 00:09:36.978
+list, then the tail of that list, and so 
+on, thanks to our let expression. 
+
+145
+00:09:36.978 --> 00:09:41.854
+So in both the count up case and the 
+count down case and in fact any other 
+
+146
+00:09:41.854 --> 00:09:47.511
+case, any order of elements in any list, 
+we will just have 50 calls so if we guess 
+
+147
+00:09:47.511 --> 00:09:52.323
+that it takes one ten millionth of a 
+second to do one of these calls, it's 
+
+148
+00:09:52.323 --> 00:09:57.459
+going to take 50 ten millionths of a 
+second or one millionth of a second to do 
+
+149
+00:09:57.459 --> 00:10:00.173
+all of them. 
+Okay, so, that is how to use lead 
+
+150
+00:10:00.173 --> 00:10:04.825
+expressions combined with recursion to 
+avoid pathological cases where you're 
+
+151
+00:10:04.825 --> 00:10:09.658
+extremely inefficient, and that concludes 
+our discussion of lead expressions for 
+
+152
+00:10:09.658 --> 00:10:09.900
+now. 

@@ -1,0 +1,593 @@
+WEBVTT
+
+1
+00:00:04.300 --> 00:00:08.030
+The purpose of this segment is to just give you an example of
+
+2
+00:00:08.030 --> 00:00:11.375
+me writing a function like you might do on your homework.
+
+3
+00:00:11.375 --> 00:00:14.840
+What I want to do is continue using this important data type binding we've
+
+4
+00:00:14.840 --> 00:00:18.555
+introduced for arithmetic expressions where constructors are for constants,
+
+5
+00:00:18.555 --> 00:00:20.825
+negations, additions and multiplications.
+
+6
+00:00:20.825 --> 00:00:23.630
+And the function I want to write is max constant.
+
+7
+00:00:23.630 --> 00:00:26.840
+It's going to have type exp arrow int and what it's supposed to do is
+
+8
+00:00:26.840 --> 00:00:30.330
+find the largest constant contained anywhere in the expression.
+
+9
+00:00:30.330 --> 00:00:31.475
+So on your homework,
+
+10
+00:00:31.475 --> 00:00:35.210
+I would typically just ask a question like that - write max constant - and it's
+
+11
+00:00:35.210 --> 00:00:39.349
+up to you to figure out what concepts from the course are relevant,
+
+12
+00:00:39.349 --> 00:00:40.412
+how to use them,
+
+13
+00:00:40.412 --> 00:00:43.310
+the difference between a solution that seems to work and is
+
+14
+00:00:43.310 --> 00:00:47.530
+correct versus an elegant one that uses the concerts in the best possible way.
+
+15
+00:00:47.530 --> 00:00:50.120
+So this example is going to show a number of concepts we've studied,
+
+16
+00:00:50.120 --> 00:00:53.050
+nothing new; so in that sense it's review or it's optional.
+
+17
+00:00:53.050 --> 00:00:55.240
+The entire rest of the segment will just be spent over in
+
+18
+00:00:55.240 --> 00:00:58.140
+the Emax buffer as I try to write this with you.
+
+19
+00:00:58.140 --> 00:01:00.590
+So I've got things started here in a short example file,
+
+20
+00:01:00.590 --> 00:01:02.685
+I have the data type binding that we need.
+
+21
+00:01:02.685 --> 00:01:05.270
+And I went ahead and wrote a test case here where I have
+
+22
+00:01:05.270 --> 00:01:08.450
+a test expression and then I call max constant on it.
+
+23
+00:01:08.450 --> 00:01:10.070
+Let's just emphasize that it's often
+
+24
+00:01:10.070 --> 00:01:13.400
+good software engineering practice to write tests even before you've
+
+25
+00:01:13.400 --> 00:01:15.590
+written your functions in order to understand
+
+26
+00:01:15.590 --> 00:01:18.935
+what answer you expect and how the function should behave.
+
+27
+00:01:18.935 --> 00:01:22.220
+And then I obviously still need to write the body of max constant.
+
+28
+00:01:22.220 --> 00:01:23.530
+So let's just get started.
+
+29
+00:01:23.530 --> 00:01:25.670
+The first thing that seems obvious is that we're going to need
+
+30
+00:01:25.670 --> 00:01:28.645
+some sort of recursive function that uses a case expression.
+
+31
+00:01:28.645 --> 00:01:31.190
+So I'm going to have the case on this and I'm going to
+
+32
+00:01:31.190 --> 00:01:33.785
+have to think that if I have a constant,
+
+33
+00:01:33.785 --> 00:01:37.240
+then the maximum constant in it is just I.
+
+34
+00:01:37.240 --> 00:01:39.620
+That's a nice base case for my recursion.
+
+35
+00:01:39.620 --> 00:01:42.950
+Otherwise, if I have a negate of some smaller expression,
+
+36
+00:01:42.950 --> 00:01:47.525
+then I should just compute recursively the max constant in e2.
+
+37
+00:01:47.525 --> 00:01:48.735
+So far, so good.
+
+38
+00:01:48.735 --> 00:01:50.455
+Two cases down, two to go.
+
+39
+00:01:50.455 --> 00:01:55.590
+If I have an add, I'm going to bind to two smaller variables, e1 and e2.
+
+40
+00:01:55.590 --> 00:01:59.320
+And now, I have to figure out the max of each of them and take the bigger one.
+
+41
+00:01:59.320 --> 00:02:01.700
+So what I might do is I might say if
+
+42
+00:02:01.700 --> 00:02:07.520
+max constant of e1 is greater than max constant of e2,
+
+43
+00:02:07.520 --> 00:02:10.924
+then return max constant of e1.
+
+44
+00:02:10.924 --> 00:02:12.990
+This should probably be setting off some alarm bells,
+
+45
+00:02:12.990 --> 00:02:15.455
+but that's okay, it's a fine first attempt.
+
+46
+00:02:15.455 --> 00:02:17.280
+And if that looks okay, that's fine.
+
+47
+00:02:17.280 --> 00:02:24.769
+And if anything seems sort of fishy about the style of that part,
+
+48
+00:02:24.769 --> 00:02:27.878
+notice that now what I'm going to do is say that in multiply,
+
+49
+00:02:27.878 --> 00:02:30.530
+it's really the exact same thing I need.
+
+50
+00:02:30.530 --> 00:02:35.639
+So how about I just copy and paste the code down there?
+
+51
+00:02:35.639 --> 00:02:38.420
+All right. So copy and paste is often a bad idea.
+
+52
+00:02:38.420 --> 00:02:40.115
+We'll get back to that in just a second.
+
+53
+00:02:40.115 --> 00:02:42.260
+But let's see if we have a working solution.
+
+54
+00:02:42.260 --> 00:02:43.720
+So just go over here,
+
+55
+00:02:43.720 --> 00:02:47.440
+try - use that XML - and sure enough, my test case passed.
+
+56
+00:02:47.440 --> 00:02:50.030
+I have val 19 equals 19.
+
+57
+00:02:50.030 --> 00:02:51.302
+And in fact, I'm not kidding you,
+
+58
+00:02:51.302 --> 00:02:52.910
+this is actually a correct solution.
+
+59
+00:02:52.910 --> 00:02:57.140
+I believe it will technically produce the correct answer for any X that you
+
+60
+00:02:57.140 --> 00:03:01.542
+would pass to it unless I've made a mistake I don't realize here.
+
+61
+00:03:01.542 --> 00:03:05.780
+But it fell into this trap of recomputing recursive results,
+
+62
+00:03:05.780 --> 00:03:08.420
+which we know could lead to a very inefficient solution.
+
+63
+00:03:08.420 --> 00:03:11.089
+We won't see that if we test it only with small expressions;
+
+64
+00:03:11.089 --> 00:03:13.625
+but if you tested it with a very deep expression.
+
+65
+00:03:13.625 --> 00:03:15.200
+With a somewhat large expression,
+
+66
+00:03:15.200 --> 00:03:18.040
+you can see this problem come up pretty quickly.
+
+67
+00:03:18.040 --> 00:03:21.565
+So we know how to fix that and that's with let binding.
+
+68
+00:03:21.565 --> 00:03:26.362
+So what if we said let val m1 equals max constant
+
+69
+00:03:26.362 --> 00:03:32.000
+of e1 and val m2 equal max constant of e2.
+
+70
+00:03:32.000 --> 00:03:39.720
+And then just said if m1 is greater than m2 then m1 else m2.
+
+71
+00:03:39.720 --> 00:03:44.900
+And that would be fine and never calls anything recursively more than once.
+
+72
+00:03:44.900 --> 00:03:48.525
+And now, I could just paste that down for multiply
+
+73
+00:03:48.525 --> 00:03:53.564
+because I still want to do the same thing there and I want to fix the same problem.
+
+74
+00:03:53.564 --> 00:03:56.141
+So let's try that out. All right.
+
+75
+00:03:56.141 --> 00:04:01.430
+Let's restart here and it works again.
+
+76
+00:04:01.430 --> 00:04:03.235
+So this seems better. All right.
+
+77
+00:04:03.235 --> 00:04:05.990
+And that's a perfectly good second solution.
+
+78
+00:04:05.990 --> 00:04:08.330
+But now this cut and paste is really bothering me and
+
+79
+00:04:08.330 --> 00:04:11.205
+it's not particularly good style to duplicate code like that.
+
+80
+00:04:11.205 --> 00:04:15.754
+And we know how to avoid duplicating code;
+
+81
+00:04:15.754 --> 00:04:18.049
+we could have a little helper function.
+
+82
+00:04:18.049 --> 00:04:20.835
+We could have a little function up here that, say,
+
+83
+00:04:20.835 --> 00:04:26.335
+took two expressions and returned the maximum constant in either of them.
+
+84
+00:04:26.335 --> 00:04:29.910
+And it turns out e1 and e2.
+
+85
+00:04:29.910 --> 00:04:34.460
+Now, it makes perfect sense to go ahead and cut this and
+
+86
+00:04:34.460 --> 00:04:40.190
+paste it up here because it's exactly what we want for the body of this function.
+
+87
+00:04:40.190 --> 00:04:43.964
+All right. And then we can use that here in add;
+
+88
+00:04:43.964 --> 00:04:47.390
+we can say max_of_two(e1,e2).
+
+89
+00:04:47.390 --> 00:04:51.834
+And now, yes, this is a little bit of cut and paste;
+
+90
+00:04:51.834 --> 00:04:53.810
+but just to call a helper function,
+
+91
+00:04:53.810 --> 00:04:55.220
+that is just fine.
+
+92
+00:04:55.220 --> 00:04:57.010
+And we can delete this.
+
+93
+00:04:57.010 --> 00:05:01.610
+And now we need an end to end the let that created our local function binding.
+
+94
+00:05:01.610 --> 00:05:04.890
+And that is a solution I'm pretty proud of. All right.
+
+95
+00:05:04.890 --> 00:05:08.345
+So let's go back over here and try that one out.
+
+96
+00:05:08.345 --> 00:05:12.070
+It's still working, so let's hope it's still all correct.
+
+97
+00:05:12.070 --> 00:05:14.390
+And now we're probably pretty good.
+
+98
+00:05:14.390 --> 00:05:17.700
+Let me show you a couple more versions, though that I like.
+
+99
+00:05:17.700 --> 00:05:21.160
+It turns out that this if m1 greater than m2 than m1 else
+
+100
+00:05:21.160 --> 00:05:26.165
+m2 - it turns out if you knew a little bit more about the standard library in SML,
+
+101
+00:05:26.165 --> 00:05:28.490
+there's a built-in function that computes the max of
+
+102
+00:05:28.490 --> 00:05:30.935
+two integers and whenever there is a built-in function,
+
+103
+00:05:30.935 --> 00:05:32.770
+it's usually easier to read.
+
+104
+00:05:32.770 --> 00:05:36.500
+A reader of your code who knew there is an int dot max would probably be much
+
+105
+00:05:36.500 --> 00:05:38.810
+happier to just see that than try
+
+106
+00:05:38.810 --> 00:05:41.545
+to read your if then else and figure out what's going on.
+
+107
+00:05:41.545 --> 00:05:44.510
+So that would be a perfectly good solution.
+
+108
+00:05:44.510 --> 00:05:46.820
+And now, once we have that,
+
+109
+00:05:46.820 --> 00:05:52.220
+believe it or not I'm going to start undoing some of the things I did before because now,
+
+110
+00:05:52.220 --> 00:05:54.170
+these local variable bindings - there's nothing
+
+111
+00:05:54.170 --> 00:05:56.470
+wrong with them if you find this easier to read,
+
+112
+00:05:56.470 --> 00:05:59.464
+but I'm no longer risking with
+
+113
+00:05:59.464 --> 00:06:02.890
+that if then else of computing the maximum of anything twice.
+
+114
+00:06:02.890 --> 00:06:09.470
+I could go ahead and just write in here max constant of e1 and max constant
+
+115
+00:06:09.470 --> 00:06:12.110
+of e2 and now I don't need this
+
+116
+00:06:12.110 --> 00:06:17.080
+let and I don't need this in and I better get rid of the end.
+
+117
+00:06:17.080 --> 00:06:22.040
+And that is because when you call a function like int dot max - int dot max is
+
+118
+00:06:22.040 --> 00:06:28.280
+just a function - we evaluate the arguments to values before we call the function.
+
+119
+00:06:28.280 --> 00:06:30.925
+So we're going to call max constant of e1 once,
+
+120
+00:06:30.925 --> 00:06:33.630
+we're going to call max constant of e2 once,
+
+121
+00:06:33.630 --> 00:06:36.915
+then we're going to pass those resulting numbers to int max,
+
+122
+00:06:36.915 --> 00:06:39.870
+which is going to be implemented with an if then else and do the right thing.
+
+123
+00:06:39.870 --> 00:06:41.207
+So this will be efficient;
+
+124
+00:06:41.207 --> 00:06:44.840
+there's no concern about a very slow function.
+
+125
+00:06:44.840 --> 00:06:47.640
+And let's make sure that this one is still working.
+
+126
+00:06:47.640 --> 00:06:51.895
+I don't like to do too much work without checking my work. Okay, we're still good.
+
+127
+00:06:51.895 --> 00:06:58.805
+And now, this local helper function that we wrote is so short that you could argue
+
+128
+00:06:58.805 --> 00:07:02.150
+you don't need the style of a local helper function just
+
+129
+00:07:02.150 --> 00:07:05.985
+to save this actually pretty small computation here.
+
+130
+00:07:05.985 --> 00:07:08.900
+So now let's undo that local helper function as well.
+
+131
+00:07:08.900 --> 00:07:13.570
+Take this. Paste it in here.
+
+132
+00:07:13.570 --> 00:07:15.440
+And paste it in here.
+
+133
+00:07:15.440 --> 00:07:18.455
+It's a little long for using twice,
+
+134
+00:07:18.455 --> 00:07:20.000
+but not too long.
+
+135
+00:07:20.000 --> 00:07:23.900
+It actually looks a little worse with the font blown up here so you can read it easily.
+
+136
+00:07:23.900 --> 00:07:25.160
+It really does fit on one line.
+
+137
+00:07:25.160 --> 00:07:29.435
+How about I move things over just a little bit here so you can see that all together?
+
+138
+00:07:29.435 --> 00:07:32.770
+You would have more columns on your screen than I would. All right.
+
+139
+00:07:32.770 --> 00:07:41.420
+And now we can get rid of this let in and this case and make sure it all still works.
+
+140
+00:07:41.420 --> 00:07:42.980
+And it does.
+
+141
+00:07:42.980 --> 00:07:45.110
+And this is actually pretty pleasant to read.
+
+142
+00:07:45.110 --> 00:07:47.154
+To compute the max constant of an e,
+
+143
+00:07:47.154 --> 00:07:51.010
+let's pattern match on e. If it's a constant, then just return it.
+
+144
+00:07:51.010 --> 00:07:54.080
+If it's a negation, recursively compute the constant of e2.
+
+145
+00:07:54.080 --> 00:07:55.445
+If it's an add,
+
+146
+00:07:55.445 --> 00:07:57.925
+compute the max of the maximum constant of e1,
+
+147
+00:07:57.925 --> 00:07:59.434
+the maximum constant in e2.
+
+148
+00:07:59.434 --> 00:08:01.189
+And the same for multiply.

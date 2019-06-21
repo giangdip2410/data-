@@ -1,0 +1,800 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.940
+[SOUND] 
+
+2
+00:00:04.940 --> 00:00:07.299
+In this segment we'll start studying 
+lists. 
+
+3
+00:00:07.299 --> 00:00:11.525
+Right now we're just going to learn the 
+basic rules for them, and then in the 
+
+4
+00:00:11.525 --> 00:00:15.422
+next segment, we'll program with 
+functions that either take lists or 
+
+5
+00:00:15.422 --> 00:00:19.099
+produce lists, just to break things into 
+slightly smaller pieces. 
+
+6
+00:00:19.099 --> 00:00:23.599
+we've already seen one way to build up 
+compound data, and that was with tuples, 
+
+7
+00:00:23.599 --> 00:00:27.935
+and they're a nice contrast with lists. 
+Tuples, even though we can make them as 
+
+8
+00:00:27.935 --> 00:00:31.667
+wide as we wanted or as deep as we 
+wanted, touples inside of touples. 
+
+9
+00:00:31.667 --> 00:00:35.180
+We still had to pick that size when we 
+were writing the program. 
+
+10
+00:00:35.180 --> 00:00:39.729
+So there was no way with tuples, as they 
+take in a number like 10, or n, or x, and 
+
+11
+00:00:39.729 --> 00:00:42.762
+then produce a tuple that had that many 
+pieces, 
+
+12
+00:00:42.762 --> 00:00:46.175
+because there be no type to write down 
+for that thing, 
+
+13
+00:00:46.175 --> 00:00:49.840
+because you don't know the size until you 
+run the program. 
+
+14
+00:00:49.840 --> 00:00:54.163
+So lists don't have that restriction. 
+We're going to be able to build lists 
+
+15
+00:00:54.163 --> 00:00:58.543
+with any number of elements and we won't 
+be limited by the type of the list. 
+
+16
+00:00:58.543 --> 00:01:03.212
+But there's a tradeoff here, and that is 
+that any list we build will have to have 
+
+17
+00:01:03.212 --> 00:01:07.365
+pieces that all have the same type. 
+And that's just the rule for lists in ML, 
+
+18
+00:01:07.365 --> 00:01:11.910
+and we'll learn in future a segments and 
+parts of the course how to program around 
+
+19
+00:01:11.910 --> 00:01:15.031
+that restriction by using other concerts 
+of the language. 
+
+20
+00:01:15.031 --> 00:01:19.522
+Alright, so to understand lists just like 
+with tuples, we're going to have ways to 
+
+21
+00:01:19.522 --> 00:01:22.205
+build them and we're going to have ways 
+to use them. 
+
+22
+00:01:22.205 --> 00:01:24.560
+So let's start with how we can build 
+lists. 
+
+23
+00:01:24.560 --> 00:01:27.161
+The simplest list has zero elements in 
+it, 
+
+24
+00:01:27.161 --> 00:01:32.117
+and you build that zero element list by 
+just writing left bracket, right bracket. 
+
+25
+00:01:32.117 --> 00:01:35.648
+This is itself a value, so the evaluation 
+rule is trivial. 
+
+26
+00:01:35.648 --> 00:01:39.180
+The syntax evaluates to itself, and 
+that's the empty list. 
+
+27
+00:01:39.180 --> 00:01:42.203
+Now, if you wanted a list with multiple 
+elements in it, 
+
+28
+00:01:42.203 --> 00:01:45.002
+you can just write those down seperated 
+by commas. 
+
+29
+00:01:45.002 --> 00:01:49.200
+So let me show you a few examples here so 
+I can really write the empy list, 
+
+30
+00:01:49.200 --> 00:01:52.168
+and that's its value. 
+You see the type there, quote A list. 
+
+31
+00:01:52.168 --> 00:01:55.862
+We'll get back to that in a few minutes. 
+Let's ignore that for now. 
+
+32
+00:01:55.862 --> 00:02:00.061
+I could also make a list three, four, 
+five, and that would hold three, four, 
+
+33
+00:02:00.061 --> 00:02:02.076
+five. 
+You can see from the type here. 
+
+34
+00:02:02.076 --> 00:02:05.547
+It's a list of, of ints, 
+so it doesn't matter how many elements 
+
+35
+00:02:05.547 --> 00:02:08.291
+are in it. 
+A two-element list has the same number, 
+
+36
+00:02:08.291 --> 00:02:11.090
+has the same type and so does a 
+four-element list, 
+
+37
+00:02:11.090 --> 00:02:14.540
+and so on. 
+these are all values because a list of 
+
+38
+00:02:14.540 --> 00:02:18.670
+values is a value. 
+But, I could put expressions in here, 
+
+39
+00:02:18.670 --> 00:02:23.487
+three plus four seven, like this and it 
+will evaluate each of those. 
+
+40
+00:02:23.487 --> 00:02:28.305
+So, this is the list holding a three and 
+then a seven and then a seven. 
+
+41
+00:02:28.305 --> 00:02:33.880
+You don't have to have lists of integers 
+you can have list of Booleans as well. 
+
+42
+00:02:33.880 --> 00:02:37.936
+So here's a three element bool list, 
+but you can't mix them. 
+
+43
+00:02:37.936 --> 00:02:42.063
+So if I had something like three, four 
+plus five, true, than that's going to 
+
+44
+00:02:42.063 --> 00:02:45.840
+give a type error, the same way four plus 
+true gives a type error. 
+
+45
+00:02:45.840 --> 00:02:49.270
+All the elements of the list have to have 
+the same type. 
+
+46
+00:02:49.270 --> 00:02:55.090
+Of course these are just values, I 
+combined a list to a variable and so on. 
+
+47
+00:02:55.090 --> 00:02:59.648
+Okay, so there's one other way to build 
+lists, which is very useful, 
+
+48
+00:02:59.648 --> 00:03:04.760
+and that's using this colon, colon 
+operation, which I'll pronounce cons, for 
+
+49
+00:03:04.760 --> 00:03:07.040
+constructing a list. 
+Cons, C, O, N, S, 
+
+50
+00:03:07.040 --> 00:03:10.832
+and here's how it works. 
+All it does is evaluate e one to some 
+
+51
+00:03:10.832 --> 00:03:13.913
+value. 
+E2 to some value that is itself a list. 
+
+52
+00:03:13.913 --> 00:03:19.411
+And then it makes a list that has one 
+more element than that list E2 evaluated 
+
+53
+00:03:19.411 --> 00:03:22.333
+to. 
+Mainly it puts the result of E1 on the 
+
+54
+00:03:22.333 --> 00:03:25.186
+front of the list. 
+So if I flip back here, 
+
+55
+00:03:25.186 --> 00:03:29.222
+remember, X is this list 789 I could say 
+five cons onto X. 
+
+56
+00:03:29.222 --> 00:03:33.688
+Now it produced the list 5789. 
+You can even say six cons don to five 
+
+57
+00:03:33.688 --> 00:03:37.032
+cons don to x. 
+The parenthesis would go like this, you 
+
+58
+00:03:37.032 --> 00:03:42.304
+don't actually need them. 
+and that would be 6, 5, 7, 8, 9, and so 
+
+59
+00:03:42.304 --> 00:03:43.012
+on. 
+Alright? 
+
+60
+00:03:43.012 --> 00:03:48.220
+One thing you can't do is something like 
+this, alright, and that just doesn't type 
+
+61
+00:03:48.220 --> 00:03:53.428
+check, and that's because we're trying to 
+take a list of integers, namely the list 
+
+62
+00:03:53.428 --> 00:03:57.414
+holding six, and put that on the front of 
+a list of integers. 
+
+63
+00:03:57.414 --> 00:04:02.622
+And a list of integers can't hold a list 
+of integers. It is a list of integers, so 
+
+64
+00:04:02.622 --> 00:04:07.258
+this is the correct thing to do. 
+You can have a list of a list of 
+
+65
+00:04:07.258 --> 00:04:13.274
+integers, so I could cons that six onto a 
+list of list of integers, maybe like 
+
+66
+00:04:13.274 --> 00:04:15.930
+this. 
+Alright, and now indeed, I have a list 
+
+67
+00:04:15.930 --> 00:04:21.634
+holding three lists of integers. 
+The first is the list six, the second the 
+
+68
+00:04:21.634 --> 00:04:28.671
+list 7, 5, and third the list 5, 2. 
+Alright, so that's how to build lists, 
+
+69
+00:04:28.671 --> 00:04:32.631
+now how about using them. 
+Well, we need a way to access the pieces, 
+
+70
+00:04:32.631 --> 00:04:36.906
+and we need to know a way to find out if 
+our list is empty or not, because if you 
+
+71
+00:04:36.906 --> 00:04:40.390
+try to access the pieces of an empty 
+list, you get a runtime error. 
+
+72
+00:04:40.390 --> 00:04:44.576
+So let's do that test first. 
+There's a function in ML called null, n, 
+
+73
+00:04:44.576 --> 00:04:47.433
+u, l, l. 
+Do not think of this like the null in 
+
+74
+00:04:47.433 --> 00:04:50.291
+Java or C+++ or any number of other 
+languages. 
+
+75
+00:04:50.291 --> 00:04:55.740
+This is a function that takes a list as 
+an argument and returns true if that list 
+
+76
+00:04:55.740 --> 00:05:00.258
+is empty and false otherwise. 
+So for example, if I ask null of X, I'll 
+
+77
+00:05:00.258 --> 00:05:03.647
+get false because remember, X is not the 
+empty list, 
+
+78
+00:05:03.647 --> 00:05:09.030
+but if I ask null of the empty list I get 
+true and indeed if some other list was 
+
+79
+00:05:09.030 --> 00:05:12.580
+empty and I asked null of that, I would 
+get true. 
+
+80
+00:05:12.580 --> 00:05:17.362
+So, once you know a list is not empty, 
+it's reasonable to ask for its head, the 
+
+81
+00:05:17.362 --> 00:05:21.900
+first element of the list, or it's tail, 
+which is the list, which is all the 
+
+82
+00:05:21.900 --> 00:05:26.168
+elements except the first one. 
+And these are the two operations we are 
+
+83
+00:05:26.168 --> 00:05:28.961
+going to use to access the pieces of the 
+list. 
+
+84
+00:05:28.961 --> 00:05:33.333
+So the head function, spelled HD, just 
+takes a list and returns the first 
+
+85
+00:05:33.333 --> 00:05:35.944
+element. 
+The tail function takes a list and 
+
+86
+00:05:35.944 --> 00:05:38.312
+returns all the other elements. 
+Alright? 
+
+87
+00:05:38.312 --> 00:05:42.381
+So these are just functions. 
+So I can just call them like any other 
+
+88
+00:05:42.381 --> 00:05:45.295
+functions. 
+So if I ask for head of X, I get seven 
+
+89
+00:05:45.295 --> 00:05:47.967
+cause remember X is this example list, 
+7-8-9. 
+
+90
+00:05:47.967 --> 00:05:51.367
+I can ask tail of X, that will give me 
+back the list 8-9. 
+
+91
+00:05:51.367 --> 00:05:56.043
+If I wanted the first element of that 
+list, I'd have to ask head of tail of X, 
+
+92
+00:05:56.043 --> 00:06:00.172
+then I would get eight. 
+Can ask of course, also get tail of tail 
+
+93
+00:06:00.172 --> 00:06:03.246
+of X. 
+That would be the one element list nine. 
+
+94
+00:06:03.246 --> 00:06:06.320
+You could also ask tail of tail of tail 
+of X. 
+
+95
+00:06:06.320 --> 00:06:11.482
+What's the tail of a one M element list? 
+It's the zero element list. 
+
+96
+00:06:11.482 --> 00:06:16.414
+So this is the empty list. 
+Now if you asked head or tail of that, 
+
+97
+00:06:16.414 --> 00:06:21.449
+that would type check just fine, 
+that if I actually evaluate this, I get 
+
+98
+00:06:21.449 --> 00:06:26.193
+an uncaught exception for trying to take 
+head or tail of the empty list. 
+
+99
+00:06:26.193 --> 00:06:29.026
+I get the same thing if I use head. 
+Alright. 
+
+100
+00:06:29.026 --> 00:06:34.297
+So that's accessing the pieces of lists. 
+We've really focused here on the syntax 
+
+101
+00:06:34.297 --> 00:06:38.579
+and the evaluation rules. 
+So now let's switch to talking a little 
+
+102
+00:06:38.579 --> 00:06:43.850
+more of the types of lists and the types 
+of functions for making them and using 
+
+103
+00:06:43.850 --> 00:06:45.210
+them. 
+So, 
+
+104
+00:06:45.210 --> 00:06:50.128
+just like when we had a tuples, we had a 
+new way of writing types. 
+
+105
+00:06:50.128 --> 00:06:53.630
+So int star int was a pair of ints for 
+example. 
+
+106
+00:06:53.630 --> 00:06:58.847
+We have a new types for lists. 
+So for any type t, the type t space list 
+
+107
+00:06:58.847 --> 00:07:03.691
+describes the values that are lists 
+holding key elements in them. 
+
+108
+00:07:03.691 --> 00:07:08.087
+So, as we've seen in the examples, int 
+list is a list of int. 
+
+109
+00:07:08.087 --> 00:07:13.900
+bool list is a list of bools, and so on. 
+Now these things can nest, I think I've 
+
+110
+00:07:13.900 --> 00:07:18.670
+shown you a little bit of this, if I make 
+a list of pairs events. 
+
+111
+00:07:18.670 --> 00:07:24.652
+That's fine, that's an int star int list. 
+It's a list whose elements have type int 
+
+112
+00:07:24.652 --> 00:07:28.566
+star int. 
+So I try to do something like cons, three 
+
+113
+00:07:28.566 --> 00:07:33.810
+onto that, it won't type check, 
+but if I try to cons a pair of ints onto 
+
+114
+00:07:33.810 --> 00:07:36.880
+that, 
+will type check just fine. 
+
+115
+00:07:36.880 --> 00:07:39.536
+Alright, 
+so you can nest these things however you 
+
+116
+00:07:39.536 --> 00:07:41.976
+want. 
+You could have a list with another list 
+
+117
+00:07:41.976 --> 00:07:44.632
+of ints inside of it. 
+I've shown you one of those. 
+
+118
+00:07:44.632 --> 00:07:49.077
+You can have a list with a pair in it and 
+where that pair has a list inside of it 
+
+119
+00:07:49.077 --> 00:07:50.219
+and so on. 
+All right, 
+
+120
+00:07:50.219 --> 00:07:54.475
+but what about the types of the 
+operations I've given you for building 
+
+121
+00:07:54.475 --> 00:07:58.551
+lists and accessing lists? 
+So probably the hardest one to understand 
+
+122
+00:07:58.551 --> 00:08:02.687
+is the type of the empty list. 
+So I've showed you before, this has the 
+
+123
+00:08:02.687 --> 00:08:07.004
+type written quote, a space list. 
+And I always pronounce quote a as alpha, 
+
+124
+00:08:07.004 --> 00:08:10.660
+like the Greek letter. 
+So we say that the empty list has type 
+
+125
+00:08:10.660 --> 00:08:14.088
+alpha lists. 
+What that actually means is that you can 
+
+126
+00:08:14.088 --> 00:08:16.863
+replace that alpha with any type you 
+want. 
+
+127
+00:08:16.863 --> 00:08:22.281
+So the empty list can have type int list, 
+but it can also have type bool list, and 
+
+128
+00:08:22.281 --> 00:08:25.585
+it can also have type int star int list, 
+and so on. 
+
+129
+00:08:25.585 --> 00:08:31.003
+And that's good, because that's what 
+let's us cons three onto the empty list 
+
+130
+00:08:31.003 --> 00:08:35.430
+to get an in list or true onto the empty 
+list to get a bool list. 
+
+131
+00:08:35.430 --> 00:08:40.540
+So, the empty list is a special thing 
+that can have lots of types. 
+
+132
+00:08:40.540 --> 00:08:46.280
+Its type is alpha list that lets it also 
+have type T list for any type T. 
+
+133
+00:08:46.280 --> 00:08:51.811
+Alright, so we're going to see that as a 
+theme with these other operations as 
+
+134
+00:08:51.811 --> 00:08:55.188
+well. 
+The cons operator also works for any kind 
+
+135
+00:08:55.188 --> 00:08:58.565
+of list. 
+The rule is E2 has to have type t list 
+
+136
+00:08:58.565 --> 00:09:04.240
+for some t, and then E1 has to have type 
+t, because you have to add something of 
+
+137
+00:09:04.240 --> 00:09:07.330
+the correct type onto the list you 
+started with. 
+
+138
+00:09:07.330 --> 00:09:11.405
+Then we have our operations for accessing 
+list, testing if they're empty, getting 
+
+139
+00:09:11.405 --> 00:09:15.072
+their head, getting their tail, and these 
+really are just functions in ML. 
+
+140
+00:09:15.072 --> 00:09:18.332
+So I have their types written here but we 
+can also see that the read eval print 
+
+141
+00:09:19.555 --> 00:09:21.374
+loop. 
+So null is just a function. 
+
+142
+00:09:21.374 --> 00:09:25.779
+Again, it's nothing like null in other 
+languages, that takes in a list of any 
+
+143
+00:09:25.779 --> 00:09:28.676
+type alpha. 
+So for all types alpha, you can take in 
+
+144
+00:09:28.676 --> 00:09:31.690
+an alpha list, and we'll give you back 
+true or false. 
+
+145
+00:09:31.690 --> 00:09:35.979
+And that's why I can't ask null with a 
+list of integers or with a list of 
+
+146
+00:09:35.979 --> 00:09:39.050
+Booleans. 
+In a couple sections later in the course, 
+
+147
+00:09:39.050 --> 00:09:43.107
+we'll learn how to write our own 
+functions that have types with these 
+
+148
+00:09:43.107 --> 00:09:45.947
+alphas in it, and other Greek letters if 
+you like, 
+
+149
+00:09:45.947 --> 00:09:50.120
+but for now we're just going to use ones 
+provided to us by the ml language. 
+
+150
+00:09:50.120 --> 00:09:55.366
+Similarly head takes in a list of alphas 
+for any type alpha, and what you get back 
+
+151
+00:09:55.366 --> 00:09:58.693
+is an alpha. 
+That's why, if you call head with a list 
+
+152
+00:09:58.693 --> 00:10:03.172
+of integers, you get back an integer, 
+and if you call it with a list of 
+
+153
+00:10:03.172 --> 00:10:07.465
+Booleans, you get back a Boolean. 
+And finally, tail takes a list and 
+
+154
+00:10:07.465 --> 00:10:12.816
+returns a list, alpha list to alpha list, 
+and those two type, lists, have to have 
+
+155
+00:10:12.816 --> 00:10:16.845
+the same type, 
+which is why, if I say tail of 3,4, I get 
+
+156
+00:10:16.845 --> 00:10:20.082
+an int list back, because I passed it in 
+int list. 
+
+157
+00:10:20.082 --> 00:10:23.121
+Alright? 
+So now we know our key operations for 
+
+158
+00:10:23.121 --> 00:10:27.943
+building lists and accessing lists. 
+What we'll do next is a very powerful, 
+
+159
+00:10:27.943 --> 00:10:30.849
+very common thing in functional 
+programming, 
+
+160
+00:10:30.849 --> 00:10:34.879
+which is to write useful functions that 
+take in return lists. 

@@ -1,0 +1,975 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.940
+[SOUND] 
+
+2
+00:00:04.940 --> 00:00:08.874
+Alright in this segment I want to take a 
+brief break from building up our 
+
+3
+00:00:08.874 --> 00:00:13.127
+conceptual framework for understanding ML 
+to go through a couple more pragmatic 
+
+4
+00:00:13.127 --> 00:00:17.487
+topics namely how to use the REPL, that 
+Read Eval Print Loop effectively as well 
+
+5
+00:00:17.487 --> 00:00:21.634
+as how to deal with error messages and 
+show you a bunch of examples of errors 
+
+6
+00:00:21.634 --> 00:00:24.240
+that are fairly common when starting to 
+learn ml. 
+
+7
+00:00:24.240 --> 00:00:26.380
+Okay. 
+So we want to ask a couple questions. 
+
+8
+00:00:26.380 --> 00:00:30.554
+First of all is how do we run programs 
+using the RPL and what does it mean to 
+
+9
+00:00:30.554 --> 00:00:33.015
+have a REPL? 
+And then what happens when we make 
+
+10
+00:00:33.015 --> 00:00:36.119
+mistakes and how can we go about 
+debugging those mistakes? 
+
+11
+00:00:36.119 --> 00:00:40.132
+And fundamentally, debugging is, is a 
+skill you develop over time, and I just 
+
+12
+00:00:40.132 --> 00:00:43.450
+want to give you some practice with it by 
+watching me do some. 
+
+13
+00:00:43.450 --> 00:00:48.408
+So, the way we've been using our repple, 
+was primarily with this use expression, 
+
+14
+00:00:48.408 --> 00:00:53.111
+and really the way that I want you to 
+think about it, is that it takes the 
+
+15
+00:00:53.111 --> 00:00:58.069
+contents of the file, and it's like you 
+typed in those bindings, those variable 
+
+16
+00:00:58.069 --> 00:01:02.583
+bindings, one at a time into the REPL. 
+And that really is what happens. 
+
+17
+00:01:02.583 --> 00:01:07.286
+So if I take this file which we've seen 
+before, it has a bunch of bindings. 
+
+18
+00:01:07.286 --> 00:01:11.800
+When I come over here with Control C, 
+Control S, Return to bring this up. 
+
+19
+00:01:11.800 --> 00:01:17.327
+I could manually type these in one at a 
+time, val x equals 34, val y equals 17 
+
+20
+00:01:17.327 --> 00:01:20.420
+and so on. 
+But instead, when I say use first dot 
+
+21
+00:01:20.420 --> 00:01:25.619
+sml, it does that but all at once in a 
+batch showing me the result of doing all 
+
+22
+00:01:25.619 --> 00:01:29.239
+of those bindings. 
+What were their types and what's the 
+
+23
+00:01:29.239 --> 00:01:33.521
+result of evaluating them. 
+And that's all that it's doing, and it's 
+
+24
+00:01:33.521 --> 00:01:37.443
+convenient that way. 
+And so when you look at it this way, what 
+
+25
+00:01:37.443 --> 00:01:42.393
+is actually going on is the meaning of 
+our programs is that all we have is a 
+
+26
+00:01:42.393 --> 00:01:45.800
+REPL. 
+And use is just a convenient way to use 
+
+27
+00:01:45.800 --> 00:01:49.015
+that REPL. 
+So, REPL stands for Read Eval Print Loop 
+
+28
+00:01:49.015 --> 00:01:53.837
+and it actually pretty well named. 
+But what happens at that prompt, when you 
+
+29
+00:01:53.837 --> 00:01:58.418
+type in a binding, is that it reads it. 
+It evaluates it, although if it doesn't 
+
+30
+00:01:58.418 --> 00:02:01.763
+type check, it just gives you an error 
+message to that extent. 
+
+31
+00:02:01.763 --> 00:02:06.041
+It prints the result, and then the loop 
+part is about how it gives you another 
+
+32
+00:02:06.041 --> 00:02:10.387
+prompt back so that you can continue. 
+So we can just think of this as a strange 
+
+33
+00:02:10.387 --> 00:02:13.697
+way to run programs. 
+Where we open up the repple and then we 
+
+34
+00:02:13.697 --> 00:02:16.455
+type use. 
+But it's also quite convenient for after 
+
+35
+00:02:16.455 --> 00:02:19.490
+you type use, to then go ahead and try a 
+few things out. 
+
+36
+00:02:19.490 --> 00:02:23.683
+Now after you types Us you find yourself 
+typing the same thing over and over 
+
+37
+00:02:23.683 --> 00:02:26.188
+again. 
+Like you're building up a collection of 
+
+38
+00:02:26.188 --> 00:02:28.475
+test cases for say your homework 
+problems. 
+
+39
+00:02:28.475 --> 00:02:31.580
+You're probably not making an efficient 
+use of your time. 
+
+40
+00:02:31.580 --> 00:02:35.773
+And it's better to go ahead and move 
+those tests into a second file, and then 
+
+41
+00:02:35.773 --> 00:02:39.966
+go ahead and use one file, then use a 
+second file that's going to include all 
+
+42
+00:02:39.966 --> 00:02:42.798
+your tests. 
+And then maybe do a little extra playing 
+
+43
+00:02:42.798 --> 00:02:45.592
+around. 
+But what I don't ever recommend, for 
+
+44
+00:02:45.592 --> 00:02:50.351
+reasons we'll discuss in the next 
+segment, is typing use, playing around 
+
+45
+00:02:50.351 --> 00:02:55.177
+and then using the same file again, 
+instead, what you always see me do is 
+
+46
+00:02:55.177 --> 00:03:00.002
+come over here to the repple, type 
+control D to end my session, control C, 
+
+47
+00:03:00.002 --> 00:03:05.364
+control S return to restart it and then 
+it's okay to type use again with the 
+
+48
+00:03:05.364 --> 00:03:07.863
+file. 
+The reppa wont stop you from doing it 
+
+49
+00:03:07.863 --> 00:03:12.247
+another way, but I don't recommend it 
+because it's often very confsing what's 
+
+50
+00:03:12.247 --> 00:03:13.026
+going on. 
+Okay. 
+
+51
+00:03:13.026 --> 00:03:16.868
+So now let's turn to errors. 
+usually when I show you programs here in 
+
+52
+00:03:16.868 --> 00:03:20.070
+the video, they just work in trying to 
+demonstrate something. 
+
+53
+00:03:20.070 --> 00:03:23.271
+But we all make mistake. 
+You can make a syntatic mistake, you 
+
+54
+00:03:23.271 --> 00:03:25.832
+don't write something down the way you 
+expected. 
+
+55
+00:03:25.832 --> 00:03:29.674
+You can make a type checking mistake, 
+what you wrote down is the correct 
+
+56
+00:03:29.674 --> 00:03:33.836
+syntax, but it doesn't follow the type 
+checking rules for the language console 
+
+57
+00:03:33.836 --> 00:03:36.697
+you're using. 
+Or, it might type check and then run. 
+
+58
+00:03:36.697 --> 00:03:41.392
+And either, it it produces an exception, 
+or goes into an infinite loop, or it 
+
+59
+00:03:41.392 --> 00:03:44.763
+produces an answer, a value, but not the 
+value you wanted. 
+
+60
+00:03:44.763 --> 00:03:49.519
+So debugging has to attack all of these 
+problems, and one of the hard things is 
+
+61
+00:03:49.519 --> 00:03:54.275
+you often don't know which mistake you 
+made, and the error message you get from 
+
+62
+00:03:54.275 --> 00:03:57.669
+ML may not help either. 
+And there's a few reasons for that. 
+
+63
+00:03:57.669 --> 00:04:01.862
+Well the, the good reason is, well you 
+wrote something that isn't what you 
+
+64
+00:04:01.862 --> 00:04:04.790
+intended. 
+So whatever error message you get is just 
+
+65
+00:04:04.790 --> 00:04:07.719
+ML's best guess as to what might be the 
+problem. 
+
+66
+00:04:07.719 --> 00:04:11.280
+But it's up to you to figure out what 
+actually the problem is. 
+
+67
+00:04:11.280 --> 00:04:15.700
+And the other thing is, is that as much 
+as I love ML as a language, and love 
+
+68
+00:04:15.700 --> 00:04:20.239
+having a read of val print loop, the 
+error messages you get particularly when 
+
+69
+00:04:20.239 --> 00:04:23.894
+you have a type checking error, are 
+usually actually quite bad. 
+
+70
+00:04:23.894 --> 00:04:28.610
+And, it's really a bit of an aquired 
+skill to look behind them and figure out 
+
+71
+00:04:28.610 --> 00:04:32.217
+what you did wrong. 
+So the best way to learn something is by 
+
+72
+00:04:32.217 --> 00:04:35.918
+trying it and I want you to just try 
+writing in all programs. 
+
+73
+00:04:35.918 --> 00:04:40.590
+Don't be afraid of errors, slow down, 
+find what line number the error's coming 
+
+74
+00:04:40.590 --> 00:04:44.292
+from and so forth. 
+And I thought I would help point you in 
+
+75
+00:04:44.292 --> 00:04:48.236
+the right direction by just doing a 
+little bit of that myself. 
+
+76
+00:04:48.236 --> 00:04:53.150
+So I have a second file here that is 
+called errors.sml and it looks like a 
+
+77
+00:04:53.150 --> 00:04:57.580
+pretty good program here. 
+It turns out it has a bunch of errors and 
+
+78
+00:04:57.580 --> 00:05:01.160
+this is the entire thing but suppose I 
+wrote all this down. 
+
+79
+00:05:01.160 --> 00:05:05.864
+And now I go over here and I say, use 
+errors dot sml, 'kay? 
+
+80
+00:05:05.864 --> 00:05:10.233
+So it turns out, it gives me a couple 
+errors here. 
+
+81
+00:05:10.233 --> 00:05:16.197
+The first one you can see is at line 
+fourteen and it says, syntax error 
+
+82
+00:05:16.197 --> 00:05:18.011
+inserting else ID. 
+Okay? 
+
+83
+00:05:18.011 --> 00:05:22.407
+So if I go over to line fourteen. 
+Which you can see here in emacs down at 
+
+84
+00:05:22.407 --> 00:05:24.876
+the bottom. 
+It prints out the line number. 
+
+85
+00:05:24.876 --> 00:05:29.091
+That line is just val a = -five. 
+So it's not, you can't look at that line, 
+
+86
+00:05:29.091 --> 00:05:31.620
+and figure out why it's inserting an 
+else. 
+
+87
+00:05:31.620 --> 00:05:36.136
+It turns out, is often ca-, the case. 
+Well, the error is actually a little bit 
+
+88
+00:05:36.136 --> 00:05:39.750
+before the line number that's being 
+reported as the problem. 
+
+89
+00:05:39.750 --> 00:05:43.170
+And indeed if you look up here I have 
+this if then expression. 
+
+90
+00:05:43.170 --> 00:05:46.651
+Well, in ML, there's no such thing as an 
+if/then expression. 
+
+91
+00:05:46.651 --> 00:05:51.032
+You need an else afterwards, which it 
+thought you might want to put on line 
+
+92
+00:05:51.032 --> 00:05:53.613
+fourteen. 
+I actually want to put it up here. 
+
+93
+00:05:53.613 --> 00:05:56.674
+And I have to have else something. 
+How bout else 42? 
+
+94
+00:05:56.674 --> 00:06:01.415
+And that's because, as we know, when you 
+have a conditional expression, either 
+
+95
+00:06:01.415 --> 00:06:04.716
+branch, the then or the else might need 
+to be evaluated. 
+
+96
+00:06:04.716 --> 00:06:09.218
+So you can't leave the else off like you 
+can in some programming languages. 
+
+97
+00:06:09.218 --> 00:06:10.898
+So, okay. 
+We fixed that error. 
+
+98
+00:06:10.898 --> 00:06:13.299
+Let's go back here. 
+Come down to the end. 
+
+99
+00:06:13.299 --> 00:06:14.800
+Restart things. 
+Try again. 
+
+100
+00:06:14.800 --> 00:06:19.043
+And by the way, if you don't want to keep 
+typing this, you can type meta p to get 
+
+101
+00:06:19.043 --> 00:06:22.703
+your previous commands back. 
+And now we see an error on line eighteen. 
+
+102
+00:06:22.703 --> 00:06:26.576
+It says replacing fun, with wild. 
+Now if you look at line eighteen here, it 
+
+103
+00:06:26.576 --> 00:06:30.130
+might look just fine to you. 
+Why can't I have a variable called fun? 
+
+104
+00:06:30.130 --> 00:06:33.790
+Well, as often happens when you're 
+learning a programming language, we 
+
+105
+00:06:33.790 --> 00:06:37.344
+stumbled across a keyword. 
+It turns out fun means something else in 
+
+106
+00:06:37.344 --> 00:06:40.527
+the language and we're not allowed to use 
+it for a variable. 
+
+107
+00:06:40.527 --> 00:06:43.603
+so we're going to have to change this and 
+how about funny. 
+
+108
+00:06:43.603 --> 00:06:45.256
+That should do the trick. 
+Quit. 
+
+109
+00:06:45.256 --> 00:06:47.149
+Restart. 
+type that back in. 
+
+110
+00:06:47.149 --> 00:06:50.217
+And now, we get a whole bunch of error 
+messages. 
+
+111
+00:06:50.217 --> 00:06:55.047
+They don't even fit on the screen. 
+Because we're now, don't have any syntax 
+
+112
+00:06:55.047 --> 00:06:59.094
+errors that ML found. 
+So it's giving a bunch of different type 
+
+113
+00:06:59.094 --> 00:07:02.227
+errors. 
+And I like to fix the first one and then 
+
+114
+00:07:02.227 --> 00:07:05.751
+come back. 
+So, up here at line 8, it says, unbound 
+
+115
+00:07:05.751 --> 00:07:09.211
+variable or constructor x. 
+So if I look at line 8. 
+
+116
+00:07:09.211 --> 00:07:11.561
+Sure enough, I am using x right here. 
+yx+1. 
+
+117
+00:07:11.561 --> 00:07:14.041
+equals x + 1. 
+But it sure looks like it should be 
+
+118
+00:07:14.041 --> 00:07:16.978
+bound. 
+It should be in my dynamic environment 
+
+119
+00:07:16.978 --> 00:07:20.653
+from the previous line. 
+But it turns out that the error here 
+
+120
+00:07:20.653 --> 00:07:25.236
+actually is syntax, even though it looks 
+like type checking because I'm not 
+
+121
+00:07:25.236 --> 00:07:27.997
+actually finished with the previous 
+expression. 
+
+122
+00:07:27.997 --> 00:07:31.816
+If you want to start another expression, 
+you have to type val again. 
+
+123
+00:07:31.816 --> 00:07:36.282
+Since I left that off the type checker 
+thought this entire thing was one 
+
+124
+00:07:36.282 --> 00:07:40.982
+expression and for this expression, there 
+is no x in the dynamic environment yet 
+
+125
+00:07:40.982 --> 00:07:45.319
+because I haven't finished defining it. 
+so I have to put val here. 
+
+126
+00:07:45.319 --> 00:07:48.671
+By the way, I used to put semicolons at 
+the end here. 
+
+127
+00:07:48.671 --> 00:07:51.829
+And you still can. 
+You have to in the REPL. 
+
+128
+00:07:51.829 --> 00:07:54.536
+But in a file, it's not actually 
+necessary. 
+
+129
+00:07:54.536 --> 00:07:58.855
+So it turns out that was not the error. 
+But leaving off the val was. 
+
+130
+00:07:58.855 --> 00:08:01.111
+So, alright? 
+So we'll try this again. 
+
+131
+00:08:01.111 --> 00:08:06.010
+And we still have a bunch more errors. 
+But at least now, we're up to line 10. 
+
+132
+00:08:06.010 --> 00:08:09.620
+Where it says, test expression in if is 
+not of type bool. 
+
+133
+00:08:09.620 --> 00:08:13.481
+If we go over here to line ten, a ha, it 
+actually got one right. 
+
+134
+00:08:13.481 --> 00:08:16.284
+This is actually very accurate error 
+message. 
+
+135
+00:08:16.284 --> 00:08:20.831
+Right here, this expression Y, has type 
+ent, because that's the type of the 
+
+136
+00:08:20.831 --> 00:08:25.190
+variable Y, and you're not allowed to 
+have something of type int there. 
+
+137
+00:08:25.190 --> 00:08:29.924
+You have to have something of type bool. 
+So, this is just a nonsense code, but 
+
+138
+00:08:29.924 --> 00:08:33.848
+maybe the programmer meant to write, if Y 
+is greater is zero. 
+
+139
+00:08:33.848 --> 00:08:36.900
+Okay, so we fixed that one. 
+Come back here, restart. 
+
+140
+00:08:36.900 --> 00:08:39.116
+Try it again. 
+Still a bunch of errors. 
+
+141
+00:08:39.116 --> 00:08:42.164
+Still on line 10. 
+Types of if branches do not agree. 
+
+142
+00:08:42.164 --> 00:08:47.028
+we remember that the then branch and the 
+else branch both have to have the same 
+
+143
+00:08:47.028 --> 00:08:49.431
+type. 
+So that, that can be the type of the 
+
+144
+00:08:49.431 --> 00:08:52.772
+entire if/then/else expression. 
+And, indeed, 34 is type int. 
+
+145
+00:08:52.772 --> 00:08:57.577
+And x less than four has type bool. 
+So I don't know which of these is wrong, 
+
+146
+00:08:57.577 --> 00:09:01.200
+but I have to fix one of them. 
+How about fixing that one? 
+
+147
+00:09:01.200 --> 00:09:05.227
+Alright, back we go. 
+I hope we don't usually make this many 
+
+148
+00:09:05.227 --> 00:09:09.810
+errors in this few lines of code but 
+we're up to line 14. 
+
+149
+00:09:09.810 --> 00:09:13.812
+Expression or pattern begins with in fix 
+identifier minus. 
+
+150
+00:09:13.812 --> 00:09:16.986
+This one might not make you very happy at 
+all. 
+
+151
+00:09:16.986 --> 00:09:22.368
+It's actually complaining about that 
+minus five and maybe that seems crazy to 
+
+152
+00:09:22.368 --> 00:09:27.957
+you but in ML the only thing you can use 
+minus for is as a binary operation like 
+
+153
+00:09:27.957 --> 00:09:32.373
+X-5 or 0-5 or 13-5 or so on. 
+If you want to write a negative number 
+
+154
+00:09:32.373 --> 00:09:36.688
+you might well say 0-5 will work. 
+you don't have to do it that way. 
+
+155
+00:09:36.688 --> 00:09:41.047
+there's just different syntax in ML. 
+When you learn a programming language, 
+
+156
+00:09:41.047 --> 00:09:45.633
+you have to learn that language's syntax 
+rules and it turns out that negation of 
+
+157
+00:09:45.633 --> 00:09:50.275
+one argument is the tilde character, with 
+or without a space here not the minus 
+
+158
+00:09:50.275 --> 00:09:51.974
+character. 
+You can't use minus. 
+
+159
+00:09:51.974 --> 00:09:56.080
+You have to use tilde. 
+And that will fix this problem. 
+
+160
+00:09:56.080 --> 00:10:02.711
+and, we're up to line twenty. 
+Operator and operand don't agree, real 
+
+161
+00:10:02.711 --> 00:10:06.554
+star real, int star int. 
+The expression it's complaining about is 
+
+162
+00:10:06.554 --> 00:10:10.757
+this X slash W, where presumably I was 
+trying to do an add division. 
+
+163
+00:10:10.757 --> 00:10:15.200
+Well, that is how you do division on 
+floating point numbers in ML which it 
+
+164
+00:10:15.200 --> 00:10:17.902
+calls reals, but it doesn't apply to 
+integers. 
+
+165
+00:10:17.902 --> 00:10:20.905
+You're not allowed to use slash on 
+integers in ML. 
+
+166
+00:10:20.905 --> 00:10:25.288
+That's just the type checking rule, but 
+there is a different operator for 
+
+167
+00:10:25.288 --> 00:10:27.690
+division and it's spelled D, I, V, for 
+div. 
+
+168
+00:10:27.690 --> 00:10:32.194
+Alright, so we maybe look that up 
+somewhere. 
+
+169
+00:10:32.194 --> 00:10:38.060
+and we got that fixed and now we can run 
+this and. 
+
+170
+00:10:38.060 --> 00:10:40.945
+Ha, that looks like a very different kind 
+of message. 
+
+171
+00:10:40.945 --> 00:10:44.717
+So it turns out we're not getting a type 
+checking error here at all. 
+
+172
+00:10:44.717 --> 00:10:48.768
+We're now actually, everything type 
+checked and we're running the program. 
+
+173
+00:10:48.768 --> 00:10:52.485
+But when we ran it we got an uncaught 
+exception for divide by zero. 
+
+174
+00:10:52.485 --> 00:10:56.868
+Like in many languages you get an error 
+if you divide by zero when you run the 
+
+175
+00:10:56.868 --> 00:10:59.531
+program. 
+It's not a typing error and sure enough 
+
+176
+00:10:59.531 --> 00:11:03.859
+if you look at this X div W, you go to 
+evaluate W, we look it up in the dynamic 
+
+177
+00:11:03.859 --> 00:11:07.465
+environment and we get zero. 
+So if we don't want that error we're 
+
+178
+00:11:07.465 --> 00:11:10.628
+going to have to use some different 
+addition division. 
+
+179
+00:11:10.628 --> 00:11:15.140
+How about dividing by W+1? 
+So let's go back here one more time. 
+
+180
+00:11:17.060 --> 00:11:18.940
+And look at that. 
+We actually ran. 
+
+181
+00:11:18.940 --> 00:11:22.075
+We have a bunch of types now, we have a 
+bunch of values. 
+
+182
+00:11:22.075 --> 00:11:24.412
+But if you look at the N, not this val 
+it. 
+
+183
+00:11:24.412 --> 00:11:28.572
+That's the result of the use itself. 
+But the last variable by name we did. 
+
+184
+00:11:28.572 --> 00:11:32.220
+I created a variable fourteen, and it is 
+bound to the value zero. 
+
+185
+00:11:32.220 --> 00:11:36.113
+Of type int. 
+Now that's not necessarily a problem, but 
+
+186
+00:11:36.113 --> 00:11:40.136
+maybe it's not what I meant. 
+And I brought this up, I included this 
+
+187
+00:11:40.136 --> 00:11:44.588
+just to remind you that sometimes you get 
+this, great sense of satisfaction when it 
+
+188
+00:11:44.588 --> 00:11:47.435
+all type checks. 
+It all runs, but you still have to make 
+
+189
+00:11:47.435 --> 00:11:51.472
+sure you have the right answer, and if I 
+wanted this to be fourteen, I probably 
+
+190
+00:11:51.472 --> 00:11:54.371
+didn't want seven minus seven. 
+I wanted seven plus seven. 
+
+191
+00:11:54.371 --> 00:11:58.357
+Of course, there's no way a type checker 
+or an automatic tool can know what I 
+
+192
+00:11:58.357 --> 00:12:00.789
+meant. 
+Fourteen is just an English word, but you 
+
+193
+00:12:00.789 --> 00:12:04.982
+still have to test your program, and, and 
+look at the answers and make sure it all 
+
+194
+00:12:04.982 --> 00:12:07.260
+works. 
+And in this case, after fixing that. 
+
+195
+00:12:07.260 --> 00:12:10.940
+Finally happy with what I've got and so 
+let's stop there. 

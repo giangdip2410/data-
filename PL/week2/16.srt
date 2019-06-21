@@ -1,0 +1,481 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:05.778
+[SOUND] I thought I would finish up this 
+section by taking a huge step back, and 
+
+2
+00:00:05.778 --> 00:00:11.483
+as we've learned a bunch of ML already 
+think about, is this the important stuff? 
+
+3
+00:00:11.483 --> 00:00:14.733
+Is this how you learn a programming 
+language? 
+
+4
+00:00:14.733 --> 00:00:20.006
+And so I want to focus for just a minute 
+on what does it take to learn a 
+
+5
+00:00:20.006 --> 00:00:25.640
+programming language, and which part of 
+that are we focusing on in this course? 
+
+6
+00:00:25.640 --> 00:00:28.358
+So I like to think of it in terms of five 
+different things. 
+
+7
+00:00:28.358 --> 00:00:31.629
+If you want to learn a programming 
+language and make yourself a better 
+
+8
+00:00:31.629 --> 00:00:35.315
+programmer, you need to know the syntax. 
+How do you write the language constructs? 
+
+9
+00:00:35.315 --> 00:00:39.000
+If you don't know the syntax, you're not 
+going to be able to write down programs. 
+
+10
+00:00:39.000 --> 00:00:41.974
+I understand that, 
+but you also need to know the semantics. 
+
+11
+00:00:41.974 --> 00:00:44.868
+What are the type checking rules and 
+evaluation rules? 
+
+12
+00:00:44.868 --> 00:00:48.889
+If you don't know what programs mean, 
+you're trying to write down different 
+
+13
+00:00:48.889 --> 00:00:53.177
+things and hope to get the right answer. 
+And that's why we keep focusing on what 
+
+14
+00:00:53.177 --> 00:00:57.251
+do these concerts mean, what are the 
+actual rules so we can reason about our 
+
+15
+00:00:57.251 --> 00:01:00.616
+programs correctly. 
+Something we haven't emphasized quite as 
+
+16
+00:01:00.616 --> 00:01:04.565
+much is that you need so far at least is 
+you need programming idioms. 
+
+17
+00:01:04.565 --> 00:01:09.087
+It's not enough to know that there's an 
+if then else expression that works in a 
+
+18
+00:01:09.087 --> 00:01:13.665
+certain way you need to recognize when 
+and if then else expression is the right 
+
+19
+00:01:13.665 --> 00:01:16.926
+thing to use. 
+We talked a little bit about the idiom of 
+
+20
+00:01:16.926 --> 00:01:21.598
+using nested function bindings in order 
+to have private helper functions that 
+
+21
+00:01:21.598 --> 00:01:25.971
+couldn't be used somewhere else. 
+That's different than just the semantics 
+
+22
+00:01:25.971 --> 00:01:30.584
+of let expressions and function bindings. 
+It's about representing, recognizing 
+
+23
+00:01:30.584 --> 00:01:33.280
+typical patterns of use for certain 
+features. 
+
+24
+00:01:33.280 --> 00:01:36.101
+And then there's these other two 
+libraries and tools. 
+
+25
+00:01:36.101 --> 00:01:40.199
+So what facilities does the language 
+provide to you that let's you do things 
+
+26
+00:01:40.199 --> 00:01:44.351
+you either couldn't do on your own or 
+would have to reimplement a lot of code 
+
+27
+00:01:44.351 --> 00:01:46.906
+that somebody else has already provided 
+for you? 
+
+28
+00:01:46.906 --> 00:01:51.271
+So an example of a library that usually 
+has to be provided for you is some way to 
+
+29
+00:01:51.271 --> 00:01:54.465
+read and write files. 
+If a language doesn't give you that on 
+
+30
+00:01:54.465 --> 00:01:58.616
+some level, you're not going to be able 
+to implement it yourself because you need 
+
+31
+00:01:58.616 --> 00:02:02.456
+some way to access the file system. 
+On the other hand, libraries for things 
+
+32
+00:02:02.456 --> 00:02:06.459
+like data structures like trees or hash 
+tables or lists are things that you 
+
+33
+00:02:06.459 --> 00:02:10.158
+actually could define on your own. 
+So far in ML we've used the lists that 
+
+34
+00:02:10.158 --> 00:02:13.806
+have been provided to us, but we're 
+going to learn enough features of ML to 
+
+35
+00:02:13.806 --> 00:02:17.100
+know that we didn't need that, 
+that we could have defined our own. 
+
+36
+00:02:17.100 --> 00:02:20.353
+And then, finally, tools. 
+These are things that language 
+
+37
+00:02:20.353 --> 00:02:23.306
+implementations give you to make your job 
+easier. 
+
+38
+00:02:23.306 --> 00:02:26.560
+Maybe it's a REPL. 
+Maybe it's something that helps you 
+
+39
+00:02:26.560 --> 00:02:30.356
+format your code well. 
+Maybe some of you have used debuggers in 
+
+40
+00:02:30.356 --> 00:02:33.670
+other languages. 
+I like to emphasize that tools are not 
+
+41
+00:02:33.670 --> 00:02:37.466
+actually part of the language. 
+There's something provided by an 
+
+42
+00:02:37.466 --> 00:02:40.961
+implementation of the language, or just 
+as a separate tool. 
+
+43
+00:02:40.961 --> 00:02:45.240
+And as valuable as they are, they are 
+separate from the language itself. 
+
+44
+00:02:45.240 --> 00:02:47.429
+Okay. 
+So these are five separate issues, 
+
+45
+00:02:47.429 --> 00:02:51.585
+and in practice, if you want to be an 
+effective programmer, you need to get 
+
+46
+00:02:51.585 --> 00:02:55.515
+good at all five of these things, 
+learning syntax, semantics, idioms, new 
+
+47
+00:02:55.515 --> 00:02:58.772
+libraries, and tools. 
+And I would like you to be good about 
+
+48
+00:02:58.772 --> 00:03:01.861
+keeping these ideas separate. 
+People often confuse them. 
+
+49
+00:03:01.861 --> 00:03:05.904
+Oh man, it's like a pet peeve of mine 
+when someone says, oh, I like the ML 
+
+50
+00:03:05.904 --> 00:03:09.497
+language because it has a REPL. 
+There is nothing to do with the ML 
+
+51
+00:03:09.497 --> 00:03:12.867
+language that has a REPL. 
+That's a tool that's provided by a 
+
+52
+00:03:12.867 --> 00:03:15.225
+particular implementation of the 
+language. 
+
+53
+00:03:15.225 --> 00:03:18.370
+And it's good to keep those ideas 
+separate in your head. 
+
+54
+00:03:18.370 --> 00:03:22.493
+Okay so bringing it back to this course. 
+This course focuses a lot on two and 
+
+55
+00:03:22.493 --> 00:03:26.456
+three, on the semantics and the idioms. 
+And I want to justify that for you so 
+
+56
+00:03:26.456 --> 00:03:30.420
+that you continue on the course and 
+understand why we're focusing on that. 
+
+57
+00:03:30.420 --> 00:03:34.363
+I tend to not focus on syntax a lot, 
+because as much as you have to know it, 
+
+58
+00:03:34.363 --> 00:03:36.520
+it's usually not particularly 
+interesting. 
+
+59
+00:03:36.520 --> 00:03:41.360
+If you want to study American History you 
+really need to know the American Civil 
+
+60
+00:03:41.360 --> 00:03:44.646
+War ended in 1865, 
+but that is not the interesting part. 
+
+61
+00:03:44.646 --> 00:03:49.486
+That's the basic stuff that gets you to 
+actually reason about theories and ideas, 
+
+62
+00:03:49.486 --> 00:03:53.508
+and in our case, semantics. 
+The other reason I usually am dismissive 
+
+63
+00:03:53.508 --> 00:03:57.361
+toward syntax is that people obsess over 
+subjective preferences. 
+
+64
+00:03:57.361 --> 00:04:02.058
+And I am not going to sit here and tell 
+you that this syntax is good, and that 
+
+65
+00:04:02.058 --> 00:04:05.429
+syntax is bad. 
+I'm not an expert of syntax any more than 
+
+66
+00:04:05.429 --> 00:04:08.319
+you are. 
+I do understand semantics, and I want to 
+
+67
+00:04:08.319 --> 00:04:11.270
+teach that to you, using syntax only as 
+necessary. 
+
+68
+00:04:11.270 --> 00:04:14.442
+As far as libraries and tools they're 
+really crucial, 
+
+69
+00:04:14.442 --> 00:04:17.554
+but you're always going to have to learn 
+new ones okay. 
+
+70
+00:04:17.554 --> 00:04:21.564
+I'd rather teach you how to think about 
+every programming language. 
+
+71
+00:04:21.564 --> 00:04:26.532
+And the fact that we happen to have a 
+REPL for ML, or some other language has a 
+
+72
+00:04:26.532 --> 00:04:29.404
+debugger. 
+There's good libraries for writing Red 
+
+73
+00:04:29.404 --> 00:04:33.554
+programs, is really not our focus. 
+And I truly believe that if you get good 
+
+74
+00:04:33.554 --> 00:04:37.079
+at learn semantics and idioms of 
+programming languages, 
+
+75
+00:04:37.079 --> 00:04:40.664
+it actually makes you better at learning 
+libraries and tools. 
+
+76
+00:04:40.664 --> 00:04:44.190
+Okay, because it helps you say, oh how 
+does this library work? 
+
+77
+00:04:44.190 --> 00:04:48.165
+What these, these methods are functions 
+that are being provided to me, what is 
+
+78
+00:04:48.165 --> 00:04:50.644
+their semantics, and how are they 
+typically used? 
+
+79
+00:04:50.644 --> 00:04:54.465
+The same mental skills, intellectual 
+tools you use for learning a language 
+
+80
+00:04:54.465 --> 00:04:57.046
+become incredibly valuable for learning 
+libraries. 
+
+81
+00:04:57.046 --> 00:05:00.816
+We're not going to learn libraries, we're 
+going to focus on the languages 
+
+82
+00:05:00.816 --> 00:05:04.792
+themselves, and this has the unfortunate 
+effect that it makes the programming 
+
+83
+00:05:04.792 --> 00:05:08.200
+languages and the programs we write 
+sometimes seem a little silly. 
+
+84
+00:05:08.200 --> 00:05:12.513
+Right, here we are, we've watched all 
+these videos and we know how to append 
+
+85
+00:05:12.513 --> 00:05:15.906
+two lists, or take the max number from a 
+list of numbers. 
+
+86
+00:05:15.906 --> 00:05:20.564
+I know that real programming doesn't look 
+like that, but I like to use the simple 
+
+87
+00:05:20.564 --> 00:05:23.152
+example so that I can focus on the 
+semantics. 
+
+88
+00:05:23.152 --> 00:05:27.408
+And so I ask you not to judge the 
+languages we use by the approach we are 
+
+89
+00:05:27.408 --> 00:05:30.974
+taking in the course. 
+If I taught all these same ideas in Java 
+
+90
+00:05:30.974 --> 00:05:35.690
+or Python or Java Script, which I could 
+do, those languages would look silly too. 
+
+91
+00:05:35.690 --> 00:05:40.820
+Instead, I want to use these languages 
+because they're the best vehicles for 
+
+92
+00:05:40.820 --> 00:05:46.217
+focusing on semantics and idioms, and I 
+assure you that there are ways to take, 
+
+93
+00:05:46.217 --> 00:05:51.215
+say Ruby and use it for web programs, or 
+Racket, and use it for real desktop 
+
+94
+00:05:51.215 --> 00:05:54.480
+software and so on, 
+and that's just not our focus. 
+
+95
+00:05:54.480 --> 00:05:59.074
+Learn the semantics and the idioms in 
+this course, and become a better software 
+
+96
+00:05:59.074 --> 00:06:02.040
+person and a better computer scientist as 
+a result. 

@@ -1,0 +1,614 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="http://static.youku.com/v1.0.1062/js/jquery.js"></script>
+<script type="text/javascript">
+var isIE = function(){
+    var browser=navigator.appName
+
+    var b_version=navigator.appVersion
+
+    var version=b_version.split(";");
+
+    var trim_Version=version[1].replace(/[ ]/g,"");
+    //alert(trim_Version);
+    if(trim_Version=="WOW64"){
+        return 11;
+    }
+    var ver = parseInt(trim_Version.substring(4),10);
+    return ver;
+}
+
+</script>
+<style type="text/css">
+@charset "utf-8";
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+nav,
+section {
+    display: block;
+}
+audio,
+canvas,
+video {
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+audio:not([controls]) {
+    display: none;
+}
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+a:focus {
+    outline: thin dotted #333;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
+}
+a:hover,
+a:active {
+    outline: 0;
+
+}
+figure {
+    padding: 0;
+    margin: 0;
+}
+sub,
+sup {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+}
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
+}
+img {
+    vertical-align: middle;
+    border: 0;
+    -ms-interpolation-mode: bicubic;
+}
+#map_canvas img,
+.google-maps img {
+    max-width: none;
+}
+button,
+input,
+select,
+textarea {
+    margin: 0;
+    font-size: 100%;
+    vertical-align: middle;
+}
+button,
+input {
+    *overflow: visible;
+    line-height: normal;
+}
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+    /* 在火狐下的input或者button默认显示并没有达到绝对的垂直居中，文字整体居中偏下的位置，而且当点击按钮之后，按钮上会出现一圈虚线 */
+    padding: 0;
+    border: 0;
+}
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+input[type="search"] {
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    -webkit-appearance: textfield;
+}
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+input::-ms-clear,
+input[type=text]::-ms-clear{
+    display:none;
+}
+
+textarea {
+    overflow: auto;
+    vertical-align: top;
+}
+i{
+    font-style: normal;
+}
+ol,
+ul,
+dl {
+    list-style: none;
+}
+body,
+p,
+ol,
+ul,
+dl {
+    padding: 0;
+    margin: 0;
+}
+/*.yk_kubox{width:242px;}*/
+.iku_container{
+    position: absolute;
+    top: 0;
+    height: 30px;
+    background-color: #fff;
+    border: 1px solid #E5E5E5;
+}
+.iku_input{
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+    color: #adadad;
+    width: 177px;
+    background-color: transparent;
+    border: none;
+    padding: 2px 0 0 5px;
+    *padding:0 0 0 5px;
+    _padding:0 0 0 5px;
+    border-right: 60px solid transparent;
+    position: relative;
+    z-index: 1;
+    *overflow: visible;
+}
+.yk_kubox_init_width{
+    width: 177px;
+}
+.iku_container a.s_search{
+    position: absolute;
+    width: 30px;
+    height: 28px;
+    right: 5px;
+    top: 0;
+}
+.iku_container a.s_search i {
+    background: url("http://r2.ykimg.com/0510000055E02B4567BC3D1F92090AF7") no-repeat 0 0;
+
+    width: 16px;
+    height: 18px;
+    display: block;
+    margin: 5px 0 0 9px;
+    cursor: pointer;
+}
+/*屏幕大于1280px*/
+.yk-w1280{
+    width: 280px;
+}
+.yk-w1280 input{
+    width: 250px;
+    *width:235px;
+}
+
+.iku_container .iku_btn_wrap{
+    position: absolute;
+    /*width: 60px;*/
+    height: 28px;
+    background-color: #fff;
+    top: 1px;
+    right: 1px;
+    z-index: 2;
+
+}
+.iku_container a.s_delete{
+    position: absolute;
+    width: 24px;
+    height: 28px;
+    right: 35px;
+    top:0;
+    display:none;
+}
+.iku_container a.s_delete i{
+    background: url("http://r2.ykimg.com/0510000055E02B4567BC3D48960960AB") no-repeat 0 0;
+    width: 16px;
+    height: 18px;
+    display: block;
+    margin: 7px 0 0 10px;
+//margin-top: 8px; /*mac下与win下位置显示有偏差*/
+
+    /* cursor: pointer;*/
+
+
+}
+.iku_container .sk_placehold{
+    position: absolute;
+    top: 1px;
+    left:0;
+    right: 60px;
+    line-height: 28px;
+    /*line-height:32px;*/
+    font-size: 12px;
+    color: #adadad;
+    cursor: text;
+    padding-left:15px;
+    z-index:0;
+}
+.blue{border-color:#63D8FF !important;}
+.blue .iku_input{color: #63D8FF}
+html,body{
+overflow: hidden;
+*overflow: visible;
+}
+#iku_container .yk_kubox .about_list li.word_box {
+    padding: 0;
+    height: auto;
+    display: block;
+    max-height: 10000px;
+    border: none;
+}
+#iku_container .yk_kubox .about_list li.word_box:hover {
+    background: none;
+    border: none;
+    border: none;
+}
+#iku_container .yk_kubox .word_wrap {
+    height: auto;
+    padding: 0;
+}
+#iku_container .yk_kubox .about_list li.tip{
+    height: 18px;
+    padding: 10px 5px;
+    border: none;
+}
+#iku_container .yk_kubox .about_list li.tip:hover {
+    background: none;
+
+}
+#iku_container .yk_kubox .about_list li a.func{
+    padding: 0;
+    line-height: 22px;
+}
+#iku_container .yk_kubox .about_list li a.func .btn_del{
+    vertical-align: middle;
+    margin-top: -2px;
+}
+#iku_container .yk_kubox .word_wrap .word{
+    margin: 0;
+    display: block;
+    float: none;
+    border: none;
+    border-bottom:1px solid #F2F2F2;
+    height: 35px;
+}
+
+#iku_container .yk_kubox .word_wrap .word.current {
+    background-color: #BDF0FD;
+}
+
+#iku_container .yk_kubox .word_wrap .word.current a{
+    margin: 0;
+    display: block;
+    float: none;
+    border: none;
+    border-bottom:1px solid #F2F2F2;
+    height: 35px;
+    color:#222222;
+}
+
+#iku_container .yk_kubox .word_wrap .word a {
+    display: block;
+    padding:5px 10px;
+    line-height: 24px;
+    height: auto;
+    overflow: hidden;
+    white-space: nowrap;
+    word-break: normal;
+    text-overflow: ellipsis;
+    background: none;
+    border: none;
+}
+#iku_container .yk_kubox .about_list li
+{
+    height: 35px;
+    border-bottom: 1px solid #F2F2F2;
+}
+#iku_container .yk_kubox .about_list li a
+{
+    padding-left: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+#iku_container .yk_kubox .about_list li.hit
+{
+    height: 76px;
+}
+#iku_container .yk_kubox .about_list li.hit .action a {
+    padding-left: 0;
+    padding-top: 5px;
+}
+#iku_container .yk_kubox .about_list li.hit a {
+    padding-top: 10px;
+    padding-right: 0;
+}
+
+#iku_container .yk_kubox .about_list li.close {
+    height: 34px;
+}
+#iku_container .yk_kubox .about_list li.close a {
+    font-size:14px;
+    text-align: right;
+    color: #444444;
+}
+
+#iku_container .yk_kubox .about_list li.close:hover {
+    background: #ffffff;
+}
+
+#iku_container .yk_kubox
+{
+    top: 31px;
+    border: 1px solid #63D8FF;
+}
+
+#iku_container .yk_kubox .about_list li.current {
+    background: #BDF0FD;
+}
+
+.yk_kubox .about_list li .name{
+    max-width:150px ;
+    overflow: hidden;
+    word-break: normal;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+}
+.iku_container_large .yk_kubox .about_list li .name {
+    max-width:188px ;
+}
+.a2{
+    padding-top: 10px;
+    //line-height: 10px;
+}
+</style>
+</head>
+<body>
+<script src="http://static.soku.com/v2.0.4/soku/giantstar/js/sk-box-open.js"></script>
+<div class="iku_container" id="iku_container">
+    <div class="sk_placehold" id="notify_words"></div>
+    <input class="iku_input" id='headq' name='mydq' type='text'  maxlength="200" />
+    <div class="iku_btn_wrap">
+        <a href="javascript:void(0)"  class="s_delete"><i id="delete"></i></a>
+        <a href="javascript:void(0)" class="s_search"><i id="search"></i></a>
+    </div>
+    <style type="text/css">
+        .yk_kubox{margin: -1px -1px 0}
+    </style>
+</div>
+<link rel="stylesheet" type="text/css" href="http://static.soku.com/v2.0.4/soku/giantstar/m/css/reset.css">
+<script>
+    function container_set_me_width( container_width )
+    {
+        if(parseInt(container_width) > 250){
+            $(".iku_container").addClass("iku_container_large");
+        }else{
+            $(".iku_container").removeClass("iku_container_large");
+        }
+        var width=parseInt(container_width)-65;
+        document.getElementById( "headq" ).style.width = width+"px";
+        //document.getElementByClassName( "yk_kubox" ).style.width = container_width;
+
+    }
+
+    var clean = null;
+    function clear_search_histroy()
+    {
+        clean();
+    }
+    
+    function search_key(str_key)
+    {
+    	if( str_key != "" && str_key != null
+         && str_key != "undefine" && document.getElementById('headq').value != str_key )
+    	{
+    		$(".sk_placehold").hide();
+    		$('.s_delete').show();
+    		document.getElementById('headq').value = str_key;
+    	}
+    }
+
+    function XBox_hide() {
+        //alart('XBox_hide');
+        XBox.hide();
+        if(document.getElementById('headq').value == "" || document.getElementById('headq').value == null
+         || document.getElementById('headq').value == "undefine" )
+         $(".sk_placehold").show();
+    }
+
+    function call_qt(main_type, sub_type, info, showed) {
+        var info_show = 'main_type:' + main_type + ', sub_type:' + sub_type + ', info:' + info;
+        //alert(info);
+       window.external.js_call_qt(main_type, sub_type, info);
+    }
+
+    //播放
+    function play(url) {
+        //iku://|play|soku|videourl|sk_1|http://v.youku.com/v_show/id_XMTI2OTg4OTgwMA==.html?from=s1.8-1-1.1|
+        var info = "iku://|play|soku|videourl|sk_box_2|" + url + "|";
+        call_qt("url", "2", info);
+    }
+
+    //节目详情
+    function detail(show_id) {
+        //iku://|showinfo|soku|showid|sk_3|25ee9e5264c411e4b432|
+        var info = "iku://|showinfo|soku|showid|sk_box_1|" + show_id + "|";
+        call_qt("url", "1", info);
+    }
+
+    //搜索结果
+    function search_rst(word) {
+        call_qt("url", "3", word);
+    }
+
+    //第三方跳转
+    function third_url(third_url) {
+        call_qt("url", "4", third_url);
+    }
+
+    function open_url(data)
+    {
+        var type = data.type;
+        var url = data.url;
+        var word = data.word;
+        var showid = data.showid;
+
+        var info = 'type:' + type + 'url:' + url + 'word:' + word + 'showid:' + showid;
+        //alert(info);
+        $(".sk_placehold").hide();
+        document.getElementById('headq').value=word;
+        $('#headq').trigger('input');
+        XBox.hide();
+        if (type == "1") {
+            detail(showid);
+        } else if (type == "2") {
+            play(url);
+        } else if (type == "3") {
+            search_rst(word);
+        } else if (type == "4") {
+            third_url(url);
+        }
+
+    }
+
+    function get_combox_height(combox_height)
+    {
+        if(isIE()<9){
+            $(".action a p").addClass("a2");
+            $(".btn_play").remove();
+			$(".btn_del").remove();
+        }
+        return parseInt(combox_height) + 32;
+    }
+
+    XBox.init({ "site": 63,
+    "placeholderId":"notify_words",
+        "afterShow": function (word, combox_width, combox_height) { call_qt("size", combox_width, get_combox_height(combox_height) - 1, true); },
+        "openUrl":function(data){open_url(data);},
+        "confirm":function(cleanMethod){clean = cleanMethod;call_qt("notify", "0", "0", false);},
+        "afterHide": function () { call_qt("size", "450", "32", false); }
+    });
+
+    (function($){
+        $(document).ready(function(){
+            $('#headq').addClass('yk_kubox_init_width');
+
+            $('#search').mousedown(function(e){
+                e.stopPropagation();
+                var word = $('#headq').val();
+                search_rst(word);
+            }).click(function(e){
+                e.stopPropagation();
+            });
+
+            $('#delete').mousedown(function(e){
+                e.stopPropagation();
+                $('.iku_container').addClass("blue");
+                $('#headq').unbind('blur');
+            }).click(function(e){
+                XBox_hide('11');
+                $(this).parents().find("#headq").val('');
+                $(".sk_placehold").show();
+                $('#headq').trigger("input").bind('blur',function(){
+                    $('.iku_container').trigger("focus");
+                    $('.iku_container ').removeClass("blue");
+                });
+                $('#headq').trigger("focus");
+            });
+            $('.iku_container').click(function (e) {
+                $(this).find('#headq').trigger('click').trigger("focus");
+            }).mousedown(function(){
+                if(! $(this).hasClass('blue')){
+                    $(this).addClass("blue");
+                }
+            });
+            $('.iku_btn_wrap').click(function(e){
+                e.stopPropagation();
+                $('#headq').trigger('click');
+            });
+            //绑定搜索框点击事件
+
+            $('#headq').bind({
+                "click":function(e){
+                             e.stopPropagation();
+                             $(this).trigger('focus');
+                             if(! $('.iku_container').hasClass('blue')){
+                                 $('.iku_container').addClass("blue");
+                             }
+                        },
+                "blur":function(){
+                              $('.iku_container').trigger("focus");
+                              $('.iku_container ').removeClass("blue");
+                        },
+                "input propertychange":function(){
+                                if($(this).val().length==0){
+                                    $('.s_delete').hide();
+                                    $(".sk_placehold").show();
+                                }else{
+                                    $('.s_delete').show();
+                                    $(".sk_placehold").hide();
+                                }
+                          },
+                "keydown":function(){
+                    var key=window.event.keyCode;
+                    if(key==38||key==40){
+						var timer=setTimeout(function(){
+							clearTimeout(timer);
+							if($('#headq').val().length!=0){
+							 $('.s_delete').show();
+							 $(".sk_placehold").hide();
+							 }
+						},40);
+                       
+                    }
+                }
+            });
+
+
+            //adjustIkuSearch();
+            //判断分辨率
+            /*
+             $(window).resize(function(){
+             adjustIkuSearch();
+             });
+             function adjustIkuSearch(){
+             var width=document.documentElement?document.documentElement.clientWidth : document.body.clientWidth;//this.body.outerWidth()
+
+             if(width>=1280){
+             $('.iku_input').addClass('yk-w1280');
+             $('.yk_kubox').addClass('yk-w1280');
+
+             }else{
+             if($('.iku_input').hasClass('yk-w1280')){
+             $('.iku_input').removeClass('yk-w1280');
+             }
+
+             if($('.yk_kubox').hasClass('yk-w1280')){
+             $('.yk_kubox').removeClass('yk-w1280');
+             }
+             }
+             }
+             */
+
+        })
+    })(jQuery)
+</script>
+</body>
+</html>

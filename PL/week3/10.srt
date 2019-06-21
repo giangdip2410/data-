@@ -1,0 +1,693 @@
+WEBVTT
+
+1
+00:00:04.370 --> 00:00:07.530
+In this segment I want to go back to talking about
+
+2
+00:00:07.530 --> 00:00:10.980
+the lists and options that we learned earlier and tell you the truth
+
+3
+00:00:10.980 --> 00:00:14.100
+about them which is that they're actually data type bindings and
+
+4
+00:00:14.100 --> 00:00:18.440
+a better way to use lists and options is with case expressions.
+
+5
+00:00:18.440 --> 00:00:20.430
+So, to explain that let me first show
+
+6
+00:00:20.430 --> 00:00:23.030
+something that's not the built in lists and options.
+
+7
+00:00:23.030 --> 00:00:26.490
+Let's see that we already know how to use datatype bindings to define
+
+8
+00:00:26.490 --> 00:00:31.050
+our own recursive structures like the arithmetic expressions we've been dealing with.
+
+9
+00:00:31.050 --> 00:00:33.510
+Now we can realize that that's all length list
+
+10
+00:00:33.510 --> 00:00:37.035
+is itself a recursive little data structure.
+
+11
+00:00:37.035 --> 00:00:39.615
+So like you see here on the slide if I wanted to create
+
+12
+00:00:39.615 --> 00:00:44.415
+my own list of integers that had any number of integers in it that I wanted,
+
+13
+00:00:44.415 --> 00:00:47.400
+I could define a data type my_int_list that
+
+14
+00:00:47.400 --> 00:00:50.640
+was either empty for the list that has no items in it,
+
+15
+00:00:50.640 --> 00:00:53.190
+or maybe built out of the Cons constructor,
+
+16
+00:00:53.190 --> 00:00:56.425
+where I would have an int and then another int list.
+
+17
+00:00:56.425 --> 00:00:58.034
+So then I could do a couple of things.
+
+18
+00:00:58.034 --> 00:01:03.310
+I could create a variable of type my_int_list like I do here.
+
+19
+00:01:03.310 --> 00:01:07.365
+This is the list holding four and then 23 and then 2008,
+
+20
+00:01:07.365 --> 00:01:10.465
+which happens to be my nephew's birthday.
+
+21
+00:01:10.465 --> 00:01:15.110
+And you see that this is just using constructors the way we understand them.
+
+22
+00:01:15.110 --> 00:01:19.470
+The Cons constructor here has to take two arguments: an int and my_int_list.
+
+23
+00:01:19.470 --> 00:01:21.630
+So 2008 and empty.
+
+24
+00:01:21.630 --> 00:01:23.520
+That fits- that should type check.
+
+25
+00:01:23.520 --> 00:01:26.550
+So this here Cons 2008 empty is in
+
+26
+00:01:26.550 --> 00:01:28.890
+my_int_list so that my_int_list can
+
+27
+00:01:28.890 --> 00:01:31.920
+be the second argument to this Cons constructor the 23,
+
+28
+00:01:31.920 --> 00:01:33.540
+and then that can be the second argument to
+
+29
+00:01:33.540 --> 00:01:36.029
+this Cons constructor with the first argument of four.
+
+30
+00:01:36.029 --> 00:01:39.120
+So this overall variable x holds of my_int_list.
+
+31
+00:01:39.120 --> 00:01:43.890
+So it's an example of using this list type that we defined ourselves,
+
+32
+00:01:43.890 --> 00:01:46.319
+and then we could write in a pen function,
+
+33
+00:01:46.319 --> 00:01:47.950
+for example, over these things.
+
+34
+00:01:47.950 --> 00:01:49.710
+So we would just use case expressions.
+
+35
+00:01:49.710 --> 00:01:53.564
+We'll use our append algorithm that we understood for the built in lists,
+
+36
+00:01:53.564 --> 00:01:56.330
+but we'll use it for this data type binding instead.
+
+37
+00:01:56.330 --> 00:02:01.890
+So if x's was made by the empty constructor then just return y's.
+
+38
+00:02:01.890 --> 00:02:06.810
+Otherwise, we can pattern match x's as x and x's prime.
+
+39
+00:02:06.810 --> 00:02:09.300
+You can't do this in many programming languages but it's a nice sort of
+
+40
+00:02:09.300 --> 00:02:12.770
+mathematical name for a variable here x's prime.
+
+41
+00:02:12.770 --> 00:02:15.660
+And then what we will do is we will create
+
+42
+00:02:15.660 --> 00:02:20.744
+the my_int_list that you get from calling the Cons constructor with x,
+
+43
+00:02:20.744 --> 00:02:22.485
+that's the first element here.
+
+44
+00:02:22.485 --> 00:02:27.730
+And the result of the recursive call of append_my_list with x's prime and y's.
+
+45
+00:02:27.730 --> 00:02:30.095
+So that's simple. There's nothing to it.
+
+46
+00:02:30.095 --> 00:02:34.425
+So we don't need the lists and the options that are provided by ML.
+
+47
+00:02:34.425 --> 00:02:35.785
+But they are there, they're convenient,
+
+48
+00:02:35.785 --> 00:02:37.770
+you should use them when they're available.
+
+49
+00:02:37.770 --> 00:02:40.945
+So this is bad style you should use ML's built in lists.
+
+50
+00:02:40.945 --> 00:02:42.960
+I just wanted to show it to you so
+
+51
+00:02:42.960 --> 00:02:45.120
+that the pattern matching I'm about to show you for the
+
+52
+00:02:45.120 --> 00:02:50.540
+built in type definitions seems as mysterious as it should.
+
+53
+00:02:50.540 --> 00:02:52.950
+Okay. So let's do option's first.
+
+54
+00:02:52.950 --> 00:02:55.725
+Just because they're a little easier to read and understand.
+
+55
+00:02:55.725 --> 00:03:02.340
+It turns out I'd previously told you that you made an option either with none or some and
+
+56
+00:03:02.340 --> 00:03:05.160
+then you tested whether you had to none or a some with
+
+57
+00:03:05.160 --> 00:03:09.690
+isSome and you've got the value out of a sum with valOf.
+
+58
+00:03:09.690 --> 00:03:12.330
+Well, now what I'm going to do is I'm going to stop using isSome
+
+59
+00:03:12.330 --> 00:03:15.090
+and valOf as soon as I tell you a tiny little truth
+
+60
+00:03:15.090 --> 00:03:17.580
+which is that option types are made from
+
+61
+00:03:17.580 --> 00:03:21.160
+a data type binding and none and some are just constructors.
+
+62
+00:03:21.160 --> 00:03:23.700
+So yes, you can make things with non and some,
+
+63
+00:03:23.700 --> 00:03:26.245
+but you can also use them in patterns
+
+64
+00:03:26.245 --> 00:03:29.700
+and so you can use them in pattern matching in case expressions.
+
+65
+00:03:29.700 --> 00:03:31.590
+So here's a little function that takes in
+
+66
+00:03:31.590 --> 00:03:35.290
+an int option and if it's given none, it returns zero.
+
+67
+00:03:35.290 --> 00:03:36.435
+If it's given some of i,
+
+68
+00:03:36.435 --> 00:03:37.755
+it returns i plus one.
+
+69
+00:03:37.755 --> 00:03:41.680
+And it uses pattern matching exactly like we've been studying.
+
+70
+00:03:41.680 --> 00:03:45.260
+All you have to know is that N-O-N-E all capital and S-O-M-E
+
+71
+00:03:45.260 --> 00:03:52.015
+all capital are constructors for a data type binding- so they can appear in pattern.
+
+72
+00:03:52.015 --> 00:03:53.849
+NONE carries no data,
+
+73
+00:03:53.849 --> 00:03:55.585
+so you don't have any variables here.
+
+74
+00:03:55.585 --> 00:03:58.080
+SOME carries one thing,
+
+75
+00:03:58.080 --> 00:04:04.164
+so we'll have one variable here which will then be bound to whatever is under the SOME.
+
+76
+00:04:04.164 --> 00:04:07.584
+So why is this better style than using isSome and valOf?
+
+77
+00:04:07.584 --> 00:04:10.440
+For all the reasons that we like case expressions,
+
+78
+00:04:10.440 --> 00:04:13.050
+you can't forget one case or the other,
+
+79
+00:04:13.050 --> 00:04:14.660
+it's pleasant to read,
+
+80
+00:04:14.660 --> 00:04:17.760
+you never make the mistake of applying a valOf two and none,
+
+81
+00:04:17.760 --> 00:04:20.300
+which leads to a runtime error, and so on.
+
+82
+00:04:20.300 --> 00:04:21.535
+So for homework two,
+
+83
+00:04:21.535 --> 00:04:23.670
+and in general when programming in ML,
+
+84
+00:04:23.670 --> 00:04:27.985
+you usually prefer this style to isSome and valOf.
+
+85
+00:04:27.985 --> 00:04:30.805
+We just use those so that we could learn one thing at a time.
+
+86
+00:04:30.805 --> 00:04:33.960
+They work fine, there are enough for options,
+
+87
+00:04:33.960 --> 00:04:38.030
+but I like case expressions more. So that's options.
+
+88
+00:04:38.030 --> 00:04:40.940
+Now let's do the lists that are built into ML.
+
+89
+00:04:40.940 --> 00:04:45.120
+So it turns out that they are just constructors as well.
+
+90
+00:04:45.120 --> 00:04:48.799
+So the same way we're not going to use isSome or valOf anymore,
+
+91
+00:04:48.799 --> 00:04:52.140
+we're not going use hd tl or null either,
+
+92
+00:04:52.140 --> 00:04:57.810
+Instead we're going to use case expressions and our patterns are
+
+93
+00:04:57.810 --> 00:05:03.840
+going to use bracket bracket for the empty list and colon colon for non empty list.
+
+94
+00:05:03.840 --> 00:05:08.470
+Now, these look strange because they don't look like the other constructors.
+
+95
+00:05:08.470 --> 00:05:13.120
+And I actually kind of wish ML had not made this decision of having them look different.
+
+96
+00:05:13.120 --> 00:05:14.660
+It's kind of a historical thing.
+
+97
+00:05:14.660 --> 00:05:16.770
+People find it more pleasant to read.
+
+98
+00:05:16.770 --> 00:05:18.800
+It just makes the patterns look a little bit
+
+99
+00:05:18.800 --> 00:05:22.165
+different even though the exact same thing is going on.
+
+100
+00:05:22.165 --> 00:05:26.570
+So let me show you two examples here: function for summing all the elements in
+
+101
+00:05:26.570 --> 00:05:31.225
+a list and a function for appending two lists together. All right.
+
+102
+00:05:31.225 --> 00:05:36.185
+So this first one I have this list x's and I have this case expression,
+
+103
+00:05:36.185 --> 00:05:40.235
+and my pattern for the empty list just looks like bracket bracket.
+
+104
+00:05:40.235 --> 00:05:42.669
+So just like none, N-O-N-E was a pattern,
+
+105
+00:05:42.669 --> 00:05:46.065
+bracket bracket is a pattern and it matches the empty list.
+
+106
+00:05:46.065 --> 00:05:49.120
+And the sum of all the numbers in an empty list is just zero.
+
+107
+00:05:49.120 --> 00:05:52.130
+That is the proper base case for a recursive function.
+
+108
+00:05:52.130 --> 00:05:54.455
+When you write a pattern for colon colon,
+
+109
+00:05:54.455 --> 00:05:59.510
+you might expect- Here let me just flip over to over here- you might
+
+110
+00:05:59.510 --> 00:06:01.345
+expect that the pattern would look something like
+
+111
+00:06:01.345 --> 00:06:04.645
+colon colon x comma y for the two variables,
+
+112
+00:06:04.645 --> 00:06:06.545
+the head of the list and the tail of the list.
+
+113
+00:06:06.545 --> 00:06:08.779
+It doesn't look like that.
+
+114
+00:06:08.779 --> 00:06:11.495
+Instead, we put the colon colon in the middle.
+
+115
+00:06:11.495 --> 00:06:12.890
+So this is just the pattern.
+
+116
+00:06:12.890 --> 00:06:14.630
+Just like with any other constructor,
+
+117
+00:06:14.630 --> 00:06:18.875
+but we put the first variable on the left and the second variable on the right.
+
+118
+00:06:18.875 --> 00:06:22.410
+And then we can use those variables as always on the right hand side of the pattern.
+
+119
+00:06:22.410 --> 00:06:25.640
+We write x plus some list of x's prime.
+
+120
+00:06:25.640 --> 00:06:28.580
+And this I find to be a very elegant short function that
+
+121
+00:06:28.580 --> 00:06:32.535
+directly captures the idea of how you sum the elements of a list.
+
+122
+00:06:32.535 --> 00:06:35.625
+You see if the list is empty, then returns zero,
+
+123
+00:06:35.625 --> 00:06:38.540
+otherwise let the first element be X and add that
+
+124
+00:06:38.540 --> 00:06:42.190
+to the sum of the rest of the list which is in the variable x's prime.
+
+125
+00:06:42.190 --> 00:06:43.879
+So I was like showing append.
+
+126
+00:06:43.879 --> 00:06:47.210
+Here's the proper way to write append using case expressions.
+
+127
+00:06:47.210 --> 00:06:48.825
+It's the same algorithm we've been using.
+
+128
+00:06:48.825 --> 00:06:52.670
+I already showed this to for the list type that we defined ourselves.
+
+129
+00:06:52.670 --> 00:06:56.870
+Now here it is for the built in lists and this is very pleasant to read as well.
+
+130
+00:06:56.870 --> 00:06:58.159
+Pattern match on x's,
+
+131
+00:06:58.159 --> 00:07:00.270
+if it's empty, the result is y's.
+
+132
+00:07:00.270 --> 00:07:03.020
+Otherwise it's the first element of x's comes on to
+
+133
+00:07:03.020 --> 00:07:06.815
+the result of appending the rest of x's on to y's.
+
+134
+00:07:06.815 --> 00:07:10.330
+Alight. So why do this?
+
+135
+00:07:10.330 --> 00:07:13.085
+As I mentioned for options and it's the same for lists,
+
+136
+00:07:13.085 --> 00:07:14.990
+you won't forget any cases,
+
+137
+00:07:14.990 --> 00:07:17.330
+you'll never make the mistake of applying tail
+
+138
+00:07:17.330 --> 00:07:20.110
+to the empty list that tl function and so on.
+
+139
+00:07:20.110 --> 00:07:23.535
+Since I really want you to learn this the same way that on
+
+140
+00:07:23.535 --> 00:07:28.625
+the first assignment I required you to use isSome vaOf NULL hd and tl.
+
+141
+00:07:28.625 --> 00:07:31.785
+On the second homework I forbid you from doing so.
+
+142
+00:07:31.785 --> 00:07:38.195
+Any time you want to access the thing under a some or any part of a list;
+
+143
+00:07:38.195 --> 00:07:43.704
+anytime you want to see if a list is empty or see if option is non ifSome,
+
+144
+00:07:43.704 --> 00:07:45.285
+you have to use case expressions.
+
+145
+00:07:45.285 --> 00:07:48.695
+You have to use pattern matching because I want you to get used to them.
+
+146
+00:07:48.695 --> 00:07:50.060
+Now there is a fair question here.
+
+147
+00:07:50.060 --> 00:07:51.874
+If they're is so much better,
+
+148
+00:07:51.874 --> 00:07:55.804
+why are null and tl and valOf and isSome predefined for us?
+
+149
+00:07:55.804 --> 00:07:57.254
+I mean, after all then,
+
+150
+00:07:57.254 --> 00:07:59.115
+if case expressions are so good,
+
+151
+00:07:59.115 --> 00:08:01.850
+why would the makers of ML and
+
+152
+00:08:01.850 --> 00:08:05.144
+providing the library even provide these little helper functions?
+
+153
+00:08:05.144 --> 00:08:08.120
+Well, few reasons. First of all,
+
+154
+00:08:08.120 --> 00:08:12.950
+they are useful sometimes as passing as arguments to other functions,
+
+155
+00:08:12.950 --> 00:08:15.560
+and we will see that once we start talking about
+
+156
+00:08:15.560 --> 00:08:19.430
+first class and higher order functions in the next section of the course.
+
+157
+00:08:19.430 --> 00:08:22.460
+The second reason is- I will be honest with you- they are sometimes more
+
+158
+00:08:22.460 --> 00:08:26.080
+convenient than putting a little case expression right where you need it,
+
+159
+00:08:26.080 --> 00:08:29.909
+but for the sort of examples I've shown you here like some lists and append lists,
+
+160
+00:08:29.909 --> 00:08:31.740
+that really is not the case.
+
+161
+00:08:31.740 --> 00:08:33.075
+And the third reason is,
+
+162
+00:08:33.075 --> 00:08:35.090
+they're easy to define. They're not a big deal.
+
+163
+00:08:35.090 --> 00:08:37.445
+You could define them yourself,
+
+164
+00:08:37.445 --> 00:08:42.530
+so the creators of ML thought this way by providing them to everyone will all kind of use
+
+165
+00:08:42.530 --> 00:08:45.015
+consistent names for these little helper functions
+
+166
+00:08:45.015 --> 00:08:48.245
+in the situations where people want to use them.
+
+167
+00:08:48.245 --> 00:08:52.885
+So what we now see is that our language ML is actually getting smaller here.
+
+168
+00:08:52.885 --> 00:08:56.530
+We didn't actually have to add options and list to the language.
+
+169
+00:08:56.530 --> 00:08:58.330
+We have datatype bindings.
+
+170
+00:08:58.330 --> 00:09:01.970
+They're just convenient useful ones that were predefined for us.
+
+171
+00:09:01.970 --> 00:09:04.730
+And we'll see that we couldn't quite define
+
+172
+00:09:04.730 --> 00:09:07.714
+lists and options the way I've shown them here ourselves,
+
+173
+00:09:07.714 --> 00:09:10.810
+and I'll explain why that is in the next segment.

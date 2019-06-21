@@ -1,0 +1,309 @@
+WEBVTT
+
+1
+00:00:04.670 --> 00:00:08.700
+One of the things I've been emphasizing is that when you learn a new language
+
+2
+00:00:08.700 --> 00:00:11.858
+construct you should understand precisely it's syntax,
+
+3
+00:00:11.858 --> 00:00:14.162
+it's type checking rules and it's evaluation rules.
+
+4
+00:00:14.162 --> 00:00:17.910
+And since datatype bindings and CASE expressions are
+
+5
+00:00:17.910 --> 00:00:22.500
+the most sophisticated language constructs we've learned in ML so far,
+
+6
+00:00:22.500 --> 00:00:26.610
+I thought it would be worth a short segment to just review what we've already
+
+7
+00:00:26.610 --> 00:00:31.025
+seen and know from a precise standpoint for each of those constructs.
+
+8
+00:00:31.025 --> 00:00:33.420
+Now what we'll do a little later in this section,
+
+9
+00:00:33.420 --> 00:00:34.695
+not in this segment,
+
+10
+00:00:34.695 --> 00:00:39.935
+is expand the notion of pattern matching to make it more general and more powerful.
+
+11
+00:00:39.935 --> 00:00:43.740
+But nothing I'm about to review with you will become untrue.
+
+12
+00:00:43.740 --> 00:00:47.630
+We'll just get some additional things that will also be true.
+
+13
+00:00:47.630 --> 00:00:50.550
+So let's start with datatype bindings.
+
+14
+00:00:50.550 --> 00:00:51.750
+We know the syntax.
+
+15
+00:00:51.750 --> 00:00:54.344
+We have an example here of datatype t
+
+16
+00:00:54.344 --> 00:00:57.835
+equals a bunch of constructors that types those things carry,
+
+17
+00:00:57.835 --> 00:00:59.815
+and they're separated by pipes.
+
+18
+00:00:59.815 --> 00:01:04.410
+This introduces a new type t that was not in our program before.
+
+19
+00:01:04.410 --> 00:01:08.030
+It also adds constructors and these constructors and parts
+
+20
+00:01:08.030 --> 00:01:13.194
+service functions where Ci has type t1_arrow_t,
+
+21
+00:01:13.194 --> 00:01:16.199
+and C2 has type t2_arrow_t.
+
+22
+00:01:16.199 --> 00:01:19.590
+And then in terms of using these constructors
+
+23
+00:01:19.590 --> 00:01:23.385
+when you have a constructor applied to a value,
+
+24
+00:01:23.385 --> 00:01:25.365
+that is itself a value.
+
+25
+00:01:25.365 --> 00:01:29.880
+In other words, values of type t both have the tag that corresponds to
+
+26
+00:01:29.880 --> 00:01:35.170
+the constructor as well as the value that's sort of underneath that tag.
+
+27
+00:01:35.170 --> 00:01:39.225
+Now that doesn't cover the case where you have a constructor that doesn't carry any data.
+
+28
+00:01:39.225 --> 00:01:42.310
+In that case, you just leave off the of and the type.
+
+29
+00:01:42.310 --> 00:01:44.845
+And in that case the constructor is not a function.
+
+30
+00:01:44.845 --> 00:01:50.730
+It's just already a value that has type t. So now we know how to make
+
+31
+00:01:50.730 --> 00:01:57.150
+expressions of type t. To access them to use their pieces we use case expressions.
+
+32
+00:01:57.150 --> 00:02:00.510
+And as I've emphasized this case expressions both test which
+
+33
+00:02:00.510 --> 00:02:05.055
+variant some value of the datatype of type t you have,
+
+34
+00:02:05.055 --> 00:02:09.210
+as well as give you a way to extract out the underlying data.
+
+35
+00:02:09.210 --> 00:02:11.455
+So let's go over a case expression again.
+
+36
+00:02:11.455 --> 00:02:14.190
+The syntax is here at the top of the slide.
+
+37
+00:02:14.190 --> 00:02:19.560
+We see that we put any expression we want between the case and the of alright and then we
+
+38
+00:02:19.560 --> 00:02:22.170
+have a bunch of branches each one which has
+
+39
+00:02:22.170 --> 00:02:25.500
+a pattern and then an arrow and then another expression.
+
+40
+00:02:25.500 --> 00:02:29.165
+Now this entire case expression is itself just an expression.
+
+41
+00:02:29.165 --> 00:02:31.840
+So we can use it anywhere we can use an expression.
+
+42
+00:02:31.840 --> 00:02:36.835
+I admit that it's common for a case expression to be the entire body of a function.
+
+43
+00:02:36.835 --> 00:02:40.020
+And I think it has been in the examples I've shown you so far.
+
+44
+00:02:40.020 --> 00:02:41.410
+But that's not necessary.
+
+45
+00:02:41.410 --> 00:02:43.440
+A case expression can appear anywhere,
+
+46
+00:02:43.440 --> 00:02:46.725
+and here is it's evaluation rules: You evaluate e
+
+47
+00:02:46.725 --> 00:02:50.090
+to a value and that thing between the case and the of that's going to give
+
+48
+00:02:50.090 --> 00:02:54.600
+you some value v. Now what we're going to do is we're going to pattern
+
+49
+00:02:54.600 --> 00:02:59.925
+match v against each of the patterns in order until we find one that matches.
+
+50
+00:02:59.925 --> 00:03:03.245
+So we'll check p1, if that matches we'll evaluate e one.
+
+51
+00:03:03.245 --> 00:03:04.980
+And that will be the answer to the whole thing.
+
+52
+00:03:04.980 --> 00:03:07.500
+Otherwise we try p2 and so on.
+
+53
+00:03:07.500 --> 00:03:10.520
+So we're only going to evaluate one of e1 through
+
+54
+00:03:10.520 --> 00:03:15.655
+en and which one will depend on the pattern that we find that matches.
+
+55
+00:03:15.655 --> 00:03:20.220
+So what that means is we have to define what it means for a pattern to match.
+
+56
+00:03:20.220 --> 00:03:25.002
+And so far our patterns look like constructor name,
+
+57
+00:03:25.002 --> 00:03:29.730
+and then one variable for each part of the thing under the constructor.
+
+58
+00:03:29.730 --> 00:03:35.625
+So that would match a value that was made out of the same constructor.
+
+59
+00:03:35.625 --> 00:03:38.310
+And then what you do when you evaluate
+
+60
+00:03:38.310 --> 00:03:42.675
+the corresponding expression like if p2 matches you evaluate e2,
+
+61
+00:03:42.675 --> 00:03:46.140
+is you evaluate e2 in an environment that is
+
+62
+00:03:46.140 --> 00:03:51.330
+extended so that those variables map to the corresponding pieces: X1 to V1,
+
+63
+00:03:51.330 --> 00:03:54.365
+X2 to V2 and so on.
+
+64
+00:03:54.365 --> 00:03:57.120
+And that's how we get the underlying pieces out
+
+65
+00:03:57.120 --> 00:04:01.260
+using the notion of variables and extending our dynamic environment.
+
+66
+00:04:01.260 --> 00:04:05.365
+Once again, the case where the constructor carries no data is a little bit different.
+
+67
+00:04:05.365 --> 00:04:07.500
+You don't have the parentheses you don't have
+
+68
+00:04:07.500 --> 00:04:10.480
+the variables because there is no underlying data.
+
+69
+00:04:10.480 --> 00:04:13.530
+So in that case if it matches then there is nothing
+
+70
+00:04:13.530 --> 00:04:16.710
+new to add to your environment but you still go to
+
+71
+00:04:16.710 --> 00:04:19.664
+the corresponding branch execute evaluate
+
+72
+00:04:19.664 --> 00:04:23.695
+that expression and that's the result for the entire case expression.
+
+73
+00:04:23.695 --> 00:04:26.550
+So that's our precise definition so far.
+
+74
+00:04:26.550 --> 00:04:29.040
+We're going to learn a couple of other things that will help us that are
+
+75
+00:04:29.040 --> 00:04:33.660
+related to pattern matching and datatypes although they're a little bit different.
+
+76
+00:04:33.660 --> 00:04:34.965
+See another example.
+
+77
+00:04:34.965 --> 00:04:37.000
+And then make pattern-matching more powerful.
