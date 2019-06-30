@@ -1,0 +1,841 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:05.327
+[MUSIC] In this optional segment I'm 
+going to show you one more closure idiom, 
+
+2
+00:00:05.327 --> 00:00:10.719
+that's significantly more advanced, 
+combines a number of the fancier features 
+
+3
+00:00:10.719 --> 00:00:15.072
+we've seen, but no new language 
+constructs and we're going to do 
+
+4
+00:00:15.072 --> 00:00:19.145
+something pretty neat. 
+So, what we're going to do is implement 
+
+5
+00:00:19.145 --> 00:00:23.754
+an abstract data type that's going to 
+feel a lot like an object in an object 
+
+6
+00:00:23.754 --> 00:00:27.134
+oriented record. 
+What we're going to do is implement, 
+
+7
+00:00:27.134 --> 00:00:31.003
+actually, a set of integers, just to keep 
+the example simple. 
+
+8
+00:00:31.003 --> 00:00:34.502
+But what we're going to do is have a 
+record of functions. 
+
+9
+00:00:34.502 --> 00:00:37.562
+So, a set is going to be represented by 
+that record. 
+
+10
+00:00:37.562 --> 00:00:41.372
+The only thing in the fields of the 
+records are functions. 
+
+11
+00:00:41.372 --> 00:00:45.194
+So the only thing clients of our 
+abstraction are going to be able to do is 
+
+12
+00:00:45.194 --> 00:00:48.460
+caller functions. 
+But because those functions are closures, 
+
+13
+00:00:48.460 --> 00:00:50.748
+they're going to have access to private 
+data. 
+
+14
+00:00:50.748 --> 00:00:54.628
+And in fact, we're going to set this 
+whole thing up so that all the functions 
+
+15
+00:00:54.628 --> 00:00:57.339
+in the record have access to the same 
+private data. 
+
+16
+00:00:57.339 --> 00:01:00.970
+And that's how they're going to be able 
+to work together to implement an 
+
+17
+00:01:00.970 --> 00:01:05.947
+abstraction with multiple operations, 
+like inserting into a set and finding out 
+
+18
+00:01:05.947 --> 00:01:09.857
+if something is in a set. 
+Now, we could have made that private data 
+
+19
+00:01:09.857 --> 00:01:13.317
+mutable or immutable. 
+It actually would have been a little 
+
+20
+00:01:13.317 --> 00:01:16.872
+simpler if we had made it mutable. 
+But I want to encourage more 
+
+21
+00:01:16.872 --> 00:01:20.822
+function-able programming style. 
+So were not going to do it in a mutable 
+
+22
+00:01:20.822 --> 00:01:24.547
+way, we'll do it immutable. 
+And, in fact, so if you insert anything 
+
+23
+00:01:24.547 --> 00:01:28.512
+into a set of integers, that doesn't 
+change the set you did insert on, it 
+
+24
+00:01:28.512 --> 00:01:32.452
+returns a new set that has another 
+element in it, if that element was not 
+
+25
+00:01:32.452 --> 00:01:35.686
+already in the set. 
+So the goal here is to make it feel a bit 
+
+26
+00:01:35.686 --> 00:01:39.753
+like object oriented programming. 
+This will be the first time in the course 
+
+27
+00:01:39.753 --> 00:01:43.879
+that I give you a hint that OOP and 
+functional programming actually have deep 
+
+28
+00:01:43.879 --> 00:01:47.971
+similarities, but even if you're not 
+familiar with OOP, it's just a closure 
+
+29
+00:01:47.971 --> 00:01:50.665
+example. 
+I admit this is advanced and clever, but 
+
+30
+00:01:50.665 --> 00:01:54.002
+it's a good way to put together a lot of 
+stuff we've seen. 
+
+31
+00:01:54.002 --> 00:01:57.824
+Lexical scope, data types, record and 
+closures, and even those the 
+
+32
+00:01:57.824 --> 00:02:02.427
+implementation of the abstraction is bit 
+sophisticated, using it from the client 
+
+33
+00:02:02.427 --> 00:02:05.915
+side, once I show you how to do it, isn't 
+going to be so tough. 
+
+34
+00:02:05.915 --> 00:02:10.209
+So, we'll do the rest of the segment in 
+the code where I'll just show you what 
+
+35
+00:02:10.209 --> 00:02:12.505
+we've got. 
+So I'm going to start with a type 
+
+36
+00:02:12.505 --> 00:02:15.347
+definition. 
+Now, I'm going to put this back to how it 
+
+37
+00:02:15.347 --> 00:02:18.450
+is in just a second. 
+But this is the type I would like to 
+
+38
+00:02:18.450 --> 00:02:21.417
+implement. 
+I would like to say that a set, just to 
+
+39
+00:02:21.417 --> 00:02:24.447
+find a nice type synonym here, is this 
+record type. 
+
+40
+00:02:24.447 --> 00:02:27.337
+So remember records are just things with 
+fields. 
+
+41
+00:02:27.337 --> 00:02:30.457
+You write colon, and you write the type 
+of the field. 
+
+42
+00:02:30.457 --> 00:02:34.967
+And there's no reason why fields can't 
+hold functions, or things of function 
+
+43
+00:02:34.967 --> 00:02:38.008
+type. 
+So the insert field would hold a closure 
+
+44
+00:02:38.008 --> 00:02:42.800
+of type int arrow set it may enter to 
+give you back a new possibly different 
+
+45
+00:02:42.800 --> 00:02:47.135
+set that contains that int. 
+Member of type int arrow bool for is the 
+
+46
+00:02:47.135 --> 00:02:51.927
+int unit set and how about size which 
+takes no argument and tells you it how 
+
+47
+00:02:51.927 --> 00:02:56.453
+many element are in the set. 
+Now, unfortunately this won't quite work 
+
+48
+00:02:56.453 --> 00:02:59.558
+because in ML type synonyms can't be 
+recursive. 
+
+49
+00:02:59.558 --> 00:03:05.167
+So this use of set is not going to work. 
+So that's why I'm doing this ML-specific 
+
+50
+00:03:05.167 --> 00:03:07.842
+thing of let's make it a datatype 
+binding. 
+
+51
+00:03:07.842 --> 00:03:12.907
+Of course, datatypes need constructors 
+and of, so this is actually a reasonable 
+
+52
+00:03:12.907 --> 00:03:16.442
+use of a A data type binding that only 
+has one constructor. 
+
+53
+00:03:16.442 --> 00:03:20.807
+I'm only using data type for the purpose 
+of being able to mention set in the 
+
+54
+00:03:20.807 --> 00:03:24.097
+definition of set. 
+The same way we mentioned list in the 
+
+55
+00:03:24.097 --> 00:03:25.677
+definition of list. 
+Okay. 
+
+56
+00:03:25.677 --> 00:03:29.807
+So now I'm going to have this type, 
+this s constructor is going to be a bit 
+
+57
+00:03:29.807 --> 00:03:33.242
+of a pain. 
+But we'll be able to use pattern matching 
+
+58
+00:03:33.242 --> 00:03:36.162
+to get rid of it when we need to, and so 
+on. 
+
+59
+00:03:36.162 --> 00:03:40.367
+So, the next easiest thing to show you is 
+to keep this type in mind. 
+
+60
+00:03:40.367 --> 00:03:44.412
+In fact, why don't I make a copy of it so 
+we'll be able to see it. 
+
+61
+00:03:44.412 --> 00:03:48.737
+I need to put this in a comment, and 
+bring it down with me to show you a 
+
+62
+00:03:48.737 --> 00:03:49.897
+client. 
+Okay. 
+
+63
+00:03:49.897 --> 00:03:53.937
+So I'm going to copy this down here is an 
+example client. 
+
+64
+00:03:53.937 --> 00:03:58.817
+Just little function use sets of type I 
+think unit arrow int. 
+
+65
+00:03:58.817 --> 00:04:03.892
+So we don't know how this set is 
+implemented but we do know its type. 
+
+66
+00:04:03.892 --> 00:04:09.442
+We know it has, it's a record with 
+fields, insert member and size, each of 
+
+67
+00:04:09.442 --> 00:04:13.668
+which are functions. 
+So, lets just start with the empty set. 
+
+68
+00:04:13.668 --> 00:04:18.284
+Oh, I should have emphasized that, the 
+only public value that's going to be 
+
+69
+00:04:18.284 --> 00:04:20.871
+available to us, is empty set of type 
+set. 
+
+70
+00:04:20.871 --> 00:04:23.705
+And I'll show you how we implement that 
+later. 
+
+71
+00:04:23.705 --> 00:04:28.006
+and so we are going to have to build our 
+set starting from the empty set. 
+
+72
+00:04:28.006 --> 00:04:32.221
+So, I have this empty set value, and I'm 
+going to be able to say, let val 
+
+73
+00:04:32.221 --> 00:04:36.483
+essentially s1=empty_set. 
+I'm putting a constructor here to pattern 
+
+74
+00:04:36.483 --> 00:04:39.607
+match away the constructor Don't worry 
+about that. 
+
+75
+00:04:39.607 --> 00:04:44.015
+I don't want to focus on that, but you do 
+need this because otherwise this s1 would 
+
+76
+00:04:44.015 --> 00:04:47.322
+not be a record of functions. 
+It would be s and then we'd have to 
+
+77
+00:04:47.322 --> 00:04:50.532
+pattern match later. 
+So s1 is now this record of functions. 
+
+78
+00:04:50.532 --> 00:04:55.769
+So what I can do is take s1, read out the 
+insert field, that will get me back an 
+
+79
+00:04:55.769 --> 00:05:00.045
+int arrow set function. 
+So I could call it with 34 and I get back 
+
+80
+00:05:00.045 --> 00:05:03.157
+a set. 
+I can then strip of the s constrictor of 
+
+81
+00:05:03.157 --> 00:05:05.991
+that and have a new record of 3 
+functions. 
+
+82
+00:05:05.991 --> 00:05:11.376
+So I really like this because you might 
+be in other languages more used to 
+
+83
+00:05:11.376 --> 00:05:16.216
+writing something like insert 34 but you 
+know, your way my way, it's just 
+
+84
+00:05:16.216 --> 00:05:20.364
+rearranging the same ideas. 
+You can't really argue one is more 
+
+85
+00:05:20.364 --> 00:05:24.636
+complicated than the other. 
+So I could then take that s2, insert 
+
+86
+00:05:24.636 --> 00:05:26.912
+again. 
+the same number, 34. 
+
+87
+00:05:26.912 --> 00:05:31.086
+So, it would not actually add it, because 
+that's not how sets work. 
+
+88
+00:05:31.086 --> 00:05:34.963
+So, sets don't have duplicates, so that 
+would produce s3. 
+
+89
+00:05:34.963 --> 00:05:38.001
+And then s3, I could insert again and 
+have 19. 
+
+90
+00:05:38.001 --> 00:05:41.829
+And so, this would logically be the set 
+holding 19 and 34. 
+
+91
+00:05:41.829 --> 00:05:46.472
+but rec, represented in s4, is just a 
+record holding 3 functions. 
+
+92
+00:05:46.472 --> 00:05:49.979
+So then, down here, I could use the 
+member function. 
+
+93
+00:05:49.979 --> 00:05:54.372
+I could take s4 and I say, if 42 is a 
+member of that set, then 99. 
+
+94
+00:05:54.372 --> 00:05:58.151
+it's not else if member s4 19. 
+19 is a nautset. 
+
+95
+00:05:58.151 --> 00:06:03.774
+I could say 17 plus the size of s3, and I 
+believe therefore, this whole thing will 
+
+96
+00:06:03.774 --> 00:06:07.453
+valuate to 19. 
+It's a silly client, but it shows that 
+
+97
+00:06:07.453 --> 00:06:12.661
+once I'm given this abstraction, using 
+it, as a set, is pretty much like we 
+
+98
+00:06:12.661 --> 00:06:17.585
+would want to program with sets. 
+We just use the functions that are 
+
+99
+00:06:17.585 --> 00:06:19.337
+provided to us. 
+Okay. 
+
+100
+00:06:19.337 --> 00:06:22.824
+so that was actually easy part. 
+That's what clients would do. 
+
+101
+00:06:22.824 --> 00:06:27.279
+We always want the client to be easier 
+than the library, because we only what to 
+
+102
+00:06:27.279 --> 00:06:30.977
+implement the library once. 
+So now let me show you that fanciness. 
+
+103
+00:06:30.977 --> 00:06:35.234
+All we have to do is implement empty set. 
+But we've to do that in a way that's 
+
+104
+00:06:35.234 --> 00:06:39.751
+actually correct, that when we call 
+insert, we will get back something that 
+
+105
+00:06:39.751 --> 00:06:42.352
+you know, will then act as an appropriate 
+set. 
+
+106
+00:06:42.352 --> 00:06:45.694
+That is not empty. 
+So there's a lot of ways to do this. 
+
+107
+00:06:45.694 --> 00:06:50.930
+I think this is a short and elegant way, 
+though I don't claim it's particularly 
+
+108
+00:06:50.930 --> 00:06:54.335
+easy to understand. 
+So I'm defining a vowel empty set. 
+
+109
+00:06:54.335 --> 00:06:58.919
+Alright, what I'm going to do is I've 
+this little helper function that I'm 
+
+110
+00:06:58.919 --> 00:07:02.255
+going to use. 
+And what this helper function does is it 
+
+111
+00:07:02.255 --> 00:07:06.892
+takes a list of elements It assumes that 
+list does not have duplicates, but it's a 
+
+112
+00:07:06.892 --> 00:07:10.057
+local helper function so that's a 
+reasonable assumption. 
+
+113
+00:07:10.057 --> 00:07:14.082
+And then, what we just return for empty 
+set is make_set of the empty list. 
+
+114
+00:07:14.082 --> 00:07:18.324
+All right? So now, all we have to do is 
+understand make_set And we're done. 
+
+115
+00:07:18.324 --> 00:07:22.425
+So let's understand mixed set. 
+It has this little helper function that 
+
+116
+00:07:22.425 --> 00:07:26.398
+we'll explain in a minute. 
+But fundamentally what it returns is this 
+
+117
+00:07:26.398 --> 00:07:30.932
+record wrapped in the s-constructor. 
+So all we have to do is return a record, 
+
+118
+00:07:30.932 --> 00:07:35.754
+where insert does the right thing for a 
+set contains the numbers and xs, member 
+
+119
+00:07:35.754 --> 00:07:38.935
+does the right thing, and size does the 
+right thing. 
+
+120
+00:07:38.935 --> 00:07:42.928
+So, let's work bottom up, which is from 
+easier to more difficult. 
+
+121
+00:07:42.928 --> 00:07:46.362
+So, remember, we know that xs has no 
+duplicates in it. 
+
+122
+00:07:46.362 --> 00:07:51.692
+That's an invariant we're going to make, 
+maintain here and so all we have to do is 
+
+123
+00:07:51.692 --> 00:07:56.292
+just take the length of that list. 
+So size is a record field that contains 
+
+124
+00:07:56.292 --> 00:08:01.052
+this anonymous function of type unit 
+arrow int which is exactly what we need 
+
+125
+00:08:01.052 --> 00:08:03.987
+for the size field and it does the right 
+thing. 
+
+126
+00:08:03.987 --> 00:08:08.992
+Notice we're using private data here. 
+We're returning a record that is using xs 
+
+127
+00:08:08.992 --> 00:08:13.947
+which is in scope right here, alright? 
+For member, well we just need to go down 
+
+128
+00:08:13.947 --> 00:08:19.322
+this list and see if there's anything in 
+the list that equals the number we're 
+
+129
+00:08:19.322 --> 00:08:22.727
+looking for. 
+So I actually, for reasons we'll see in a 
+
+130
+00:08:22.727 --> 00:08:26.582
+minute, I have put this in a helper 
+function here contains. 
+
+131
+00:08:26.582 --> 00:08:31.166
+So contains take a, takes a number i and 
+returns true if i is in xs. 
+
+132
+00:08:31.166 --> 00:08:36.449
+So again I can use private data here I 
+can use xs, I can use a nice library 
+
+133
+00:08:36.449 --> 00:08:42.309
+function List.exists, which works just 
+like the exists function I wrote for you 
+
+134
+00:08:42.309 --> 00:08:46.378
+a few segments ago. 
+It's curried, I pass in this predicate 
+
+135
+00:08:46.378 --> 00:08:49.942
+function that says for each element in 
+the list j, 
+
+136
+00:08:49.942 --> 00:08:55.122
+does i equal j, and then, this is a 
+perfectly good function of type int arrow 
+
+137
+00:08:55.122 --> 00:08:58.287
+bool. 
+So, that's exactly the function that I 
+
+138
+00:08:58.287 --> 00:09:02.606
+want to put in the member field of the 
+record I am returning. 
+
+139
+00:09:02.606 --> 00:09:08.290
+Okay, now all we have to do is insert. 
+The tricky thing about insert, is that it 
+
+140
+00:09:08.290 --> 00:09:12.955
+is going to use make set, recursively. 
+And that does make sense. 
+
+141
+00:09:12.955 --> 00:09:17.543
+Since, when you insert an element into a 
+set, you make a new set. 
+
+142
+00:09:17.543 --> 00:09:21.324
+Alright? So insert has the type, have 
+type int arrow set. 
+
+143
+00:09:21.324 --> 00:09:24.957
+So here's an anonymous function that does 
+what we need. 
+
+144
+00:09:24.957 --> 00:09:28.202
+Takes in that integer i. 
+If i is contained in xs. 
+
+145
+00:09:28.202 --> 00:09:33.226
+So there's my second use of my helper 
+function contains, which is why I made a 
+
+146
+00:09:33.226 --> 00:09:35.071
+helper function. 
+For it. 
+
+147
+00:09:35.071 --> 00:09:39.849
+Well, if I already have it, then I want 
+to return the same set I already have, 
+
+148
+00:09:39.849 --> 00:09:44.671
+but there's no harm in making a new set, 
+and the easiest way here, is just call 
+
+149
+00:09:44.671 --> 00:09:48.891
+make set with the same list xs. 
+Alright, and that will work fine. 
+
+150
+00:09:48.891 --> 00:09:51.901
+Otherwise, make_set with i;;xs. 
+And that's it. 
+
+151
+00:09:51.901 --> 00:09:56.723
+You can look at this, you can stare at 
+this, and see that the three functions I 
+
+152
+00:09:56.723 --> 00:10:02.118
+put in here Do exactly the right thing in 
+the case that xs are the elements we want 
+
+153
+00:10:02.118 --> 00:10:05.044
+in our set. 
+The trickiness is that make_set is 
+
+154
+00:10:05.044 --> 00:10:09.895
+recursive and that we provide the 
+empty_set where we make_set of the empty 
+
+155
+00:10:09.895 --> 00:10:13.699
+list and the recursion of make_set takes 
+care of the rest. 
+
+156
+00:10:13.699 --> 00:10:18.479
+So I have this all compiled over here, 
+you'll see that we defined our type 
+
+157
+00:10:18.479 --> 00:10:22.752
+definition for sets. 
+empty_set is just something of type set. 
+
+158
+00:10:22.752 --> 00:10:27.422
+It is a record of 3 functions wrapped 
+with this s constructor, and then our 
+
+159
+00:10:27.422 --> 00:10:32.112
+example client is something that just 
+read out the fields of the record and 
+
+160
+00:10:32.112 --> 00:10:36.342
+used them in various ways, and if I call 
+it, I actually get back 18. 
+
+161
+00:10:36.342 --> 00:10:40.382
+Earlier, I said it was 19. 
+I must have been misreading the code. 
+
+162
+00:10:40.382 --> 00:10:45.172
+I'm sure the compiler is right, so let's 
+flip back here to the file. 
+
+163
+00:10:45.172 --> 00:10:52.087
+And look down here at the client and sure 
+enough 17 plus the size of s3, I think I 
+
+164
+00:10:52.087 --> 00:10:58.522
+thought we were taking the side of S4 you 
+see here that s3 is this one that only 
+
+165
+00:10:58.522 --> 00:11:04.846
+has one element in it, 34, because we 
+don't put duplicate in there and so 17 + 
+
+166
+00:11:04.846 --> 00:11:08.017
+1 is 18. 
+Alright? So that's our implementation, 
+
+167
+00:11:08.017 --> 00:11:12.007
+our client, and our testing code. 
+And we really have implemented an 
+
+168
+00:11:12.007 --> 00:11:16.740
+abstraction using nothing except data 
+types, recursion, closures, and records. 

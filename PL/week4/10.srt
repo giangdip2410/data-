@@ -1,0 +1,441 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:05.194
+[MUSIC] In this segment, I want to show 
+how we can use our understanding of 
+
+2
+00:00:05.194 --> 00:00:10.673
+lexical scope to avoid unnecessary 
+recomputation of things when we're using 
+
+3
+00:00:10.673 --> 00:00:13.662
+closures. 
+So, here's what we know. We know a 
+
+4
+00:00:13.662 --> 00:00:17.931
+function body is not evaluated until the 
+function is called. 
+
+5
+00:00:17.931 --> 00:00:22.983
+That's not even relevant to lexical 
+scope, that's the way functions and 
+
+6
+00:00:22.983 --> 00:00:27.893
+methods work in every language. 
+You don't evaluate the body until you 
+
+7
+00:00:27.893 --> 00:00:31.685
+make the call. 
+We also know that the function body is 
+
+8
+00:00:31.685 --> 00:00:37.276
+reevaluated, if you will, every time the 
+function is called using the arguments 
+
+9
+00:00:37.276 --> 00:00:40.929
+for that call. 
+But we also know that a variable binding 
+
+10
+00:00:40.929 --> 00:00:44.934
+evaluates expression, 
+its expression once when the binding is 
+
+11
+00:00:44.934 --> 00:00:47.907
+evaluated, 
+not every time the variable is used. 
+
+12
+00:00:47.907 --> 00:00:51.848
+These are three things we've definitely 
+seen, definitely used. 
+
+13
+00:00:51.848 --> 00:00:56.823
+And if you take a minute to understand 
+exactly what's being written here, you 
+
+14
+00:00:56.823 --> 00:00:59.860
+probably understand those three things as 
+well. 
+
+15
+00:00:59.860 --> 00:01:04.475
+Now, I want to put those three things 
+together to point out that with closures, 
+
+16
+00:01:04.475 --> 00:01:08.969
+we can use these things to avoid 
+repeating any computation that you would 
+
+17
+00:01:08.969 --> 00:01:13.342
+naturally put in the function body, but 
+is not actually using any of the 
+
+18
+00:01:13.342 --> 00:01:16.378
+function's arguments. 
+This can improve performance. 
+
+19
+00:01:16.378 --> 00:01:20.933
+It can make your code a little longer. 
+It can make it more or less readable, 
+
+20
+00:01:20.933 --> 00:01:25.670
+depending on your preference, but it's a 
+good example that helps emphasize the 
+
+21
+00:01:25.670 --> 00:01:28.950
+semantics of how functions and function 
+closures work. 
+
+22
+00:01:28.950 --> 00:01:33.957
+So, let me show you the example I'm going 
+to use to demonstrate this. 
+
+23
+00:01:33.957 --> 00:01:39.702
+First, I just have our old friend, the 
+very famous higher-order function filter, 
+
+24
+00:01:39.702 --> 00:01:43.605
+no change there. 
+And now, I'm going to use filter with 
+
+25
+00:01:43.605 --> 00:01:49.643
+this function here, it takes in a list of 
+string xs and a string s and it returns 
+
+26
+00:01:49.643 --> 00:01:54.136
+another string list. 
+So, this has type string list star string 
+
+27
+00:01:54.136 --> 00:01:59.187
+arrow string list, okay? 
+and what it does is it filters out all 
+
+28
+00:01:59.187 --> 00:02:05.343
+the strings that are longer than s, okay? 
+So, all we're going to do is call filter 
+
+29
+00:02:05.343 --> 00:02:11.419
+with xs for the list and with this 
+perfectly reasonable anonymous function, 
+
+30
+00:02:11.419 --> 00:02:17.575
+take in an x, that'll be an element of 
+the list and ask, is its size less than 
+
+31
+00:02:17.575 --> 00:02:21.972
+the size of S? 
+If it's strictly shorter, then we'll have 
+
+32
+00:02:21.972 --> 00:02:25.890
+it in our output and if not, we'll filter 
+it away, 
+
+33
+00:02:25.890 --> 00:02:31.638
+alright? There's nothing wrong with this, 
+this will produce the right answer. 
+
+34
+00:02:31.638 --> 00:02:37.770
+But it turns out that we are going to 
+recompute the size of s for every element 
+
+35
+00:02:37.770 --> 00:02:41.543
+of the list xs. 
+Because filter is going to call this 
+
+36
+00:02:41.543 --> 00:02:47.004
+function, one time for every element of 
+the list And and time we call it, we 
+
+37
+00:02:47.004 --> 00:02:51.543
+compute the size of x, which we need to, 
+x is changing every time, 
+
+38
+00:02:51.543 --> 00:02:55.656
+and the size of s. 
+But that's an unnecessary recomputation. 
+
+39
+00:02:55.656 --> 00:03:01.188
+The size of s is not going to change. 
+The way to fix that is as we see in this 
+
+40
+00:03:01.188 --> 00:03:05.088
+second example. 
+Let's just create a local variable that 
+
+41
+00:03:05.088 --> 00:03:07.783
+holds the size of s, 
+call it i, alright? 
+
+42
+00:03:07.783 --> 00:03:10.833
+And now in our anonymous function, just 
+ask, 
+
+43
+00:03:10.833 --> 00:03:14.882
+is the size of x less than i? 
+This will produce exactly the same 
+
+44
+00:03:14.882 --> 00:03:17.672
+answer. 
+There's nothing any caller can do to tell 
+
+45
+00:03:17.672 --> 00:03:22.226
+whether we use the first version or the 
+second version, except to notice that if 
+
+46
+00:03:22.226 --> 00:03:26.553
+our list is very long and/or if the 
+length of s is very long, we could see a 
+
+47
+00:03:26.553 --> 00:03:30.139
+performance difference. 
+So, that's exactly what I wanted to show 
+
+48
+00:03:30.139 --> 00:03:34.352
+you and notice we need closures here. 
+If we don't have lexical scope, if we 
+
+49
+00:03:34.352 --> 00:03:38.280
+don't store with this closure, the 
+environment where the function was 
+
+50
+00:03:38.280 --> 00:03:41.582
+defined, we're not going to be able to 
+use this variable i. 
+
+51
+00:03:41.582 --> 00:03:46.022
+So, this is yet another example of where 
+closures and lexical scope are very 
+
+52
+00:03:46.022 --> 00:03:48.888
+natural thing. 
+So, I wanted to show you this, that it 
+
+53
+00:03:48.888 --> 00:03:53.416
+actually works but it's a little hard to 
+do because you can't see the difference 
+
+54
+00:03:53.416 --> 00:03:56.156
+in all shorter than one and all shorter 
+than two. 
+
+55
+00:03:56.156 --> 00:04:00.293
+So, for the purpose of showing you the 
+difference, how about we put in some 
+
+56
+00:04:00.293 --> 00:04:03.144
+print statements so we can see where 
+things happen. 
+
+57
+00:04:03.144 --> 00:04:07.505
+So, I haven't done this with you before 
+but there is a function Print in ML that 
+
+58
+00:04:07.505 --> 00:04:11.570
+takes a string and prints it out. 
+There's also this semicolon operator. 
+
+59
+00:04:11.570 --> 00:04:16.011
+when you use it as an expression in 
+general, let me put this in a comment 
+
+60
+00:04:16.011 --> 00:04:20.160
+here, if you have e1;e2,e2, it does e1, 
+throws away the result then does e2 and 
+
+61
+00:04:20.160 --> 00:04:24.777
+that's the result for the whole thing. 
+In functional programming, you don't need 
+
+62
+00:04:24.777 --> 00:04:29.452
+this sequencing very often because what's 
+the point of performing a computation 
+
+63
+00:04:29.452 --> 00:04:33.951
+that wouldn't have assignments of side 
+effects if you're just going to throw 
+
+64
+00:04:33.951 --> 00:04:37.224
+away the result. 
+But printing is a good example where it 
+
+65
+00:04:37.224 --> 00:04:41.490
+does have a side effect and that's what 
+we're actually trying to do here. 
+
+66
+00:04:41.490 --> 00:04:45.376
+And similarly, let us put in a print 
+before this call. 
+
+67
+00:04:45.376 --> 00:04:51.023
+So, my idea here is to print one 
+exclamation point before any time that we 
+
+68
+00:04:51.023 --> 00:04:55.423
+call string.size of s. 
+So, in fact, let me change this up here. 
+
+69
+00:04:55.423 --> 00:05:01.070
+I like it a little better if I put it 
+right here so you can see it really is 
+
+70
+00:05:01.070 --> 00:05:04.076
+related to the size of the string s, 
+okay? 
+
+71
+00:05:04.076 --> 00:05:09.600
+So now, I have my two functions. 
+And now, down here, I have some testing 
+
+72
+00:05:09.600 --> 00:05:12.357
+code where I had the prints commented 
+out, 
+
+73
+00:05:12.357 --> 00:05:16.492
+alright? So, what it's going to do, it's 
+going to, it's going to print with 
+
+74
+00:05:16.492 --> 00:05:22.334
+allshorterthan1 and then it's going to 
+call allshorterthan1 on an length four 
+
+75
+00:05:22.334 --> 00:05:26.731
+list with this string. 
+And then, allshorterthan2 on the same 
+
+76
+00:05:26.731 --> 00:05:30.867
+list and the same argument, okay? 
+And if we just run this, say use 
+
+77
+00:05:30.867 --> 00:05:35.067
+closures_and_recomputation, 
+it's going to end up doing those print 
+
+78
+00:05:35.067 --> 00:05:40.450
+statements before the other stuff from 
+the RPL as soon as I fix my parentheses 
+
+79
+00:05:40.450 --> 00:05:44.885
+here somewhere. 
+yes. 
+
+80
+00:05:44.885 --> 00:05:52.200
+One too many there. 
+or [SOUND] let's see. 
+
+81
+00:05:52.200 --> 00:05:55.820
+Try it that way. 
+Yup. 
+
+82
+00:05:55.820 --> 00:06:01.025
+Good. And we see that with width 
+allshorterthan1, which was the version 
+
+83
+00:06:01.025 --> 00:06:06.230
+that did not use the local variable, we 
+got four exclamation points for our 
+
+84
+00:06:06.230 --> 00:06:10.394
+length four list. 
+But when we called allshorterthan2, we 
+
+85
+00:06:10.394 --> 00:06:16.151
+only did this let binding a single time. 
+Once, when we computed the size of s and 
+
+86
+00:06:16.151 --> 00:06:21.757
+even though we called this function four 
+times, we looked up i four times but 
+
+87
+00:06:21.757 --> 00:06:26.488
+looking up i just returned, I think 
+three, the length of that list. 
+
+88
+00:06:26.488 --> 00:06:30.347
+There's no recomputation when you look up 
+a variable. 

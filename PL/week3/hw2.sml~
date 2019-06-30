@@ -1,0 +1,177 @@
+(* Dan Grossman, Coursera PL, HW2 Provided Code *)
+
+(* if you use this function to compare two strings (returns true if the same
+   string), then you avoid several of the functions in problem 1 having
+   polymorphic types that may be confusing *)
+fun same_string(s1 : string, s2 : string) =
+    s1 = s2
+
+(* put your solutions for problem 1 here *)
+
+(* you may assume that Num is always used with values 2, 3, ..., 10
+   though it will not really come up *)
+datatype suit = Clubs | Diamonds | Hearts | Spades
+datatype rank = Jack | Queen | King | Ace | Num of int 
+type card = suit * rank
+
+datatype color = Red | Black
+datatype move = Discard of card | Draw 
+
+exception IllegalMove
+
+(* put your solutions for problem 2 here *)
+
+	      (* Q1 *)
+ fun all_except_option(x1,y1) =
+    let fun all_except_string(x,y)=
+	    case y of
+		[] =>[]
+	      | y::ys' => if same_string(x,y)
+			  then all_except_string(x,ys')
+			  else y::all_except_string(x,ys')
+    in
+	let
+	    val temp = all_except_string(x1,y1)
+	in
+	  if temp = y1 (* when y = temp,  y is empty list or x is not in y*)
+	  then  NONE
+	  else SOME temp
+	end
+    end
+
+
+
+	(* Q2 *)
+  fun get_substitutions1(x,y)=
+    case x of
+	[] => []
+      | x::xs' => let  val temp = all_except_option(y, x)
+		  in
+		      case temp of
+			  NONE => [] @ get_substitutions1(xs',y)
+			| SOME temp =>temp @ get_substitutions1(xs',y)
+		  end
+	(* Q3  *)	      
+  fun get_substitutions2(x,y)=
+      let fun help(x,y,z) =
+	      case x of
+		  [] => z
+		| x::xs' => let val temp = all_except_option(y,x)
+			    in
+				case temp of
+				    NONE => help(xs',y,z)
+				  | SOME temp => help(xs',y, z @ temp)
+			    end
+      in
+	  help(x,y,[])
+      end
+
+	  (*Q4 *)
+  fun similar_names(name, {first = x,middle = y, last = z}) =
+     (* let val temp = x::get_substitution2(name,x)
+      in*)
+	  let fun help(temp)=
+		  case temp of
+		      [] => []
+		    | m::ms' => {first = m,middle = y, last = z}::help(ms')
+	  in
+	      help(x::get_substitutions2(name,x))
+	  end
+	      
+
+
+	      (* Q5 *)
+  fun card_color(x)=
+      case x of
+	  (Spades,_)=>Black
+	| (Clubs,_) => Black
+	|  _ => Red
+
+ (* Q6 *)
+  fun card_value(x)=
+      case x of
+	  (_,Ace) => 11
+	| (_, Num e) => e 
+		     | _ => 10 
+
+(*Q7 *)
+  fun remove_card(cs,c,ex)=
+      let fun remove(x,y,z)=
+	  case x of 
+	      [] => z
+	    | x::x' => if x = y
+		       then
+			   remove([],y, z @ x')
+		       else
+			   remove(x',y,(x::[]) @ z)
+      in
+	  let val temp = remove(cs,c,[])
+	  in
+	      if temp = cs (* cs is empty or c is not in cs *)
+	      then
+		  raise ex
+	      else
+		  temp
+	  end
+      end
+
+      
+
+(* Q8 *)
+  fun all_same_color(c)=
+      case c of
+	  [] => true
+	| c::[] =>  true
+	| c::c1::c1' => card_color(c) = card_color(c1) andalso all_same_color(c1::c1') 
+
+(* Q9 *)
+  fun sum_cards(x)=
+      let fun sum_local(x,acc)=
+	      case x  of
+		  [] => acc
+		| x::x' => sum_local(x',acc + card_value(x))
+      in
+	  sum_local(x,0)
+      end
+  (*Q10 *)
+  fun score(cl,goal)=
+  (*cl is card list *)
+      let fun cal_score(cl,pre_score)=
+	      if all_same_color(cl)
+	      then
+		  pre_score div 2
+	      else
+		  pre_score
+      in
+	  let val sum_score = sum_cards(cl)
+	  in
+	      if sum_score >= goal
+	      then
+		  cal_score(cl,3 * (sum_score - goal))
+	      else
+		  cal_score(cl, goal - sum_score)
+	  end
+      end
+	  
+      	  
+	  (*Q 11 *)
+  fun officiate(card_list,move_list,goal)=
+      let fun local_officiate(card_list,move_list,goal, held_cards)=
+	      case move_list of
+		  [] => score(held_cards,goal) 
+		| Draw::move_list' => (case card_list of
+					   [] =>goal
+					 | x:: [] => score(x::held_cards,goal) 
+                              | x::card_list' => local_officiate(card_list',move_list',goal,x::held_cards)
+					)
+					  
+		|(Discard e)::move_list'=>
+		       let val new_held_card = remove_card(held_cards,e,IllegalMove)
+	               in
+		local_officiate(card_list,move_list',goal,new_held_card)
+							   
+		       end
+      in
+	  local_officiate(card_list,move_list,goal,[])
+      end
+	  

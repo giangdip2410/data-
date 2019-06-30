@@ -1,0 +1,589 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.940
+[SOUND] 
+
+2
+00:00:04.940 --> 00:00:09.800
+In this segment, I want to talk about the 
+type of the n * function we wrote in the 
+
+3
+00:00:09.800 --> 00:00:13.220
+previous segment. 
+And more generally, talk about the types 
+
+4
+00:00:13.220 --> 00:00:17.840
+of these higher order functions that are 
+taking other functions as arguments. 
+
+5
+00:00:17.840 --> 00:00:22.040
+So, often, the higher order functions we 
+write end up being polymorphic. 
+
+6
+00:00:22.040 --> 00:00:26.480
+They end up having those type variables. 
+A quote a, which I pronounce alpha. 
+
+7
+00:00:26.480 --> 00:00:29.840
+And often, also, a quote b or a quote c, 
+or even a quote d. 
+
+8
+00:00:29.840 --> 00:00:32.360
+Where multiple type variables in the 
+type. 
+
+9
+00:00:32.360 --> 00:00:36.964
+So that can make them seem a little more 
+sophisticated or inscrutable, but it's 
+
+10
+00:00:36.964 --> 00:00:40.519
+actually really helpful. 
+It shows that these functions are so 
+
+11
+00:00:40.519 --> 00:00:44.599
+reusable that they can often take 
+function, arguments, of various types, 
+
+12
+00:00:44.599 --> 00:00:49.204
+the same way we saw n times work over 
+numbers when we were doubling, and we saw 
+
+13
+00:00:49.204 --> 00:00:52.410
+it work over lists when we were taking 
+the [INAUDIBLE]. 
+
+14
+00:00:52.410 --> 00:00:57.026
+But the notion of polymorphic types, and 
+the notion of functions taking other 
+
+15
+00:00:57.026 --> 00:01:00.143
+functions as arguments are actually 
+separate issues. 
+
+16
+00:01:00.143 --> 00:01:04.520
+There are high-order functions that are 
+not polymorphic; I'll show you an 
+
+17
+00:01:04.520 --> 00:01:07.334
+example. 
+And there are non-higher-order functions, 
+
+18
+00:01:07.334 --> 00:01:10.524
+first-order functions, we call them, that 
+are polymorphic. 
+
+19
+00:01:10.524 --> 00:01:14.852
+And I'll show you an example you've 
+actually seen before, so I'm really just 
+
+20
+00:01:14.852 --> 00:01:18.497
+reminding you of this. 
+In general I think it's worth focusing on 
+
+21
+00:01:18.497 --> 00:01:22.540
+this because it's always a good idea, 
+when you write down a function, to 
+
+22
+00:01:22.540 --> 00:01:26.014
+understand it's type. 
+What sort of arguments does it work for? 
+
+23
+00:01:26.014 --> 00:01:29.773
+And that's especially true for 
+higher-order functions because the 
+
+24
+00:01:29.773 --> 00:01:33.760
+functions themselves, and their types, 
+are more interesting and complex. 
+
+25
+00:01:33.760 --> 00:01:36.500
+So now let's look at this N times 
+function. 
+
+26
+00:01:36.500 --> 00:01:41.408
+The type it actually has is here on the 
+slide, it's alpha arrow alpha for the 
+
+27
+00:01:41.408 --> 00:01:45.997
+first argument, ent for the second 
+argument, alpha for the third argument, 
+
+28
+00:01:45.997 --> 00:01:49.885
+alpha for the result. 
+So it works for any type alpha provided 
+
+29
+00:01:49.885 --> 00:01:54.857
+that first argument takes and returns 
+alphas, second is an ent, and third is an 
+
+30
+00:01:54.857 --> 00:01:56.951
+alpha. 
+Result is also an alpha. 
+
+31
+00:01:56.951 --> 00:02:01.658
+Now to understand N times it's often 
+helpful to simplify it first. 
+
+32
+00:02:01.658 --> 00:02:06.935
+We could have, given N times a more 
+restrictive type, we wouldn't have been 
+
+33
+00:02:06.935 --> 00:02:12.498
+able to use it as generally but we could 
+have given it a type where all those 
+
+34
+00:02:12.498 --> 00:02:16.991
+alphas are replaced by N's. 
+And this simpler type say if F is a 
+
+35
+00:02:16.991 --> 00:02:20.343
+function that takes and ent and returns 
+an ent. 
+
+36
+00:02:20.343 --> 00:02:23.980
+N is an ent and X is an ent then it 
+returns an ent. 
+
+37
+00:02:23.980 --> 00:02:27.760
+And if you look at the code up here, that 
+makes sense. 
+
+38
+00:02:27.760 --> 00:02:33.466
+Whatever the type of X is, has to be the 
+return type of the entire function. 
+
+39
+00:02:33.466 --> 00:02:38.793
+Because we sometimes return X. 
+So if one of those is INT, the other has 
+
+40
+00:02:38.793 --> 00:02:42.065
+to be INT. 
+And then, the return type of this 
+
+41
+00:02:42.065 --> 00:02:45.870
+recursive call N times, has to be an 
+argument to F. 
+
+42
+00:02:45.870 --> 00:02:49.852
+And the result type of f has to be the 
+result type of m times. 
+
+43
+00:02:49.852 --> 00:02:53.385
+Because the result of this called f is 
+what's returned. 
+
+44
+00:02:53.385 --> 00:02:57.881
+So it turns out that the argument to f 
+has to be the result type of f. 
+
+45
+00:02:57.881 --> 00:03:02.699
+And that has to be the type of x. 
+And that has to be the return type of the 
+
+46
+00:03:02.699 --> 00:03:05.911
+function. 
+But we don't actually care, as the writer 
+
+47
+00:03:05.911 --> 00:03:10.407
+of n times, what that type is. 
+And that's exactly what this polymorphic 
+
+48
+00:03:10.407 --> 00:03:13.747
+type with the alphas in certain 
+positions, is saying. 
+
+49
+00:03:13.747 --> 00:03:18.179
+It's saying, all of these alphas have to 
+be replaced by the same type. 
+
+50
+00:03:18.179 --> 00:03:22.227
+But it works for any type. 
+So, type inference figured this out for 
+
+51
+00:03:22.227 --> 00:03:26.983
+us, but once we have this and we can see 
+it from the [INAUDIBLE] print loop as 
+
+52
+00:03:26.983 --> 00:03:32.165
+we'll see here it's extremely useful to 
+look at this, understand this, and say I 
+
+53
+00:03:32.165 --> 00:03:34.665
+see. 
+F has to be a function with the same 
+
+54
+00:03:34.665 --> 00:03:38.627
+argument and return type. 
+That has to be the type of x and that's 
+
+55
+00:03:38.627 --> 00:03:41.920
+also has to be the same return type. 
+The same function. 
+
+56
+00:03:41.920 --> 00:03:46.553
+So, if we look at how we used end times, 
+we actually did instantiate the type 
+
+57
+00:03:46.553 --> 00:03:49.480
+alpha, or quote a, differently for 
+different uses. 
+
+58
+00:03:49.480 --> 00:03:54.630
+In this call here with double four and 
+seven, we let alpha be INT in every 
+
+59
+00:03:54.630 --> 00:03:58.110
+position. 
+Double, right here is a function from INT 
+
+60
+00:03:58.110 --> 00:04:03.539
+to INT, four is an INT, that has to be an 
+INT here, seven is and INT, that's this 
+
+61
+00:04:03.539 --> 00:04:06.950
+third argument. 
+And indeed the result type is INT. 
+
+62
+00:04:06.950 --> 00:04:11.283
+For increment it was the same. 
+We also instantiated alpha with int. 
+
+63
+00:04:11.283 --> 00:04:14.960
+But for nth tail, we actually 
+instantiated with int list. 
+
+64
+00:04:14.960 --> 00:04:19.621
+We can see that most easily with this 
+argument here, the third argument. 
+
+65
+00:04:19.621 --> 00:04:22.970
+That alpha before the arrow, is clearly 
+an int list. 
+
+66
+00:04:22.970 --> 00:04:28.546
+Entail as it self polymorphic it coumored 
+for any type of list and returns a the 
+
+67
+00:04:28.546 --> 00:04:34.055
+same type of list so it is correct as a 
+function from it list to int list which 
+
+68
+00:04:34.055 --> 00:04:37.360
+is the correct type for the first 
+argument here. 
+
+69
+00:04:37.360 --> 00:04:40.369
+And the overall result ends up being an 
+int list. 
+
+70
+00:04:40.369 --> 00:04:44.423
+So that's just polymorphic functions, 
+it's not really anything new. 
+
+71
+00:04:44.423 --> 00:04:49.398
+It just sometimes looks a little bit more 
+mysterious once you start seeing these 
+
+72
+00:04:49.398 --> 00:04:52.776
+function arguments. 
+but it makes our code a lot more 
+
+73
+00:04:52.776 --> 00:04:55.724
+reusable. 
+If we didn't have polymorphism here, we 
+
+74
+00:04:55.724 --> 00:04:59.409
+would have to write one version of n * 
+for integer arguments. 
+
+75
+00:04:59.409 --> 00:05:02.603
+And another version of n * for int list 
+arguments. 
+
+76
+00:05:02.603 --> 00:05:07.701
+And that would make the whole idea of 
+reusable code and first class functions a 
+
+77
+00:05:07.701 --> 00:05:09.269
+lot less persuasive. 
+Okay, 
+
+78
+00:05:09.269 --> 00:05:13.548
+so that is end times. 
+That is the reason why we saw the type we 
+
+79
+00:05:13.548 --> 00:05:18.370
+saw from the read eval print loop. 
+Now let me try and convince you that 
+
+80
+00:05:18.370 --> 00:05:21.973
+there are. 
+Higher order functions that are not 
+
+81
+00:05:21.973 --> 00:05:27.170
+polymorphic and polymorphic functions 
+that are not higher order. 
+
+82
+00:05:27.170 --> 00:05:33.260
+So I've an example of each here. 
+the first is this function called times 
+
+83
+00:05:33.260 --> 00:05:36.508
+until zero. 
+Let me tell you what it does. 
+
+84
+00:05:36.508 --> 00:05:43.247
+It takes in a function F in an argument X 
+and it counts how many times you need to 
+
+85
+00:05:43.247 --> 00:05:47.470
+do [SOUND] F, of F, of F, of F, of X 
+until you get zero, 
+
+86
+00:05:47.470 --> 00:05:51.025
+okay? 
+So what's the first time, the first 
+
+87
+00:05:51.025 --> 00:05:57.355
+number of S, at which the result is zero? 
+So I've implemented that right here. 
+
+88
+00:05:57.355 --> 00:06:00.415
+If x is already zero, then we need zero 
+f's. 
+
+89
+00:06:00.415 --> 00:06:05.325
+Otherwise, we need one+ the number of 
+times to get to zero from f of x. 
+
+90
+00:06:05.325 --> 00:06:10.661
+So we're going to now start with f of x 
+for our recursive call, using the same 
+
+91
+00:06:10.661 --> 00:06:14.077
+function F. 
+And since that's one extra step of F, 
+
+92
+00:06:14.077 --> 00:06:19.563
+that adds one to the result. 
+Okay, and so that is a nice function and 
+
+93
+00:06:19.563 --> 00:06:26.725
+it turns out that its type is, let's see 
+F has to be an ent error ent and X has to 
+
+94
+00:06:26.725 --> 00:06:31.616
+be an ent and then the result is an ent 
+and why is that? 
+
+95
+00:06:31.616 --> 00:06:36.770
+Well X has to be an ent because we 
+compare it to zero, okay? 
+
+96
+00:06:36.770 --> 00:06:41.768
+F has the taken end. 
+Because right here, we call it with X. 
+
+97
+00:06:41.768 --> 00:06:46.680
+X has to be an end, we call F with X. 
+F has the taken end. 
+
+98
+00:06:46.680 --> 00:06:51.166
+And therefore x has to return an int, 
+because it's past as the second argument 
+
+99
+00:06:51.166 --> 00:06:54.560
+to times until zero. 
+So it turns out that this higher order 
+
+100
+00:06:54.560 --> 00:06:58.816
+function that is convenient and reusable. 
+You can imagine using it in many 
+
+101
+00:06:58.816 --> 00:07:03.303
+situations for seeing if some function 
+converges or something only works with 
+
+102
+00:07:03.303 --> 00:07:06.178
+integers. 
+It just doesn't make sense otherwise, you 
+
+103
+00:07:06.178 --> 00:07:10.838
+can't say how many times do you have to 
+convert a string into a different string 
+
+104
+00:07:10.838 --> 00:07:13.311
+until you get zero. 
+That doesn't make sense. 
+
+105
+00:07:13.311 --> 00:07:16.820
+Strings will never be zero. 
+You cannot compare them with zero. 
+
+106
+00:07:16.820 --> 00:07:20.806
+So, not a polymorphic function but 
+nonetheless, a useful high order 
+
+107
+00:07:20.806 --> 00:07:23.424
+function. 
+Conversely, here's a function we've seen 
+
+108
+00:07:23.424 --> 00:07:25.706
+many times. 
+It computes the length of a list. 
+
+109
+00:07:25.706 --> 00:07:29.492
+and its type is, it will take a list of 
+any type and return an integer. 
+
+110
+00:07:29.492 --> 00:07:31.929
+Doesn't care what the type of the 
+elements are. 
+
+111
+00:07:31.929 --> 00:07:35.092
+It never looks at them. 
+In fact, we could replace this pattern 
+
+112
+00:07:35.092 --> 00:07:38.100
+here with a wild card that would arguably 
+be better style. 
+
+113
+00:07:38.100 --> 00:07:41.523
+So, it has a polymorphic type. 
+But there's nothing, there's no first 
+
+114
+00:07:41.523 --> 00:07:44.635
+class function in sight. 
+It just takes a list and returns an 
+
+115
+00:07:44.635 --> 00:07:45.399
+integer, 
+okay? 
+
+116
+00:07:45.399 --> 00:07:50.075
+so that is our contrast. 
+Hopefully, now we understand the type of 
+
+117
+00:07:50.075 --> 00:07:55.520
+end times better, and we understand the 
+relation between polymorphic types and 
+
+118
+00:07:55.520 --> 00:07:57.126
+functions as arguments. 

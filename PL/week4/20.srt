@@ -1,0 +1,360 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:06.362
+[MUSIC] This segment and the next couple, 
+which are all optional fit together and 
+
+2
+00:00:06.362 --> 00:00:12.237
+are about taking some of our closure 
+idioms and porting them to languages that 
+
+3
+00:00:12.237 --> 00:00:17.322
+don't actually have closures. 
+So the idea here is that closures and 
+
+4
+00:00:17.322 --> 00:00:22.370
+higher-order programming Programming with 
+functions like map and filter is great. 
+
+5
+00:00:22.370 --> 00:00:26.036
+And it's particularly easy when your 
+language supports closures. 
+
+6
+00:00:26.036 --> 00:00:30.437
+Because you can very easily create things 
+with private data, pass them around. 
+
+7
+00:00:30.437 --> 00:00:34.882
+Function types are exactly what we want. 
+But if your language doesn't have 
+
+8
+00:00:34.882 --> 00:00:37.577
+closures you can still program in this 
+style. 
+
+9
+00:00:37.577 --> 00:00:41.282
+Now it's often much more painful. 
+You often have to create what 
+
+10
+00:00:41.282 --> 00:00:44.382
+conceptually is your closure environment 
+manually. 
+
+11
+00:00:44.382 --> 00:00:48.992
+But by showing you how to do this in 
+languages you might be familiar with we 
+
+12
+00:00:48.992 --> 00:00:53.342
+can see some of the connections between 
+different programming styles. 
+
+13
+00:00:53.342 --> 00:00:58.311
+So one segment is going to do this in an 
+object oriented style using java, and the 
+
+14
+00:00:58.311 --> 00:01:03.614
+key idea there is to have interfaces, 
+that just have one method, so that's kind 
+
+15
+00:01:03.614 --> 00:01:08.806
+of like the function code, the call me. 
+Part of an interface of, of a closure. 
+
+16
+00:01:08.806 --> 00:01:13.893
+And then in C, where we have function 
+pointers but we don't have closures, we 
+
+17
+00:01:13.893 --> 00:01:17.769
+can pass the environment explicitly as an 
+extra argument. 
+
+18
+00:01:17.769 --> 00:01:22.671
+So these are optional segments because 
+you need to be a bit of an expert in Java 
+
+19
+00:01:22.671 --> 00:01:26.151
+to understand the Java one. 
+And I bit of an expert in C to understand 
+
+20
+00:01:26.151 --> 00:01:28.654
+the C one. 
+Even if you do know some Java or C, you 
+
+21
+00:01:28.654 --> 00:01:31.138
+may find this a bit over your head, 
+that's okay. 
+
+22
+00:01:31.138 --> 00:01:34.892
+I want to put these segments up, so you 
+can refer back to them someday. 
+
+23
+00:01:34.892 --> 00:01:38.739
+If you're in these languages, and you 
+find yourself wanting to program in a 
+
+24
+00:01:38.739 --> 00:01:42.916
+functional style, then these segments 
+might help you, point you in the right 
+
+25
+00:01:42.916 --> 00:01:46.057
+direction. 
+So it shows some connections between the 
+
+26
+00:01:46.057 --> 00:01:50.402
+languages and the features It can help 
+you understand what closures and objects 
+
+27
+00:01:50.402 --> 00:01:54.647
+are really all about, and at the end of 
+the day it is a bit clumsy so it may make 
+
+28
+00:01:54.647 --> 00:01:58.872
+you just wish that more programming 
+languages actually had closures, so that 
+
+29
+00:01:58.872 --> 00:02:02.142
+we didn't have to simulate them and 
+incode the same idioms. 
+
+30
+00:02:02.142 --> 00:02:05.603
+In more painful ways. 
+So this segment just shows the ML code 
+
+31
+00:02:05.603 --> 00:02:10.277
+that we're then going to translate, which 
+is often called porting, to Java or C. 
+
+32
+00:02:10.277 --> 00:02:14.453
+It's just a little list library. 
+I'm not going to use ML's built in lists 
+
+33
+00:02:14.453 --> 00:02:18.487
+because I want to show all the code, 
+right? And I want to find a fuller 
+
+34
+00:02:18.487 --> 00:02:22.794
+comparison because we're going to write 
+everything ourselves in all three 
+
+35
+00:02:22.794 --> 00:02:25.234
+languages. 
+And then the next segments are 
+
+36
+00:02:25.234 --> 00:02:28.350
+independent. 
+You can watch one or the other or both or 
+
+37
+00:02:28.350 --> 00:02:32.888
+neither And then show how to write the 
+same code in those other languages. 
+
+38
+00:02:32.888 --> 00:02:35.645
+So here we are. 
+I'm just going to define my own 
+
+39
+00:02:35.645 --> 00:02:39.440
+polymorphic data constructor. 
+Alpha my list, two constructors. 
+
+40
+00:02:39.440 --> 00:02:43.257
+Cons which has two parts, the head of the 
+list, which is an alpha. 
+
+41
+00:02:43.257 --> 00:02:46.231
+And the tail of the list, which is an 
+alpha my list. 
+
+42
+00:02:46.231 --> 00:02:50.165
+Or empty for the empty list. 
+These are just plain old constructors. 
+
+43
+00:02:50.165 --> 00:02:53.957
+So I can write a function map. 
+I'm using a curried style here, but 
+
+44
+00:02:53.957 --> 00:02:57.973
+that's not essential. 
+That takes in a function and one of these 
+
+45
+00:02:57.973 --> 00:03:01.973
+my lists, so not ML's built in lists but 
+one of these my lists. 
+
+46
+00:03:01.973 --> 00:03:06.117
+If it's empty we return empty. 
+If it's not empty then we cons on F 
+
+47
+00:03:06.117 --> 00:03:10.887
+applied to X and mapping F across Xs. 
+That is mapped over the my list type. 
+
+48
+00:03:10.887 --> 00:03:14.499
+Filter is similar, it's just the 
+appropriate if then L. 
+
+49
+00:03:14.499 --> 00:03:17.873
+I just want to expand this out here so 
+you can see it. 
+
+50
+00:03:17.873 --> 00:03:22.792
+Indent it a little more nicely. 
+Empty list is empty list, if f of x, then 
+
+51
+00:03:22.792 --> 00:03:27.887
+Cons x onto filtering f across x's, 
+otherwise ignore x and just filter f 
+
+52
+00:03:27.887 --> 00:03:31.787
+across x's. 
+And finally, length, which is easier than 
+
+53
+00:03:31.787 --> 00:03:35.632
+any of them. 
+Empty list returns zero, non empty list 
+
+54
+00:03:35.632 --> 00:03:38.704
+Returns one plus the length of the rest 
+of the list. 
+
+55
+00:03:38.704 --> 00:03:43.278
+Then a couple clients that are using 
+these functions to define their own more 
+
+56
+00:03:43.278 --> 00:03:46.919
+specific functions. 
+How about something that takes a My List 
+
+57
+00:03:46.919 --> 00:03:51.741
+of integers and doubles all the elements. 
+Then we would just use the map function 
+
+58
+00:03:51.741 --> 00:03:54.813
+that's no longer quite on the screen, but 
+is above. 
+
+59
+00:03:54.813 --> 00:03:59.498
+Remember two curried arguments So I'm 
+doing a partial application here. 
+
+60
+00:03:59.498 --> 00:04:04.585
+I'm just calling it with, an anonymous 
+function that takes a number, and 
+
+61
+00:04:04.585 --> 00:04:08.684
+multiplies it by 2. 
+And then, how about another function that 
+
+62
+00:04:08.684 --> 00:04:11.550
+just takes a, a list. 
+A my list, of course. 
+
+63
+00:04:11.550 --> 00:04:14.152
+And, in N. 
+and returns how many. 
+
+64
+00:04:14.152 --> 00:04:19.834
+elements of the list are n, okay? And so, 
+one way I could do this in terms of the 
+
+65
+00:04:19.834 --> 00:04:25.547
+functions I've written, it's not the most 
+efficient way to compute this but it does 
+
+66
+00:04:25.547 --> 00:04:30.796
+work, is to first filter the list. 
+They so that we only have the elements 
+
+67
+00:04:30.796 --> 00:04:33.038
+that are n. 
+And then compute its length. 
+
+68
+00:04:33.038 --> 00:04:37.189
+Alright? So the result of this called a 
+filter will be a list that has nothing in 
+
+69
+00:04:37.189 --> 00:04:40.879
+it but a bunch of the number n. 
+Then however long that number, that list 
+
+70
+00:04:40.879 --> 00:04:43.659
+is, is the number of n's that were in the 
+original list. 
+
+71
+00:04:43.659 --> 00:04:47.403
+So we're going to write that code in this 
+style, in Java, and C in the upcoming 
+
+72
+00:04:47.403 --> 00:04:47.848
+segments. 

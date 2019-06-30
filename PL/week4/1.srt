@@ -1,0 +1,619 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.940
+[MUSIC] 
+
+2
+00:00:04.940 --> 00:00:09.735
+In this segment, let's get right to 
+studying probably the most common use of 
+
+3
+00:00:09.735 --> 00:00:14.656
+first class functions which is passing 
+one function as an argument to another 
+
+4
+00:00:14.656 --> 00:00:17.495
+function. 
+So, I want to emphasize that there's 
+
+5
+00:00:17.495 --> 00:00:22.480
+nothing really new here in terms of 
+language features, we just never thought 
+
+6
+00:00:22.480 --> 00:00:26.013
+to do this before. 
+So, we could define a function binding in 
+
+7
+00:00:26.013 --> 00:00:30.808
+ML, say, f that took as one of its 
+arguments another function g. And then 
+
+8
+00:00:30.808 --> 00:00:33.776
+inside the, the body of f, 
+g would be a variable. 
+
+9
+00:00:33.776 --> 00:00:36.428
+That when we look it up, we get a 
+function. 
+
+10
+00:00:36.428 --> 00:00:39.902
+And so, we could call that function with 
+some arguments. 
+
+11
+00:00:39.902 --> 00:00:43.312
+And so, we could use f in one place 
+calling it with h1. 
+
+12
+00:00:43.312 --> 00:00:47.923
+And in another place, calling it with h2. 
+So, that makes f more useful, more 
+
+13
+00:00:47.923 --> 00:00:52.912
+parameterizable because different callers 
+of f can pass in different functions. 
+
+14
+00:00:52.912 --> 00:00:56.133
+This is going to be a very elegant 
+strategy for us. 
+
+15
+00:00:56.133 --> 00:01:00.870
+We're going to be able to take common 
+pieces of code and abstract them out 
+
+16
+00:01:00.870 --> 00:01:04.808
+which is one of the best things to do 
+when you're designing software. 
+
+17
+00:01:04.808 --> 00:01:08.975
+And the way we can abstract them out is 
+instead of having n very similar 
+
+18
+00:01:08.975 --> 00:01:13.200
+functions, we could have one function 
+that has all the common parts and then, 
+
+19
+00:01:13.200 --> 00:01:17.825
+pass in n different shorter functions 
+that just describe in their bodies and 
+
+20
+00:01:17.825 --> 00:01:20.708
+their computations the parts that are 
+different. 
+
+21
+00:01:20.708 --> 00:01:25.393
+So really, the rest of this segment is 
+going to be over in Emacs showing you a 
+
+22
+00:01:25.393 --> 00:01:30.079
+good example of this, a simple example of 
+this to give you a sense of how this 
+
+23
+00:01:30.079 --> 00:01:33.246
+might work. 
+So, to start with, I already have written 
+
+24
+00:01:33.246 --> 00:01:36.192
+here three ordinary non higher-order 
+functions. 
+
+25
+00:01:36.192 --> 00:01:39.012
+Plain old first-order functions, we call 
+them. 
+
+26
+00:01:39.012 --> 00:01:42.960
+but they all have quite a bit of 
+similarity, which we'll see. 
+
+27
+00:01:42.960 --> 00:01:46.023
+So, they're a little silly, but bear with 
+me. 
+
+28
+00:01:46.023 --> 00:01:51.438
+This first one just takes two arguments n 
+and x and increments x, n times. 
+
+29
+00:01:51.438 --> 00:01:56.283
+So, if n is zero, it just returns x. 
+Otherwise, it returns one, plus the 
+
+30
+00:01:56.283 --> 00:01:59.347
+result of incrementing x, n minus one 
+times. 
+
+31
+00:01:59.347 --> 00:02:03.622
+Now, this really is quite silly. 
+This is an addition function. 
+
+32
+00:02:03.622 --> 00:02:07.470
+It's just taking x and adding n to it, 
+but, but that's okay. 
+
+33
+00:02:07.470 --> 00:02:12.694
+The second example is a bit less silly. 
+There's no built-in operator for it in 
+
+34
+00:02:12.694 --> 00:02:15.642
+ML. 
+It takes a number n and another number x 
+
+35
+00:02:15.642 --> 00:02:19.862
+and it doubles x, n times. 
+Put it another way, if you're a little 
+
+36
+00:02:19.862 --> 00:02:24.082
+more familiar with your math, it's two to 
+the n times x, alright? 
+
+37
+00:02:24.082 --> 00:02:27.833
+And the way it does it is it says if n is 
+zero, return x. 
+
+38
+00:02:27.833 --> 00:02:32.590
+Otherwise, multiply by two the result of 
+doubling x, n minus one times. 
+
+39
+00:02:32.590 --> 00:02:39.497
+The last example doesn't necessarily work 
+with numbers at all, it works with lists. 
+
+40
+00:02:39.497 --> 00:02:44.383
+Takes a number n and a list x's and it 
+takes the nth tail. 
+
+41
+00:02:44.383 --> 00:02:51.627
+So, for example, if you pass it three and 
+the list 4, 8, 12, 16, then you would get 
+
+42
+00:02:51.627 --> 00:02:56.934
+back the list 16. 
+Because if you take tail of tail of tail 
+
+43
+00:02:56.934 --> 00:03:02.410
+of that input list, you end up with the 
+list holding just 16, 
+
+44
+00:03:02.410 --> 00:03:03.773
+okay? 
+How does it do it? 
+
+45
+00:03:03.773 --> 00:03:06.499
+If n is zero, then just return the entire 
+list. 
+
+46
+00:03:06.499 --> 00:03:09.522
+Otherwise, take tail of the nth tail of n 
+- 1 and x's. 
+
+47
+00:03:09.522 --> 00:03:12.367
+Alright. 
+So, three simple functions we could have 
+
+48
+00:03:12.367 --> 00:03:16.101
+already written ourselves. 
+But hopefully, it pains you to see so 
+
+49
+00:03:16.101 --> 00:03:20.310
+much similarity between these functions. 
+All of them take two arguments. 
+
+50
+00:03:20.310 --> 00:03:23.397
+If the first argument is zero, return the 
+second one. 
+
+51
+00:03:23.397 --> 00:03:27.849
+Otherwise, do something to the recursive 
+call with x or x's and n minus one. 
+
+52
+00:03:27.849 --> 00:03:32.361
+So, somehow we'd like to separate all 
+this out so we don't have to write all 
+
+53
+00:03:32.361 --> 00:03:36.160
+that stuff three times. 
+And in general, these might be bigger and 
+
+54
+00:03:36.160 --> 00:03:39.717
+more complicated. 
+and the only way we can do this without 
+
+55
+00:03:39.717 --> 00:03:44.397
+first class functions which would be some 
+ugly kluge, where we had some flag. 
+
+56
+00:03:44.397 --> 00:03:47.122
+Do I want to be increment or double or 
+nth tail? 
+
+57
+00:03:47.122 --> 00:03:50.972
+And that's not extensible. 
+What if there's a fourth function that 
+
+58
+00:03:50.972 --> 00:03:55.060
+comes along that is like this? 
+But first-class functions do this very, 
+
+59
+00:03:55.060 --> 00:03:57.548
+very well. 
+So, what I'm going to do is write a 
+
+60
+00:03:57.548 --> 00:04:00.629
+function n times. 
+That, in addition to taking n and x, 
+
+61
+00:04:00.629 --> 00:04:04.632
+takes another argument, f. 
+And that f is going to capture the 
+
+62
+00:04:04.632 --> 00:04:07.946
+differences between the three functions 
+above. 
+
+63
+00:04:07.946 --> 00:04:11.117
+So, in every case, 
+I want to say, if n0, = 0, then just 
+
+64
+00:04:11.117 --> 00:04:15.728
+return that second argument. 
+Otherwise, I definitely want to call n 
+
+65
+00:04:15.728 --> 00:04:20.556
+times with the same function n - 1 and x. 
+And then, what I want to do to that 
+
+66
+00:04:20.556 --> 00:04:23.078
+recursive result, 
+well, that depends. 
+
+67
+00:04:23.078 --> 00:04:28.339
+And it depends on whether I want to do 
+doubling or incrementing or tailing. 
+
+68
+00:04:28.339 --> 00:04:33.959
+but in all cases, we'll just have the 
+caller pass in an f that does what we 
+
+69
+00:04:33.959 --> 00:04:36.802
+want. 
+So, that is our useful higher-order 
+
+70
+00:04:36.802 --> 00:04:42.689
+function and now let's see how we can use 
+that to do incrementing and doubling and 
+
+71
+00:04:42.689 --> 00:04:46.165
+tailing. 
+And so, let me first just define a couple 
+
+72
+00:04:46.165 --> 00:04:49.995
+very simple and very short helper 
+functions like this. 
+
+73
+00:04:49.995 --> 00:04:53.968
+There are various ways you can double 
+there's one, right? 
+
+74
+00:04:53.968 --> 00:04:59.500
+And now, what I can do is use n times in 
+various ways. So, if I wanted to double 
+
+75
+00:04:59.500 --> 00:05:02.480
+seven four times, then I would just do 
+that. 
+
+76
+00:05:02.480 --> 00:05:06.370
+And if I, oops, sorry. 
+x1 equals, there we go. 
+
+77
+00:05:06.370 --> 00:05:11.020
+if I wanted to increment seven four 
+times, 
+
+78
+00:05:11.020 --> 00:05:17.360
+then how about I make the exact same 
+call, but I pass an increment instead. 
+
+79
+00:05:17.360 --> 00:05:21.044
+And similarly, if I wanted to take the 
+tail, 
+
+80
+00:05:21.044 --> 00:05:28.413
+so maybe two tails of a list like 4, 8, 
+12, 16, it'll work just like that. 
+
+81
+00:05:28.413 --> 00:05:32.440
+And sure enough, if I come over here and 
+run it, 
+
+82
+00:05:33.800 --> 00:05:42.473
+functions as arguments.sml. 
+You'll see that x1 is 112, x2 is eleven, 
+
+83
+00:05:42.473 --> 00:05:47.146
+and x3 is 12,16. 
+So, we saved a lot of code reuse here. 
+
+84
+00:05:47.146 --> 00:05:52.170
+We got a lot more code reuse. 
+All we did here was use n times, 
+
+85
+00:05:52.170 --> 00:05:56.401
+increment double, which are very short 
+and then, use it in different ways. 
+
+86
+00:05:56.401 --> 00:05:58.952
+Now, you might be thinking, well, that's 
+great. 
+
+87
+00:05:58.952 --> 00:06:00.691
+But, you know, 
+callers, you know, 
+
+88
+00:06:00.691 --> 00:06:04.169
+users of my code shouldn't have to go to 
+this extra work. 
+
+89
+00:06:04.169 --> 00:06:06.720
+But, of course, they, they don't have to, 
+right? 
+
+90
+00:06:06.720 --> 00:06:10.430
+If I want to write my own increment 
+function that takes n and x. 
+
+91
+00:06:10.430 --> 00:06:14.778
+And how about I change its name, since we 
+know this is really just addition. 
+
+92
+00:06:14.778 --> 00:06:17.155
+As long as n is greater than or equal to 
+zero, 
+
+93
+00:06:17.155 --> 00:06:19.880
+none of these functions work for negative 
+n. 
+
+94
+00:06:19.880 --> 00:06:23.937
+I can just define this like this, 
+right? 
+
+95
+00:06:23.937 --> 00:06:30.244
+The function that takes n and x and 
+increments x n times can be implemented 
+
+96
+00:06:30.244 --> 00:06:33.729
+by calling n times with increment n and 
+x. 
+
+97
+00:06:33.729 --> 00:06:39.253
+And similarly, double n times could be 
+better written as this body. 
+
+98
+00:06:39.253 --> 00:06:43.189
+[SOUND] And finally, nth tail, 
+n, x can be written as this. 
+
+99
+00:06:43.189 --> 00:06:50.077
+And as always, callers of these functions 
+don't need to know and don't need to care 
+
+100
+00:06:50.077 --> 00:06:56.135
+that we've implemented them using the 
+same common code, n times, under the 
+
+101
+00:06:56.135 --> 00:06:59.268
+hood. 
+And then finally, suppose we did this, we 
+
+102
+00:06:59.268 --> 00:07:04.160
+are very happy with ourselves, 
+we can now go up and really get rid of or 
+
+103
+00:07:04.160 --> 00:07:09.188
+for the sake of simplicity, I'll just 
+comment out all this repetitive code. 
+
+104
+00:07:09.188 --> 00:07:15.012
+So, all we have now is n times and these 
+three helper functions, and then maybe 
+
+105
+00:07:15.012 --> 00:07:18.470
+sometime later, you'll realize that that 
+pattern, 
+
+106
+00:07:18.470 --> 00:07:22.490
+that reusable code, 
+that higher-order function n times is 
+
+107
+00:07:22.490 --> 00:07:26.652
+even more useful. 
+Maybe you come along and you realize that 
+
+108
+00:07:26.652 --> 00:07:29.897
+oh, you need to triple some number n 
+times, n, x. 
+
+109
+00:07:29.897 --> 00:07:33.706
+And you're like oh, 
+well, I'll just call n times with a 
+
+110
+00:07:33.706 --> 00:07:37.515
+little helper function triple that I'll 
+write and n, x. 
+
+111
+00:07:37.515 --> 00:07:40.759
+and, of course, I need to define triple 
+here. 
+
+112
+00:07:40.759 --> 00:07:44.850
+And it'll be three times x, alright? 
+And this is all wonderful. 
+
+113
+00:07:44.850 --> 00:07:48.660
+and let's go back and make sure we got 
+that all right. 
+
+114
+00:07:49.960 --> 00:07:55.888
+And sure enough, what we now have are 
+functions additional, addition and double 
+
+115
+00:07:55.888 --> 00:08:01.360
+n times, both of int star int arrow int. 
+We have nth tail of type int star alpha 
+
+116
+00:08:01.360 --> 00:08:06.149
+list arrow alpha list and triple n times 
+of int star arrow int. 
+
+117
+00:08:06.149 --> 00:08:11.849
+So, n times which fundamentally just 
+takes a function and an n and an x and 
+
+118
+00:08:11.849 --> 00:08:17.210
+ends up returning f of f of f of f. N 
+times of those applied to x is a 
+
+119
+00:08:17.210 --> 00:08:23.461
+generally reusable, beautiful high-order 
+function that we can reuse by passing in 
+
+120
+00:08:23.461 --> 00:08:26.780
+different functions in that position for 
+f. 
+
+121
+00:08:26.780 --> 00:08:31.199
+So, that seems like a great example. The 
+only thing that might be a little 
+
+122
+00:08:31.199 --> 00:08:35.740
+confusing to you is this type of n times 
+which looks a little complicated in 
+
+123
+00:08:35.740 --> 00:08:39.735
+polymorphic. And so, let's talk about 
+that a little bit more in the next 
+
+124
+00:08:39.735 --> 00:08:40.220
+segment. 

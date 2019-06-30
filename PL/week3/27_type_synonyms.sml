@@ -34,3 +34,7 @@ fun is_Queen_of_Spades2 c =
 but that is also
   val is_Queen_of_Spades2 = fn : card -> bool
 *)
+type foo = int
+fun add(x:foo,y:foo)=
+    x+y
+	   

@@ -1,0 +1,811 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:06.517
+[MUSIC] Okay, now in our study of lexical 
+scope, we can get to the motivation of 
+
+2
+00:00:06.517 --> 00:00:12.687
+why this is the symantecs you want. 
+So remember lexical scope is using the 
+
+3
+00:00:12.687 --> 00:00:19.092
+environment where a function is defined 
+to look up variables in the function 
+
+4
+00:00:19.092 --> 00:00:21.969
+body. 
+The other natural thing you might think 
+
+5
+00:00:21.969 --> 00:00:25.007
+of, go, does have a name, it's called 
+dynamic scope. 
+
+6
+00:00:25.007 --> 00:00:29.389
+If you have dynamic scope use the 
+environment where the function is called. 
+
+7
+00:00:29.389 --> 00:00:33.938
+So decades ago, these were considered 
+reasonable options and in a programming 
+
+8
+00:00:33.938 --> 00:00:38.231
+language course, you would study both and 
+think about which one of language you 
+
+9
+00:00:38.231 --> 00:00:41.432
+might have. 
+I think it's fair to say that, these 
+
+10
+00:00:41.432 --> 00:00:45.482
+days, lexical scope is considered the one 
+that makes sense. 
+
+11
+00:00:45.482 --> 00:00:50.457
+We'll talk a little bit at the end of 
+this segment about things that do work 
+
+12
+00:00:50.457 --> 00:00:50.782
+with dynamic scope, it is occasionally 
+useful. 
+
+13
+00:00:50.782 --> 00:00:55.342
+But lexical scope is really how 
+programming languages work these days. 
+
+14
+00:00:55.342 --> 00:00:59.892
+So, there are reasons for this and these 
+are precise technical reasons. 
+
+15
+00:00:59.892 --> 00:01:04.322
+Sometimes in programming languages, 
+things are just a matter of taste, 
+
+16
+00:01:04.322 --> 00:01:08.642
+but I'm about to show you things that 
+lexical scope let's you do, 
+
+17
+00:01:08.642 --> 00:01:13.052
+ways it let's you reason about code and 
+dynamic scope simply does not, 
+
+18
+00:01:13.052 --> 00:01:17.747
+and that much is not a matter of opinion. 
+The only opinion you might have is 
+
+19
+00:01:17.747 --> 00:01:21.302
+whether or not those reasons are good or 
+important. 
+
+20
+00:01:21.302 --> 00:01:25.261
+So let's just get started. 
+I'll show you three main reasons. 
+
+21
+00:01:25.261 --> 00:01:30.534
+The first two are actually related. 
+The first one I'll say that the meaning 
+
+22
+00:01:30.534 --> 00:01:34.809
+of a function does not depend on what 
+variable names you use. 
+
+23
+00:01:34.809 --> 00:01:37.959
+This is nice, 
+because you can go in and change the 
+
+24
+00:01:37.959 --> 00:01:42.328
+names of your variables, say to make them 
+more informative or to port them to 
+
+25
+00:01:42.328 --> 00:01:46.647
+different human language or something, 
+and you can know that it's not going to 
+
+26
+00:01:46.647 --> 00:01:50.273
+affects any of your callers. 
+So for example, look at this first 
+
+27
+00:01:50.273 --> 00:01:55.162
+function we see here we've seen a 
+function like this before, and suppose 
+
+28
+00:01:55.162 --> 00:01:59.876
+that you come along and say, you know, x 
+is not very, a very good name for that. I 
+
+29
+00:01:59.876 --> 00:02:04.540
+want to call it q of fu or pizza instead. 
+You could change it here and you could 
+
+30
+00:02:04.540 --> 00:02:08.372
+change it here and you would know that no 
+caller can tell. 
+
+31
+00:02:08.372 --> 00:02:12.393
+It's a local variable and the name of 
+local variables should really never 
+
+32
+00:02:12.393 --> 00:02:14.325
+matter. 
+It's good abstraction. 
+
+33
+00:02:14.325 --> 00:02:18.164
+It's good modularity. 
+It's good software engineering and it's 
+
+34
+00:02:18.164 --> 00:02:22.838
+only lexical scope that gives us that. 
+Let me show you that with the code here. 
+
+35
+00:02:22.838 --> 00:02:26.327
+So here, I have the function that we had 
+on the slide, 
+
+36
+00:02:26.327 --> 00:02:29.927
+I've just called it f1 to distinguish it 
+from f2 here. 
+
+37
+00:02:29.927 --> 00:02:33.502
+And f2, I've done the variable renaming I 
+suggested. 
+
+38
+00:02:33.502 --> 00:02:38.586
+It's exactly like f1, except I've used q 
+for my local variable both in its 
+
+39
+00:02:38.586 --> 00:02:43.709
+definition and its use instead of x. 
+And it turns out that no one will ever be 
+
+40
+00:02:43.709 --> 00:02:47.754
+able to tell. 
+If I call (f1 7) and get a function back, 
+
+41
+00:02:47.754 --> 00:02:51.618
+that function is going to add 15 to its 
+argument, 2y + 1. 
+
+42
+00:02:51.618 --> 00:02:57.382
+If I call (f2 7), I will get back a 
+function that adds 15 to its argument. 
+
+43
+00:02:57.382 --> 00:03:03.122
+All callers can tell is that I get back a 
+function that adds 15 to its argument, so 
+
+44
+00:03:03.122 --> 00:03:08.644
+both a1 and a2 will be 19. It doesn't 
+matter that there is an x in scope here. 
+
+45
+00:03:08.644 --> 00:03:14.322
+If we had dynamic scope, if we evaluated 
+these function bodies, x + y + z, q + y + 
+
+46
+00:03:14.322 --> 00:03:19.800
+z, where we called these functions 
+instead of where they were defined, then 
+
+47
+00:03:19.800 --> 00:03:24.630
+under dynamic scop, one of these 
+functions would end up using this 17 and 
+
+48
+00:03:24.630 --> 00:03:28.682
+the other one would actually end up with 
+an unidentified variable. 
+
+49
+00:03:28.682 --> 00:03:33.671
+because we would try to use q and there 
+would not be any q here, that's actually 
+
+50
+00:03:33.671 --> 00:03:38.317
+one of the other reasons we're going to 
+get to, okay? So that's our first reason 
+
+51
+00:03:38.317 --> 00:03:42.486
+is that function domain does not depend 
+on the variable name uses. 
+
+52
+00:03:42.486 --> 00:03:47.627
+I actually already showed you another 
+example of this which is the second 
+
+53
+00:03:47.627 --> 00:03:51.752
+example down here, that it lets you 
+remove unused variables. 
+
+54
+00:03:51.752 --> 00:03:57.202
+In the previous segment, I showed you an 
+example where we had a function body that 
+
+55
+00:03:57.202 --> 00:04:01.202
+was let val x = 3 or something like that, 
+in g called 2. 
+
+56
+00:04:01.202 --> 00:04:05.192
+This val x is irrelevant, so it would be 
+fine to remove it. 
+
+57
+00:04:05.192 --> 00:04:10.486
+On the other hand, if we had dynamic 
+scope, then if the caller to f passed in 
+
+58
+00:04:10.486 --> 00:04:15.464
+some g that had in its function body x, 
+we might end up using that x, because 
+
+59
+00:04:15.464 --> 00:04:21.153
+here is the call site and under dynamic 
+scope, which is not what ML has. We would 
+
+60
+00:04:21.153 --> 00:04:25.502
+end up using the environment where the 
+function was called. 
+
+61
+00:04:25.502 --> 00:04:29.909
+So you really need lexical scope, to 
+reason about these functions this way, 
+
+62
+00:04:29.909 --> 00:04:32.830
+this way, 
+and this is essential, for modularity of 
+
+63
+00:04:32.830 --> 00:04:36.116
+the software. 
+And modularity, in software is one of the 
+
+64
+00:04:36.116 --> 00:04:39.982
+most important features you want from 
+your programming language. 
+
+65
+00:04:39.982 --> 00:04:41.354
+Okay. 
+On to reason two, 
+
+66
+00:04:41.354 --> 00:04:44.351
+somewhat similar. 
+Functions can be type checked and 
+
+67
+00:04:44.351 --> 00:04:48.272
+reasoned about where they're defined not 
+where they're used. 
+
+68
+00:04:48.272 --> 00:04:53.370
+So let's look at this example. 
+we can just look at it on this slide 
+
+69
+00:04:53.370 --> 00:04:56.849
+here. 
+I look at this function f, which we, it's 
+
+70
+00:04:56.849 --> 00:05:02.337
+the same one I've been showing you. 
+And we can reason about the fact that it 
+
+71
+00:05:02.337 --> 00:05:07.941
+returns 2y + 1 and its function that when 
+called returned 2y + 1, excuse me. 
+
+72
+00:05:07.941 --> 00:05:11.440
+And its type is take an int and return an 
+int arrow int. 
+
+73
+00:05:11.440 --> 00:05:16.484
+So its type is int arrow, int arrow int. 
+Once we know that it type checks, we know 
+
+74
+00:05:16.484 --> 00:05:20.693
+that if we call it with an int, that 
+shouldn't lead to any problems. 
+
+75
+00:05:20.693 --> 00:05:25.712
+And indeed, when we call it was 7 here on 
+the second to last line, we get back the 
+
+76
+00:05:25.712 --> 00:05:30.873
+function that will add 15 to its argument 
+and then when we call that with 4 we get 
+
+77
+00:05:30.873 --> 00:05:33.675
+19. 
+What if we had dynamic scope? If we had 
+
+78
+00:05:33.675 --> 00:05:37.851
+dynamic scope, then down here at the 
+bottom, when we end up calling this 
+
+79
+00:05:37.851 --> 00:05:41.924
+function, we go to evaluate x + y + z. 
+What we're going to get back, hm, 
+
+80
+00:05:41.924 --> 00:05:44.325
+we're going to look up x in our 
+environment, 
+
+81
+00:05:44.325 --> 00:05:48.220
+we're going to get a string. 
+That's a really bad idea since you can't 
+
+82
+00:05:48.220 --> 00:05:50.888
+add strings in ML. 
+We're going to look up y in the 
+
+83
+00:05:50.888 --> 00:05:54.242
+environment. 
+We're going to get an undefined variable. 
+
+84
+00:05:54.242 --> 00:05:57.157
+Well, no, 
+y we might get, or z because there is no 
+
+85
+00:05:57.157 --> 00:05:59.997
+y and z here. 
+Those are undefined variables. 
+
+86
+00:05:59.997 --> 00:06:04.592
+So our whole purpose of type checking 
+just got thrown out the window with 
+
+87
+00:06:04.592 --> 00:06:09.237
+dynamic scope, because we end up using 
+the wrong variables in the wrong places. 
+
+88
+00:06:09.237 --> 00:06:13.972
+Okay? Onto our third and probably most 
+exciting example, because it's going to 
+
+89
+00:06:13.972 --> 00:06:18.712
+to let us do new things. Closures just 
+got much more powerful, because we can 
+
+90
+00:06:18.712 --> 00:06:23.133
+use this lexical scope idea to have them 
+store whatever data they need. 
+
+91
+00:06:23.133 --> 00:06:27.905
+And this is, works particularly well with 
+functions like map and filter that I've 
+
+92
+00:06:27.905 --> 00:06:31.191
+showed you before that iterate over data 
+structures. 
+
+93
+00:06:31.191 --> 00:06:35.164
+So, I have the same code over here. Let 
+me get to it here. Alright. 
+
+94
+00:06:35.164 --> 00:06:37.856
+So, we have seen the function filter 
+before. 
+
+95
+00:06:37.856 --> 00:06:42.266
+This is just a function that takes a 
+function f and a list xs and returns a 
+
+96
+00:06:42.266 --> 00:06:46.330
+list that only contains the elements of 
+xs for which f returns true. 
+
+97
+00:06:46.330 --> 00:06:49.593
+Okay? 
+So suppose that I wanted to filter on all 
+
+98
+00:06:49.593 --> 00:06:55.139
+of the, I wanted all the numbers that 
+were greater than negative one or the 
+
+99
+00:06:55.139 --> 00:06:59.506
+nonnegative numbers. 
+Here is the way I could implement that in 
+
+100
+00:06:59.506 --> 00:07:04.247
+these two lines using filter. 
+What I'm going to do is I am going to 
+
+101
+00:07:04.247 --> 00:07:10.258
+define a little high order function here 
+it takes in a number x and it returns the 
+
+102
+00:07:10.258 --> 00:07:15.940
+function that takes a y and returns true 
+if y > x. 
+
+103
+00:07:15.940 --> 00:07:20.286
+So greater than x has type int arrow int 
+arrow int. 
+
+104
+00:07:20.286 --> 00:07:26.676
+So, down here where I call greater than x 
+with minus one, I'll get back an int 
+
+105
+00:07:26.676 --> 00:07:27.399
+arrow int. 
+Okay? 
+
+106
+00:07:27.399 --> 00:07:34.869
+So if I call filter with the result of 
+this call, that's essentially going to be 
+
+107
+00:07:34.869 --> 00:07:40.213
+a function that takes in a y And asks is 
+y > -1? 
+
+108
+00:07:40.213 --> 00:07:44.800
+Filter that over the list, 
+I get a function that takes a list and 
+
+109
+00:07:44.800 --> 00:07:49.742
+returns all the nonnegative numbers in 
+the list, zero or positive. 
+
+110
+00:07:49.742 --> 00:07:54.385
+So where are we using lexical, lexical 
+scope here? In the creation of this 
+
+111
+00:07:54.385 --> 00:08:00.194
+function that would pass the filter, 
+greater than x, when called with minus 
+
+112
+00:08:00.194 --> 00:08:06.964
+one, returns a closure that captures, 
+stores in its environment that x is minus 
+
+113
+00:08:06.964 --> 00:08:10.638
+one. 
+So, when we pass this function into 
+
+114
+00:08:10.638 --> 00:08:15.922
+filter, we will be asking for each 
+element of the list, 
+
+115
+00:08:15.922 --> 00:08:20.540
+is that element greater than minus one? 
+It does not matter that up here in the 
+
+116
+00:08:20.540 --> 00:08:26.492
+body of filter, there's a different x. 
+If we had dynamic scope, this would not 
+
+117
+00:08:26.492 --> 00:08:31.851
+this, would ask is a number greater than 
+itself, we would get false, and we had 
+
+118
+00:08:31.851 --> 00:08:37.199
+filter everything out of our list. 
+What's going on here in general is that 
+
+119
+00:08:37.199 --> 00:08:42.727
+filter just says give me a function, any 
+function f, and it does not care about 
+
+120
+00:08:42.727 --> 00:08:47.906
+the fact that the closure pass then, can 
+have whatever data it needs in its 
+
+121
+00:08:47.906 --> 00:08:51.209
+environment. 
+In this example, it's using just minus 
+
+122
+00:08:51.209 --> 00:08:55.073
+one that was stored when we created the 
+closure here. 
+
+123
+00:08:55.073 --> 00:09:00.872
+I may show you a second example using an 
+unanimous function. We also call filter. 
+
+124
+00:09:00.872 --> 00:09:06.238
+This is a function all greater than or 
+all greater, that takes in a list and a 
+
+125
+00:09:06.238 --> 00:09:11.548
+number and filter out all the numbers 
+less than n, less than or equal to n. 
+
+126
+00:09:11.548 --> 00:09:15.362
+So it only returns strings strictly 
+greater than n. 
+
+127
+00:09:15.362 --> 00:09:20.030
+So, I call filter, I call it with this 
+little anonymous function n, xs, and 
+
+128
+00:09:20.030 --> 00:09:25.288
+notice that when I pass in this function, 
+it's going to end up getting called in 
+
+129
+00:09:25.288 --> 00:09:29.896
+the body of filter between if and then. 
+But we look up variables in the body of 
+
+130
+00:09:29.896 --> 00:09:34.850
+that function, not where the function is 
+called but where the function is defined. 
+
+131
+00:09:34.850 --> 00:09:39.219
+So when we look up this n, we will always 
+get the n that was passed into all 
+
+132
+00:09:39.219 --> 00:09:42.326
+greater. 
+So this will work correctly if you call a 
+
+133
+00:09:42.326 --> 00:09:46.468
+greater with a list and 17, we will 
+filter out anything that is 17 or less 
+
+134
+00:09:46.468 --> 00:09:49.137
+and we need lexical scope to do that. 
+Alright? 
+
+135
+00:09:49.137 --> 00:09:53.468
+Let's go back to the slides we will see 
+more examples of this after I show you 
+
+136
+00:09:53.468 --> 00:09:58.139
+some other high-order functions, but this 
+is really where we get a lot of the power 
+
+137
+00:09:58.139 --> 00:10:01.197
+of closures. 
+And now, let me ask the question, if 
+
+138
+00:10:01.197 --> 00:10:05.467
+dynamic scope is such a bad idea, why do 
+we even have a name for it? Okay? 
+
+139
+00:10:05.467 --> 00:10:09.977
+So, people now do realize that lexical 
+scope for variables is definitely the 
+
+140
+00:10:09.977 --> 00:10:12.932
+right default. 
+It's very common behavior across 
+
+141
+00:10:12.932 --> 00:10:17.457
+programming languages, it's important 
+when designing a language to get this 
+
+142
+00:10:17.457 --> 00:10:19.907
+right. 
+Now, dynamic scope is occasionally 
+
+143
+00:10:19.907 --> 00:10:24.702
+convenient in some situations. 
+And so some languages, for example Racket 
+
+144
+00:10:24.702 --> 00:10:28.990
+which we'll use later in the course have 
+special ways to do it. 
+
+145
+00:10:28.990 --> 00:10:33.660
+You can add to your language a special 
+kind of variable, separate from the 
+
+146
+00:10:33.660 --> 00:10:36.884
+regular variables, that works with 
+dynamic scope. 
+
+147
+00:10:36.884 --> 00:10:40.374
+Most languages don't bother but it can be 
+convenient. 
+
+148
+00:10:40.374 --> 00:10:45.996
+an example is trying to change through 
+dynamic scoping where output is 
+
+149
+00:10:45.996 --> 00:10:50.166
+redirected to certain files and things. 
+I'm not going to show an example here. 
+
+150
+00:10:50.166 --> 00:10:54.328
+The other thing I would like to point out 
+is if you squint a little bit and think 
+
+151
+00:10:54.328 --> 00:10:58.266
+about it, exceptions, which we saw 
+previously in the course, act a little 
+
+152
+00:10:58.266 --> 00:11:02.166
+bit like dynamic scope. 
+If you think about a handle expression 
+
+153
+00:11:02.166 --> 00:11:07.434
+and when you raise an exception, which 
+handler does it go to? It's not lexical. 
+
+154
+00:11:07.434 --> 00:11:10.312
+You don't look at the structure of the 
+code. 
+
+155
+00:11:10.312 --> 00:11:14.792
+It's not the closest handle expression 
+where the raise was defined. 
+
+156
+00:11:14.792 --> 00:11:20.700
+It's the closest handle on the call stack 
+in the current dynamic nesting of calls 
+
+157
+00:11:20.700 --> 00:11:26.041
+and that is much more like dynamic scope. 
+You look up the current handler, 
+
+158
+00:11:26.041 --> 00:11:31.016
+is it, did your caller want to handle 
+this exception? Did its callers want to, 
+
+159
+00:11:31.016 --> 00:11:33.567
+and it's not based on where things were 
+defined. 
+
+160
+00:11:33.567 --> 00:11:37.323
+And lots of experience with exception 
+handling just suggests that for 
+
+161
+00:11:37.323 --> 00:11:41.365
+exceptions, that's a better default, 
+people find that more convenient and 
+
+162
+00:11:41.365 --> 00:11:44.158
+better stylistically when designing their 
+software. 

@@ -1,0 +1,805 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:05.198
+[MUSIC] In this segment we're going to 
+port our ML list library to C, which is a 
+
+2
+00:00:05.198 --> 00:00:08.457
+language that does not have objects or 
+closures. 
+
+3
+00:00:08.457 --> 00:00:13.692
+We're going to use some fairly advance C, 
+so if you're not an expert C programmer, 
+
+4
+00:00:13.692 --> 00:00:18.828
+then maybe some little parts that don't 
+make sense to you, but perhaps you can 
+
+5
+00:00:18.828 --> 00:00:23.594
+still get the high level idea. 
+If your'e more novice C programmer, you 
+
+6
+00:00:23.594 --> 00:00:27.112
+might want to leave this segment for 
+another day. 
+
+7
+00:00:27.112 --> 00:00:29.927
+But give it a try and see if you get the 
+sense of it. 
+
+8
+00:00:29.927 --> 00:00:34.156
+So as I mentioned, closures and objects 
+during the programming objects have 
+
+9
+00:00:34.156 --> 00:00:36.907
+something that's seed is not built in by 
+default. 
+
+10
+00:00:36.907 --> 00:00:41.272
+And that's that you can have parts of 
+your things, your closures your objects, 
+
+11
+00:00:41.272 --> 00:00:45.912
+that do not show up in their type. 
+The fields of an object that implement an 
+
+12
+00:00:45.912 --> 00:00:51.092
+interface, not relevant to the interface 
+you're implementing, and for everyone, 
+
+13
+00:00:51.092 --> 00:00:56.112
+the ML function types do not mention the 
+types of the private fields, the things 
+
+14
+00:00:56.112 --> 00:01:00.927
+that happen to be in the environment. 
+Now in C, in case you didn't know this, 
+
+15
+00:01:00.927 --> 00:01:05.947
+functions really are first class in the 
+sense that you can pass them around, you 
+
+16
+00:01:05.947 --> 00:01:10.572
+can put them in data structures, you can 
+pass one function to another. 
+
+17
+00:01:10.572 --> 00:01:16.202
+But they're just function pointers. 
+Closures in ML have code and environment. 
+
+18
+00:01:16.202 --> 00:01:21.802
+Function pointers in C are only the code. 
+So if you've just passed the function 
+
+19
+00:01:21.802 --> 00:01:27.587
+pointer with the normal sort of arguments 
+that you expect, it will only be able to 
+
+20
+00:01:27.587 --> 00:01:30.909
+use those arguments and any global 
+variables. 
+
+21
+00:01:30.909 --> 00:01:35.269
+It has no access to any other 
+environment, certainly not the func the 
+
+22
+00:01:35.269 --> 00:01:37.952
+environment where the function was 
+defined. 
+
+23
+00:01:37.952 --> 00:01:41.156
+And in fact functions have to be defined 
+at top level. 
+
+24
+00:01:41.156 --> 00:01:44.533
+Right, you can't define one function 
+inside of another. 
+
+25
+00:01:44.533 --> 00:01:48.882
+Although some C compilers support some 
+extensions to allow that. 
+
+26
+00:01:48.882 --> 00:01:53.932
+and so we have to do this ourselves, and 
+so there are various ways to do this, but 
+
+27
+00:01:53.932 --> 00:01:58.882
+the common technique, the technique I 
+usually see in idiomatic C code, is that 
+
+28
+00:01:58.882 --> 00:02:04.264
+whenever you're using function pointers, 
+have them take an extra argument and that 
+
+29
+00:02:04.264 --> 00:02:09.457
+extra argument should be the environment 
+and it can be some, whatever is needed 
+
+30
+00:02:09.457 --> 00:02:14.577
+and it should be passed along with the 
+function pointer and then passed back to 
+
+31
+00:02:14.577 --> 00:02:18.372
+the function pointer when the function 
+pointer is used. 
+
+32
+00:02:18.372 --> 00:02:20.987
+Now I'm going to show you an example of 
+that. 
+
+33
+00:02:20.987 --> 00:02:25.442
+The other high level idea in our code, is 
+that we don't have type variables. 
+
+34
+00:02:25.442 --> 00:02:29.687
+We don't have quote A, quote B. 
+We don't have generics like in java, or C 
+
+35
+00:02:29.687 --> 00:02:32.987
+sharp, or Skala. 
+And so, we're going to have to just use 
+
+36
+00:02:32.987 --> 00:02:37.482
+this type void star, which is going to 
+lead to lots of casts between types. 
+
+37
+00:02:37.482 --> 00:02:40.101
+Because we don't really have a better 
+choice. 
+
+38
+00:02:40.101 --> 00:02:42.606
+Okay? So with that, let's look at the 
+code. 
+
+39
+00:02:42.606 --> 00:02:45.602
+here I'm just defining a little list 
+type. 
+
+40
+00:02:45.602 --> 00:02:49.442
+It's just something with two fields. 
+A head field and a tail field. 
+
+41
+00:02:49.442 --> 00:02:51.922
+My head field, there's no good type for 
+it. 
+
+42
+00:02:51.922 --> 00:02:55.069
+because I want it to be generic, so I'll 
+just use void star. 
+
+43
+00:02:55.069 --> 00:02:57.722
+My tail will be a pointer to another 
+list. 
+
+44
+00:02:57.722 --> 00:03:01.516
+I have a little helper function here for 
+constructing lists. 
+
+45
+00:03:01.516 --> 00:03:04.858
+It just takes in the field 
+the head and the tail. 
+
+46
+00:03:04.858 --> 00:03:09.881
+mallocs allocates room, initializes the 
+field and returns a pointer to the 
+
+47
+00:03:09.881 --> 00:03:13.499
+allocated thing. 
+I am using null here, or some sort of 
+
+48
+00:03:13.499 --> 00:03:16.929
+sentinel. 
+Zero, if you will for representing the 
+
+49
+00:03:16.929 --> 00:03:20.307
+empty list. 
+Okay? So that's the end of the simple 
+
+50
+00:03:20.307 --> 00:03:23.196
+stuff. 
+Now our library has to implement map 
+
+51
+00:03:23.196 --> 00:03:25.592
+filter and length. 
+So, here is map. 
+
+52
+00:03:25.592 --> 00:03:30.753
+And the syntax for function pointers in C 
+is not something I've ever been 
+
+53
+00:03:30.753 --> 00:03:33.914
+particularly fond of. 
+But it gets the job done. 
+
+54
+00:03:33.914 --> 00:03:37.891
+I want to take in a function argument. 
+And the list argument. 
+
+55
+00:03:37.891 --> 00:03:42.367
+We're used to that, okay? What we're 
+generally used to is that the, we have 
+
+56
+00:03:42.367 --> 00:03:47.189
+this list, and this function would take 
+one argument, which would be the element 
+
+57
+00:03:47.189 --> 00:03:51.533
+of the list, and return one argument, 
+which is the thing to put in the new 
+
+58
+00:03:51.533 --> 00:03:54.390
+list. 
+But in, if you just do it that way, if 
+
+59
+00:03:54.390 --> 00:03:59.542
+you just add one argument here, and you 
+don't have the second argument I'm about 
+
+60
+00:03:59.542 --> 00:04:03.442
+to explain, that function pointer cannot 
+be a full closure. 
+
+61
+00:04:03.442 --> 00:04:07.985
+It can only refer to its argument. 
+That will work for some things. 
+
+62
+00:04:07.985 --> 00:04:12.240
+Like our example where we want to double 
+every element to the list. 
+
+63
+00:04:12.240 --> 00:04:14.929
+because we can multiply by 2, if nothing 
+else. 
+
+64
+00:04:14.929 --> 00:04:19.873
+But it won't work for other clients. 
+Like, our account ends, because there's 
+
+65
+00:04:19.873 --> 00:04:24.541
+no way to get that value env back to f. 
+So, the idiom in C is to always have an 
+
+66
+00:04:24.541 --> 00:04:29.195
+extra argument in 2 places. 
+f takes an extra argument and map takes 
+
+67
+00:04:29.195 --> 00:04:34.531
+an extra argument. And what map is going 
+to do is, every time it calls f, it's 
+
+68
+00:04:34.531 --> 00:04:39.480
+just going to pass env back, and so 
+whatever the caller to map needs f to 
+
+69
+00:04:39.480 --> 00:04:44.333
+know about, those private fields from our 
+closure aren't so private anymore. 
+
+70
+00:04:44.333 --> 00:04:48.032
+They're now in this env argument, and 
+then we can pass it to f, and that makes 
+
+71
+00:04:48.032 --> 00:04:51.136
+map, much more useful. 
+Now again, we're using the type void 
+
+72
+00:04:51.136 --> 00:04:54.862
+star, because we have no idea what the 
+type of env should be, and that's going 
+
+73
+00:04:54.862 --> 00:04:57.982
+to lead to a lot of annoying type casts 
+when we go to use map. 
+
+74
+00:04:57.982 --> 00:05:02.225
+And in C that's unavoidable if you want 
+map to work for lists and functions of 
+
+75
+00:05:02.225 --> 00:05:05.051
+any type. 
+All right, so given all that, the actual 
+
+76
+00:05:05.051 --> 00:05:08.415
+body of map is pretty easy if you write 
+it in a recursive way. 
+
+77
+00:05:08.415 --> 00:05:12.962
+It's not particularly conventional to 
+write a lot of recursive functions in C. 
+
+78
+00:05:12.962 --> 00:05:16.905
+it's considered less efficient. 
+But it's much more elegant. 
+
+79
+00:05:16.905 --> 00:05:21.794
+I'm much more confident this is correct 
+than if I wrote a complicated version 
+
+80
+00:05:21.794 --> 00:05:25.243
+with while loops and pointers and all 
+that sort of stuff. 
+
+81
+00:05:25.243 --> 00:05:28.139
+So, if xs is null, the empty list is 
+passed in. 
+
+82
+00:05:28.139 --> 00:05:31.382
+Return the empty list. 
+Otherwise, make a new list. 
+
+83
+00:05:31.382 --> 00:05:37.127
+Out of calling f not just with the head 
+of the list, but also with env and then 
+
+84
+00:05:37.127 --> 00:05:43.067
+the tail of the list is mapping f with 
+the same env across xs arrow tail, so 
+
+85
+00:05:43.067 --> 00:05:47.216
+that is map. 
+Filter is similar, the function we want 
+
+86
+00:05:47.216 --> 00:05:51.514
+pass in should now return a bool or an 
+int if you preferred. 
+
+87
+00:05:51.514 --> 00:05:56.804
+Bool is now a standard in C. 
+again I want this have to take not just 
+
+88
+00:05:56.804 --> 00:06:02.945
+the list element which I will put right 
+here but also an environment which is the 
+
+89
+00:06:02.945 --> 00:06:06.702
+second argument to filter. 
+And then of course filter needs to take 
+
+90
+00:06:06.702 --> 00:06:09.758
+in a list. 
+And, if given the empty list, it returns 
+
+91
+00:06:09.758 --> 00:06:12.962
+the empty list. 
+Here, I call this predecet function f 
+
+92
+00:06:12.962 --> 00:06:17.247
+with the environment passing back 
+whatever data it needs and the head of 
+
+93
+00:06:17.247 --> 00:06:20.121
+the list. 
+If that returns true, then make a list 
+
+94
+00:06:20.121 --> 00:06:24.220
+that includes the head where the tail is 
+filtering f across the tail. 
+
+95
+00:06:24.220 --> 00:06:29.148
+Otherwise, just filter with f across the 
+tail, alright? for length, there's really 
+
+96
+00:06:29.148 --> 00:06:32.975
+no reason for recursion, no function 
+pointers, this is pretty easy. 
+
+97
+00:06:32.975 --> 00:06:37.218
+I went ahead and allowed myself to use a 
+mutable variable and a while loop and 
+
+98
+00:06:37.218 --> 00:06:41.755
+just walk down the list, xs = xs->tail, 
+incrementing ans and then, returning it. 
+
+99
+00:06:41.755 --> 00:06:46.632
+mutating local variables is a, 
+it's a fairly reasonable thing to do in 
+
+100
+00:06:46.632 --> 00:06:49.327
+C, and actually in any programming 
+language. 
+
+101
+00:06:49.327 --> 00:06:53.847
+Okay? So that is our library, and the 
+thing I really want to emphasize before 
+
+102
+00:06:53.847 --> 00:06:58.317
+we get to the clients of the library, is 
+that whenever you're using function 
+
+103
+00:06:58.317 --> 00:07:01.487
+pointers in C, 
+I don't want you to just take in the 
+
+104
+00:07:01.487 --> 00:07:05.802
+argument like the head of the list that 
+you think the function needs. 
+
+105
+00:07:05.802 --> 00:07:09.707
+Always add one extra argument, like you 
+saw in the code and you see in this 
+
+106
+00:07:09.707 --> 00:07:13.960
+second yellow box on the slide, and have 
+the caller take in that extra argument. 
+
+107
+00:07:13.960 --> 00:07:17.923
+Now, if you don't want that extra 
+argument, you can code this up with strux 
+
+108
+00:07:17.923 --> 00:07:22.500
+and other things, but always have the 
+function pointer take the extra argument. 
+
+109
+00:07:22.500 --> 00:07:26.806
+Now why am I emphasizing this? It turns 
+out list libraries like this are not 
+
+110
+00:07:26.806 --> 00:07:31.326
+common in C, okay? People don't write 
+list libraries like this, they just kind 
+
+111
+00:07:31.326 --> 00:07:34.372
+of live without map and filter to be 
+honest with you. 
+
+112
+00:07:34.372 --> 00:07:39.560
+But they do have callbacks, a different 
+closure idiom that I think is just as 
+
+113
+00:07:39.560 --> 00:07:43.028
+important. 
+And when you're writing interfaces and 
+
+114
+00:07:43.028 --> 00:07:46.875
+libraries that use callbacks, please do 
+the same thing. 
+
+115
+00:07:46.875 --> 00:07:52.242
+Let the functions that are registered as 
+callbacks have access to an environment, 
+
+116
+00:07:52.242 --> 00:07:56.712
+so they have the private state they need. 
+Conversely, if you're using these 
+
+117
+00:07:56.712 --> 00:08:01.272
+libraries, and you see these extra void* 
+arguments, now you know why they are 
+
+118
+00:08:01.272 --> 00:08:05.547
+there, and hopefully you can use them 
+effectively to get the benefit of 
+
+119
+00:08:05.547 --> 00:08:10.132
+closures, with the tiny detail that you 
+have to cast to and from void* all over 
+
+120
+00:08:10.132 --> 00:08:14.332
+the place, because the library 
+implementer can't predict what type you 
+
+121
+00:08:14.332 --> 00:08:18.531
+need for your private data. 
+So let's see that typecasting issue by 
+
+122
+00:08:18.531 --> 00:08:22.864
+coming back here and seeing some clients. 
+here is my client of map. 
+
+123
+00:08:22.864 --> 00:08:27.680
+So this is a function that takes in a 
+list, presumably of integers that should 
+
+124
+00:08:27.680 --> 00:08:32.609
+really be documented somewhere, that we 
+assume xs here holds ints and returns a 
+
+125
+00:08:32.609 --> 00:08:36.710
+list of ints where every element is 
+doubled and what I want to do is I want 
+
+126
+00:08:36.710 --> 00:08:40.449
+to call map with this function double int 
+I defined right here. 
+
+127
+00:08:40.449 --> 00:08:42.966
+So that's how you pass a function pointer 
+in C. 
+
+128
+00:08:42.966 --> 00:08:47.251
+Just like ML, we've defined a function. 
+Now we can pass it to another function. 
+
+129
+00:08:47.251 --> 00:08:51.241
+We don't need an environment here. 
+So, double int can just ignore it. 
+
+130
+00:08:51.241 --> 00:08:54.895
+So let's just pass a null for that 
+argument, map takes requires that 
+
+131
+00:08:54.895 --> 00:08:57.957
+argument there. 
+We just don't care what it is and, of 
+
+132
+00:08:57.957 --> 00:09:02.772
+course, the list. And so double int to be 
+the type that map expects, has to take in 
+
+133
+00:09:02.772 --> 00:09:06.527
+a void star for the argument. 
+I've called it ignore, because I'm not 
+
+134
+00:09:06.527 --> 00:09:10.902
+going to use it, and a void star for the 
+list element, which we know will be an 
+
+135
+00:09:10.902 --> 00:09:15.327
+int, but that's not the type that C 
+expects, so now, in the body, we have to 
+
+136
+00:09:15.327 --> 00:09:18.872
+take that i, cast it to an inpointer, 
+then multiply it by 2. 
+
+137
+00:09:18.872 --> 00:09:20.962
+The cast it back to avoid star. 
+If you do that, you'll avoid all compiler 
+
+138
+00:09:20.962 --> 00:09:26.481
+warnings related to the types. 
+and then that was double all. 
+
+139
+00:09:26.481 --> 00:09:31.296
+Now we need to count ns. 
+So, the way we did it in ML was we 
+
+140
+00:09:31.296 --> 00:09:38.101
+filtered our list, so that it only held 
+the elements that were equal to n to 
+
+141
+00:09:38.101 --> 00:09:41.681
+begin with. 
+And then we took the length of that, so 
+
+142
+00:09:41.681 --> 00:09:46.616
+I'm doing the same thing here, length of 
+filter of something, so we just need to 
+
+143
+00:09:46.616 --> 00:09:51.319
+understand the argument to filter. 
+Clearly, we pass in the list, we pass in 
+
+144
+00:09:51.319 --> 00:09:56.915
+this function pointer, is N, that just 
+decides if, The argument is given, is the 
+
+145
+00:09:56.915 --> 00:10:00.192
+same as aha, 
+this n that were passing in the 
+
+146
+00:10:00.192 --> 00:10:03.747
+environment. 
+The private data we need here is n. 
+
+147
+00:10:03.747 --> 00:10:09.363
+That was what we use from our environment 
+in ml, and now we're going to pass it as 
+
+148
+00:10:09.363 --> 00:10:13.983
+this extra argument. 
+And so now, here's our function, is n. 
+
+149
+00:10:13.983 --> 00:10:17.557
+It takes an environment, which will be 
+the n we're looking for. 
+
+150
+00:10:17.557 --> 00:10:20.089
+And the next element of the list, which 
+is i. 
+
+151
+00:10:20.089 --> 00:10:24.147
+Those both, those, have to have type 
+void* to appease the type checker. 
+
+152
+00:10:24.147 --> 00:10:27.957
+So we cast them both to ints. 
+This is the type you're supposed to use 
+
+153
+00:10:27.957 --> 00:10:31.320
+when casting to and from pointers. 
+We see if they're equal. 
+
+154
+00:10:31.320 --> 00:10:33.808
+And we return the corresponding. 
+In bool. 
+
+155
+00:10:33.808 --> 00:10:35.130
+Alright. 
+Bottom line. 
+
+156
+00:10:35.130 --> 00:10:39.600
+Extra argument to your function pointers. 
+Get used to casting to and from void 
+
+157
+00:10:39.600 --> 00:10:42.269
+star. 
+And you can actually use closures in C by 
+
+158
+00:10:42.269 --> 00:10:45.581
+manually constructing the environments as 
+you need them. 
+
+159
+00:10:45.581 --> 00:10:49.887
+If you think that's painful, then you 
+agree with me that you want a language 
+
+160
+00:10:49.887 --> 00:10:54.307
+that helps you automatically construct 
+your closures so that you can use them 
+
+161
+00:10:54.307 --> 00:10:55.529
+without all this pain. 
