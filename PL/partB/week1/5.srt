@@ -1,0 +1,681 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:06.381
+[MUSIC] In this segment, I want to have 
+out first discussion about how Racket is 
+
+2
+00:00:06.381 --> 00:00:11.404
+a dynamically typed language, and 
+emphasize how it lets us build up our 
+
+3
+00:00:11.404 --> 00:00:17.178
+data structures without any type system 
+or type checker getting in our way. 
+
+4
+00:00:17.178 --> 00:00:19.988
+So, this is a major topic that we'll 
+discuss later. 
+
+5
+00:00:19.988 --> 00:00:23.054
+After we're more familiar with them, 
+dynamic typing, 
+
+6
+00:00:23.054 --> 00:00:27.155
+I want to contrast it with static typing 
+and discuss the advantages and 
+
+7
+00:00:27.155 --> 00:00:30.705
+disadvantages of each. 
+But, for right now, we just need to get 
+
+8
+00:00:30.705 --> 00:00:35.009
+used to the idea that Racket doesn't 
+detect a lot of things as type errors, 
+
+9
+00:00:35.009 --> 00:00:39.466
+and understand what that let's us do. 
+Now, you may get frustrated by the lack 
+
+10
+00:00:39.466 --> 00:00:42.607
+of a type checker. 
+As much as you don't like type error 
+
+11
+00:00:42.607 --> 00:00:45.980
+messages, they're often better than not 
+getting them. 
+
+12
+00:00:45.980 --> 00:00:50.590
+So, if you made a mistake in your Racket 
+code, like write something like n*x 
+
+13
+00:00:50.590 --> 00:00:55.328
+instead of times nx, Racket will let you 
+run that code without any problem. and if 
+
+14
+00:00:55.328 --> 00:00:58.212
+you don't execute that particular 
+expression, 
+
+15
+00:00:58.212 --> 00:01:02.568
+you'll never see that it's an error. So, 
+it's only if you have a test case that 
+
+16
+00:01:02.568 --> 00:01:07.189
+actually gets there, looks up and in the 
+environment, presumably does not find a 
+
+17
+00:01:07.189 --> 00:01:11.445
+function expecting two arguments, the 
+first of which is times that you will get 
+
+18
+00:01:11.445 --> 00:01:15.069
+an error message. 
+Okay? So, it makes testing for this sort 
+
+19
+00:01:15.069 --> 00:01:19.679
+of error actually more important. 
+But the advantages, it let's us build 
+
+20
+00:01:19.679 --> 00:01:24.573
+very flexible data structures without 
+having to go through a bunch of work to 
+
+21
+00:01:24.573 --> 00:01:27.532
+tell the type checker what we're trying 
+to do. 
+
+22
+00:01:27.532 --> 00:01:32.629
+So, the example we're going to do in this 
+segment is we're going to end up writing 
+
+23
+00:01:32.629 --> 00:01:35.947
+a sum function, that sums up all numbers 
+in a list. 
+
+24
+00:01:35.947 --> 00:01:40.971
+But its not just a list of numbers. 
+Our list can either have numbers or other 
+
+25
+00:01:40.971 --> 00:01:46.122
+lists of numbers, or inside those list 
+more lists that have more lists or 
+
+26
+00:01:46.122 --> 00:01:49.386
+numbers. 
+And so, what we're, what the idea is to 
+
+27
+00:01:49.386 --> 00:01:54.673
+allow arbitrary nesting of lists and 
+numbers as deep as we want and still sum 
+
+28
+00:01:54.673 --> 00:01:58.364
+up all the numbers that appear anywhere 
+in any of those lists. 
+
+29
+00:01:58.364 --> 00:02:02.963
+So, you can't do this in ML without 
+creating a data type binding and 
+
+30
+00:02:02.963 --> 00:02:06.877
+constructors in order to put numbers and 
+lists in the same list. 
+
+31
+00:02:06.877 --> 00:02:11.592
+You can't do that according to the type 
+checker that's why you have to use a data 
+
+32
+00:02:11.592 --> 00:02:14.932
+type binding. 
+But in Racket, there is no type checker, 
+
+33
+00:02:14.932 --> 00:02:19.384
+so we'll just be able to do this. 
+So, let's just go over here and explain 
+
+34
+00:02:19.384 --> 00:02:23.297
+what I'm talking about. 
+So, let me first define a couple example 
+
+35
+00:02:23.297 --> 00:02:26.476
+lists, so you know the sort of thing I'm 
+doing. 
+
+36
+00:02:26.476 --> 00:02:30.942
+So, my first list here, xs, I can just 
+have a normal list of numbers, 
+
+37
+00:02:30.942 --> 00:02:35.554
+4, 5, 6, okay? 
+But I could also have a list we say had 
+
+38
+00:02:35.554 --> 00:02:40.116
+another list in it with 4 and 5, and then 
+had 6 and 7. 
+
+39
+00:02:40.116 --> 00:02:44.296
+And then, had a list 8, and then may be a 
+9 and 2 and 3. 
+
+40
+00:02:44.296 --> 00:02:50.628
+And then, list a 0 and 1, okay? 
+So, what I've just to find and bound to y 
+
+41
+00:02:50.628 --> 00:02:56.182
+is a list with a bunch of elements. 
+Here is the first one. 
+
+42
+00:02:56.182 --> 00:03:01.506
+Second one is 6, third is 7, fourth is 
+the list 8, then a 9, a 2, and a 3, and 
+
+43
+00:03:01.506 --> 00:03:06.737
+then this list with two more elements. 
+And this list has a 4 and a 5, and this 
+
+44
+00:03:06.737 --> 00:03:12.257
+list has a 0 and a 1, but I can list more 
+deeply. Maybe here I have a list of a 5 
+
+45
+00:03:12.257 --> 00:03:15.816
+and another 0. 
+And so, I can nest these things as deep 
+
+46
+00:03:15.816 --> 00:03:20.134
+as I want and it's still going to be the 
+sort of thing I want my function to work 
+
+47
+00:03:20.134 --> 00:03:23.376
+properly on, okay? So now let's actually 
+define it. 
+
+48
+00:03:23.376 --> 00:03:27.913
+I'm going to define two versions in this 
+segment, so we'll start with sum1 and 
+
+49
+00:03:27.913 --> 00:03:31.792
+I'll call the other one sum2. 
+And I forgot a parenthesis here. 
+
+50
+00:03:31.792 --> 00:03:34.567
+And I want to take an a list let's call 
+it xs. 
+
+51
+00:03:34.567 --> 00:03:39.092
+this is just shadowing, this is just a 
+function parameter. 
+
+52
+00:03:39.092 --> 00:03:43.742
+It's not the list xs I defined above. 
+and what I wanted to do is if this 
+
+53
+00:03:43.742 --> 00:03:47.931
+argument xs is null, 
+then zero, right? The sum of the empty 
+
+54
+00:03:47.931 --> 00:03:50.845
+list is zero. 
+Just like we're familiar with. 
+
+55
+00:03:50.845 --> 00:03:55.856
+Otherwise, I can't just go and add the 
+car of xs because the car might hold 
+
+56
+00:03:55.856 --> 00:03:58.748
+another list. 
+So, I better not just do that. 
+
+57
+00:03:58.748 --> 00:04:01.759
+I better check whether it's a list or a 
+number. 
+
+58
+00:04:01.759 --> 00:04:06.745
+I can do that with this number function. 
+For all the built in types in Racket, 
+
+59
+00:04:06.745 --> 00:04:11.418
+they all come with these functions that 
+test at run time, do you have one of 
+
+60
+00:04:11.418 --> 00:04:16.134
+these things? In a statitically typed 
+language, you wouldn't need this. The 
+
+61
+00:04:16.134 --> 00:04:19.809
+type checker will tell you what type of 
+thing you have where. 
+
+62
+00:04:19.809 --> 00:04:24.405
+But in Racket, we can pass anything 
+anywhere, and so these functions are very 
+
+63
+00:04:24.405 --> 00:04:27.159
+useful. 
+So, if that evaluates to true, then we 
+
+64
+00:04:27.159 --> 00:04:31.361
+definitely have a number. So, let's go 
+ahead an add the car of xs to the 
+
+65
+00:04:31.361 --> 00:04:35.890
+recursively summering the cdr of xs. 
+So, add those two things together and 
+
+66
+00:04:35.890 --> 00:04:40.824
+thats a good true branch for our 
+conditional. Otherwise, we'll assume that 
+
+67
+00:04:40.824 --> 00:04:45.534
+if it's not a number it must be a list, 
+because the sort of thing someone is 
+
+68
+00:04:45.534 --> 00:04:51.467
+supposed to work on is this combination 
+of lists and numbers that go arbitrarily 
+
+69
+00:04:51.467 --> 00:04:57.867
+deep. So, let's do sum1 car of xs so that 
+is going to sum up everything in the car. 
+
+70
+00:04:57.867 --> 00:05:03.602
+The car is itself a list, so recursively 
+sum all of those. And then, let's 
+
+71
+00:05:03.602 --> 00:05:07.729
+recursively sum the cdr of xes. 
+Add those two things together, 
+
+72
+00:05:07.729 --> 00:05:11.856
+that's a good false branch. 
+That takes care of the false branch if we 
+
+73
+00:05:11.856 --> 00:05:15.824
+don't have the empty list, 
+and that takes care of our definition. 
+
+74
+00:05:15.824 --> 00:05:19.482
+So, let's try this out. 
+You can see the sum function up there. 
+
+75
+00:05:19.482 --> 00:05:22.472
+And we can try sum1 on xs, and it works 
+fine. 
+
+76
+00:05:22.472 --> 00:05:25.666
+We get 15. 
+We can try sum1 on ys, and we get 45. And 
+
+77
+00:05:25.666 --> 00:05:30.564
+I'll hope that that's correct, that, that 
+sums up all the numbers we have up in 
+
+78
+00:05:30.564 --> 00:05:33.349
+that long list. 
+and let's try one more. 
+
+79
+00:05:33.349 --> 00:05:38.797
+Let's try list of list of list of 4 and 
+then a 5 and list of a 7 and a 2. 
+
+80
+00:05:38.797 --> 00:05:43.097
+And that works fine. 
+We get 18 which looks right. 
+
+81
+00:05:43.097 --> 00:05:48.747
+But, won't work is that maybe deep 
+inside, one of these lists we have 
+
+82
+00:05:48.747 --> 00:05:54.810
+something that's not a number or a list, 
+okay? Then we'll get an error because 
+
+83
+00:05:54.810 --> 00:05:58.009
+eventually we'll, we will recur to that 
+position. 
+
+84
+00:05:58.009 --> 00:06:01.437
+And R function assumed that we would 
+never hit a string. 
+
+85
+00:06:01.437 --> 00:06:05.305
+So, something wasn't a number. 
+So, we tried to treat it as a list. 
+
+86
+00:06:05.305 --> 00:06:10.164
+We tried to take the car of a string. 
+And if you take a car of high that does 
+
+87
+00:06:10.164 --> 00:06:14.523
+not make any sense. 
+And you get a runtime error, okay? okay. 
+
+88
+00:06:14.523 --> 00:06:17.847
+So, this is fine. 
+someone misused our function. 
+
+89
+00:06:17.847 --> 00:06:22.492
+When you misuse a function in a 
+dynamically typed language, you often get 
+
+90
+00:06:22.492 --> 00:06:26.226
+these sort of errors. 
+But, if we wanted to support this, we 
+
+91
+00:06:26.226 --> 00:06:31.115
+could write a second version that if you 
+hit something in a list that is not a 
+
+92
+00:06:31.115 --> 00:06:34.452
+number and not a nested list, let's just 
+skip it. 
+
+93
+00:06:34.452 --> 00:06:38.367
+You know, treat it as zero, 
+right? Just skip over it in our summing. 
+
+94
+00:06:38.367 --> 00:06:41.250
+Now, there's probably a number of ways to 
+do this. 
+
+95
+00:06:41.250 --> 00:06:45.631
+I'm going to show you one that is you 
+know, as much like our first version as 
+
+96
+00:06:45.631 --> 00:06:48.413
+possible. 
+So, if I have the empty list, zero's a 
+
+97
+00:06:48.413 --> 00:06:52.731
+good answer. And if I have a number in 
+the car of the list, then I definitely 
+
+98
+00:06:52.731 --> 00:06:57.479
+want to add that number to recursively 
+summing everything in the cdr, okay? 
+
+99
+00:06:57.479 --> 00:07:02.274
+But now, let's not assume I have a list, 
+all right? This is a matter of style 
+
+100
+00:07:02.274 --> 00:07:07.116
+whether, you know, it's up to you to 
+force callers to do the right thing and 
+
+101
+00:07:07.116 --> 00:07:11.102
+they'll be in error otherwise. 
+Or if you want to say, alright, 
+
+102
+00:07:11.102 --> 00:07:14.963
+well, if it's a list, then I'll do what I 
+did before, 
+
+103
+00:07:14.963 --> 00:07:20.186
+sum2 car xs and sum2 of cdr xs, 
+right? So, I have a list in the first 
+
+104
+00:07:20.186 --> 00:07:23.233
+position. 
+So, recursively add all that. 
+
+105
+00:07:23.233 --> 00:07:28.331
+The cdr is always another list. 
+And so, add all that, and then add the 
+
+106
+00:07:28.331 --> 00:07:31.818
+two together. 
+Otherwise, I don't want to touch the 
+
+107
+00:07:31.818 --> 00:07:36.401
+thing in the car because it might be 
+something like a string. 
+
+108
+00:07:36.401 --> 00:07:40.204
+So, let's just sum the elements in the 
+cdr of the list, 
+
+109
+00:07:40.204 --> 00:07:43.443
+okay? So, that's the case we didn't have 
+before. 
+
+110
+00:07:43.443 --> 00:07:48.631
+We were assuming we had a list down here. 
+And now, we're explicitly checking. 
+
+111
+00:07:48.631 --> 00:07:52.729
+I can run this. 
+if you just do Alt P in DrRacket, you get 
+
+112
+00:07:52.729 --> 00:07:56.582
+your previous commands. 
+You can cycle through those. 
+
+113
+00:07:56.582 --> 00:08:00.270
+And now, this was the thing that gave us 
+an error before. 
+
+114
+00:08:00.270 --> 00:08:05.698
+But now, instead of calling it sum1, I 
+just go back here and edit it to be sum2, 
+
+115
+00:08:05.698 --> 00:08:10.462
+then I get the right answer, alright? 
+That 14 it skipped over. 
+
+116
+00:08:10.462 --> 00:08:16.739
+and if this five were instead something 
+like -3, sorry, I want something that's 
+
+117
+00:08:16.739 --> 00:08:22.055
+not a number or a list. How about false? 
+Okay? Then, it'll just nicely skip it and 
+
+118
+00:08:22.055 --> 00:08:24.995
+I'll get 13, 
+okay? Now, sum2 doesn't work for just 
+
+119
+00:08:24.995 --> 00:08:28.058
+anything. 
+It still assumes the initial argument is 
+
+120
+00:08:28.058 --> 00:08:30.718
+a list. 
+If I tried to call it with hi, I would 
+
+121
+00:08:30.718 --> 00:08:34.450
+still get a error message. 
+And that's because right here I start 
+
+122
+00:08:34.450 --> 00:08:37.489
+checking the car before I even know it 
+has a list. 
+
+123
+00:08:37.489 --> 00:08:41.030
+And that's a third version. 
+If you really want it to work for 
+
+124
+00:08:41.030 --> 00:08:45.467
+anything, and maybe for something else 
+like this return zero, then I'll leave 
+
+125
+00:08:45.467 --> 00:08:49.259
+that as an exercise for you. 
+But, what we've seen here is that we 
+
+126
+00:08:49.259 --> 00:08:54.187
+could do correct versions of sum that 
+work for lists of numbers and numbers of 
+
+127
+00:08:54.187 --> 00:08:57.962
+lists without having to create ML style 
+data type bindings. 
+
+128
+00:08:57.962 --> 00:09:02.632
+There's no type declaration at all. 
+We can just, flipping back here to the 
+
+129
+00:09:02.632 --> 00:09:06.152
+file, define x's and y's to be lists 
+holding anything we want. 
+
+130
+00:09:06.152 --> 00:09:12.485
+And, in fact, you can hold, have a single 
+list, hold the false, and hi, and 14, and 
+
+131
+00:09:12.485 --> 00:09:16.052
+Racket has no problem with this 
+whatsoever. 
+
+132
+00:09:16.052 --> 00:09:21.971
+We can run this, we can ask for the car 
+of zs, we get false, we can ask for the 
+
+133
+00:09:21.971 --> 00:09:25.250
+cdr of zs. 
+We get the list holding hi and 14, and so 
+
+134
+00:09:25.250 --> 00:09:27.837
+on. 
+And so, this is more convenient for us. 
+
+135
+00:09:27.837 --> 00:09:32.317
+But, of course, it also makes it a little 
+harder to test our functions and to 
+
+136
+00:09:32.317 --> 00:09:35.268
+document what type of argument they 
+expect. 

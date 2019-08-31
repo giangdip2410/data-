@@ -1,0 +1,560 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:05.951
+, In this segment we're going to begin
+emphasizing, in our semantics, when
+
+2
+00:00:05.963 --> 00:00:12.041
+expressions get evaluated. This is a key
+concept in programming languages and it's
+
+3
+00:00:12.053 --> 00:00:18.024
+going to be essential for understanding
+the programming idioms we're going to see
+
+4
+00:00:18.036 --> 00:00:23.970
+in the next few segments. So for every
+language construct and every programming
+
+5
+00:00:23.982 --> 00:00:29.520
+language, the semantics does have to
+specify if or when those sub expressions
+
+6
+00:00:29.532 --> 00:00:35.335
+appear to get evaluated. For two crucial
+examples, let's focus on function calls
+
+7
+00:00:35.347 --> 00:00:41.285
+and conditionals. So in ML and Racket and
+other languages you're probably familiar
+
+8
+00:00:41.297 --> 00:00:46.885
+with. When you have a function call, the
+arguments to the call are evaluated before
+
+9
+00:00:46.897 --> 00:00:52.385
+the call starts, before you evaluate the
+function body. Each of them is evaluated
+
+10
+00:00:52.397 --> 00:00:58.030
+once, and then the function body uses
+variables. The function parameters to look
+
+11
+00:00:58.042 --> 00:01:03.680
+up the results of those computations that
+already occurred. Conditionals work very
+
+12
+00:01:03.692 --> 00:01:09.380
+differently. If you look at an if, that
+takes, three expressions, the test, the
+
+13
+00:01:09.392 --> 00:01:14.615
+true branch, and the false branch, we do
+not evaluate all of them. Eagerly like
+
+14
+00:01:14.627 --> 00:01:19.420
+that. We evaluate just the first one and
+then use the result to decide which of the
+
+15
+00:01:19.432 --> 00:01:24.005
+other two we evaluate and then the other
+one is never evaluated. So we have not
+
+16
+00:01:24.017 --> 00:01:28.800
+emphasized this quite as much before, but
+this piece of the semantics of language
+
+17
+00:01:28.812 --> 00:01:33.635
+constrcuts is essential for programming
+correctly, so I'm going to switch over to
+
+18
+00:01:33.647 --> 00:01:38.245
+the code, which I have written out here,
+and show you a number of examples that
+
+19
+00:01:38.257 --> 00:01:44.662
+show that. So let's start with an ordinary
+function, a totally normal implementation
+
+20
+00:01:44.674 --> 00:01:50.351
+of factorial, we've seen such an example
+many times. And if I click run and use it,
+
+21
+00:01:50.650 --> 00:01:56.847
+it will work as expected, normal of 5,
+I'll get 120. And by the way this function
+
+22
+00:01:56.859 --> 00:02:02.644
+grows very fast and Racket has no problem
+with large numbers. So if I ask factorial
+
+23
+00:02:02.656 --> 00:02:07.697
+500 It's happy to print out this very
+large number that I will trust is 500
+
+24
+00:02:07.697 --> 00:02:12.112
+times 499 times 498 and so on, and
+everything works correctly. And what
+
+25
+00:02:12.124 --> 00:02:17.813
+happened is when I called factorial normal
+of 500, if I had it evaluated 500. That w
+
+26
+00:02:17.813 --> 00:02:22.980
+as a value.
+Went into the body, decided oh, x is 0, so
+
+27
+00:02:22.992 --> 00:02:30.825
+I will evaluate the false branch because x
+is not 0, excuse me. So only because 500
+
+28
+00:02:30.837 --> 00:02:36.451
+is not 0, do we decide to do this
+multiplication. And when we do a
+
+29
+00:02:36.463 --> 00:02:41.321
+multiplication, we eagerly look up x. We
+get 500. And then, we do this recursive
+
+30
+00:02:41.333 --> 00:02:46.055
+call, which after a whole lot of work
+returns a very large number. And then we
+
+31
+00:02:46.067 --> 00:02:52.200
+do a multiplication And then we return. So
+why am I emphasizing this? Let me show you
+
+32
+00:02:52.212 --> 00:02:58.030
+a slight variation. Suppose I try to write
+a little wrapper for if. So I have a
+
+33
+00:02:58.042 --> 00:03:04.370
+function, my-if-bad, it takes three
+functions, three arguments, e1, e2 and e3.
+
+34
+00:03:04.672 --> 00:03:09.138
+And then it just calls if with e1, e2, and
+e3. So it looks like it's just an
+
+35
+00:03:09.150 --> 00:03:14.019
+unnecessary function wrapping of if. And
+here's a version of factorial-bad that
+
+36
+00:03:14.031 --> 00:03:18.966
+uses my if-bad. Now I encourage you to try
+this out on your own. I'm not going to do
+
+37
+00:03:18.978 --> 00:03:24.006
+it while we're recording, but if you call
+factorial-bad with any number whatsoever
+
+38
+00:03:24.202 --> 00:03:29.305
+It will never terminate. It will never
+terminate. The reason is you call
+
+39
+00:03:29.317 --> 00:03:35.173
+factorial-bad with an argument, 0, 500, 5,
+I don't care what it is, negative 7, and
+
+40
+00:03:35.185 --> 00:03:40.571
+the 1st thing it has to do is call the
+my-if-bad function. And before you call a
+
+41
+00:03:40.583 --> 00:03:45.178
+function, you evaluate all three
+arguments. So you see if x is 0. That will
+
+42
+00:03:45.190 --> 00:03:50.282
+go quickly. You see if 1, you evaluate 1.
+That goes quickly. But then, you have to
+
+43
+00:03:50.294 --> 00:03:54.941
+evaluate this as well. And that will do a
+recursive call, and that will do a
+
+44
+00:03:54.953 --> 00:04:00.034
+recursive call, and we will never end the
+recursion. See it's essential to all of
+
+45
+00:04:00.046 --> 00:04:04.904
+our recursive functions that if, as we saw
+up here in the good version, does not
+
+46
+00:04:04.916 --> 00:04:09.792
+evaluate both of its branches. It only
+evaluates the one we need. But my-if-bad
+
+47
+00:04:09.804 --> 00:04:14.728
+being a function evaluates both. So it
+turns out that I'm going to make a third
+
+48
+00:04:14.740 --> 00:04:20.516
+version of the example, which is actually
+going to work. This is not good style. The
+
+49
+00:04:20.528 --> 00:04:25.896
+first version is good style, but it's
+going to introduce an idiom that's going
+
+50
+00:04:25.908 --> 00:04:31.351
+to prove very useful to us in upcoming
+segments. And that is if you really want a
+
+51
+00:04:31.363 --> 00:04:37.533
+function It takes three arguments a nd
+acts like if. You have to change what it
+
+52
+00:04:37.545 --> 00:04:43.615
+takes for some of those arguments. Have it
+take for e2 and e3 not the result you
+
+53
+00:04:43.627 --> 00:04:50.002
+want, but a zero argument function that if
+you call that function. You get back the
+
+54
+00:04:50.014 --> 00:04:54.536
+result you want. So what
+my-if-strange-but-works does is it
+
+55
+00:04:54.548 --> 00:05:00.446
+evaluates e1 to get an answer, and then it
+either calls e2 with no arguments, or
+
+56
+00:05:00.458 --> 00:05:05.932
+calls e3 with no arguments, because
+remember in Racket, if you want to call. A
+
+57
+00:05:06.027 --> 00:05:11.015
+zero argument function that's, in some
+expression, e, you write e inside a
+
+58
+00:05:11.027 --> 00:05:16.265
+parentheses. So e to an e3 and any call
+my-if-strange-but-works have to themselves
+
+59
+00:05:16.277 --> 00:05:21.590
+be zero argument functions. So we're doing
+higher order functions here. And now, if
+
+60
+00:05:21.602 --> 00:05:26.535
+you want to write factorial using
+my-if-strange-but-works, you can do that.
+
+61
+00:05:26.642 --> 00:05:32.780
+Let me just make this on the screen for
+you. So factorial okay takes in a number
+
+62
+00:05:32.792 --> 00:05:38.670
+x. Says if x, is z- it calls
+my-if-strange-but-works with three
+
+63
+00:05:38.682 --> 00:05:46.495
+arguments. The result of is x 0. This
+function, and this function. So, functions
+
+64
+00:05:46.507 --> 00:05:53.665
+do not evaluate their bodies until you
+call them. We know that. So all three of
+
+65
+00:05:53.677 --> 00:05:59.895
+these arguments. Evaluate very quickly. If
+x is zero, that's very fast. These other
+
+66
+00:05:59.907 --> 00:06:04.779
+two are already values. We just make the
+right closure, and then we call
+
+67
+00:06:04.791 --> 00:06:09.894
+my-if-strange-but-works, and
+my-if-strange-but-works decides which one
+
+68
+00:06:09.906 --> 00:06:16.031
+of these lambdas to call. And it never
+calls the other one. And if you never call
+
+69
+00:06:16.043 --> 00:06:22.316
+a function, its body is never going to
+execute. So this works just fine. If I say
+
+70
+00:06:22.328 --> 00:06:28.415
+factorial-okay of 500. I will get my very
+big number, 'kay? So that is the code I
+
+71
+00:06:28.427 --> 00:06:34.177
+wanted to show you. Let me emphasize yet
+again what is going on and what we call
+
+72
+00:06:34.189 --> 00:06:40.968
+these things. There's some terminology I
+want to introduce related to this idiom.
+
+73
+00:06:41.088 --> 00:06:46.975
+Okay, so we know how to delay evaluation.
+If you have an expression that you don't
+
+74
+00:06:46.987 --> 00:06:52.175
+want to evaluate yet, you want it to
+evaluate later or maybe not at all, put it
+
+75
+00:06:52.187 --> 00:06:57.875
+in a function and don't call the function.
+Thanks to closures, you can really do this
+
+76
+00:06:57.887 --> 00:07:03.400
+anywhere. Anywhere you want, you can just
+take some expression e, replace it with
+
+77
+00:07:03.412 --> 00:07:08.825
+lambda, take no arguments of e And now you
+have a procedure that when you call it,
+
+78
+00:07:08.939 --> 00:07:14.484
+will produce the answer of then. But you
+do have to remember to call it. So that's
+
+79
+00:07:14.496 --> 00:07:20.066
+what we saw here. You see it on the side,
+compared to the example that did not work,
+
+80
+00:07:20.180 --> 00:07:25.762
+our definition of my if function had to
+remember to either Call its 2nd argument
+
+81
+00:07:25.774 --> 00:07:31.372
+or call its 3rd argument and then our use
+of it in factorial had to not pass in the
+
+82
+00:07:31.384 --> 00:07:37.040
+expressions that we wanted to evaluate,
+but to pass in 0 argument functions that
+
+83
+00:07:37.052 --> 00:07:42.582
+we could then call to get the answers we
+wanted. So we have names for this. so let
+
+84
+00:07:42.594 --> 00:07:47.567
+me, actually let me go back on this slide
+here. I forgot to say this middle part I
+
+85
+00:07:47.579 --> 00:07:52.452
+wanted to say. So when you have these
+0-argument functions, we actually have a
+
+86
+00:07:52.464 --> 00:07:57.406
+name for them. They're called thunks. YOu
+can read on the Internet where people
+
+87
+00:07:57.418 --> 00:08:02.398
+think this word came from. Nobody is quite
+sure. Or at least I have not heard a
+
+88
+00:08:02.410 --> 00:08:07.050
+definitive account, but it's just a funny
+word that computer scientists use. A
+
+89
+00:08:07.141 --> 00:08:11.876
+zero-argument function that is used for
+the purpose of delaying evaluation in this
+
+90
+00:08:11.888 --> 00:08:16.204
+way is called a thunk. You can even use
+this as a verb. If you want to tell
+
+91
+00:08:16.216 --> 00:08:21.084
+someone, No, no, no. YOu're evaluating
+that thing too eagerly" We might not need
+
+92
+00:08:21.096 --> 00:08:25.682
+it passing a function that produces the
+result. You can just say, oh, thunk that.
+
+93
+00:08:25.780 --> 00:08:30.341
+Thunk the expression or the function needs
+a thunk. You can say all of these things,
+
+94
+00:08:30.439 --> 00:08:35.380
+okay? So let's emphasize, 3 very different
+things in racket. They look similar, but
+
+95
+00:08:35.392 --> 00:08:39.365
+it's essential we understand the
+difference, or you're going to find it
+
+96
+00:08:39.377 --> 00:08:45.065
+very difficult to do your next homework
+assignment. When you have some expression
+
+97
+00:08:45.077 --> 00:08:52.320
+e, we evaluate it and we get a result. So
+maybe e is plus 3, 4. We evaluate that, we
+
+98
+00:08:52.332 --> 00:08:59.513
+get 7. But if instead we have a thunk with
+e in it, this is a function. That will not
+
+99
+00:08:59.525 --> 00:09:06.260
+evaluate e at all until you call it. And
+then every time you call this thunk, we
+
+100
+00:09:06.272 --> 00:09:12.271
+will evaluate e and get the result. So
+lambda no arguments plus 3 4 is a
+
+101
+00:09:12.283 --> 00:09:18.275
+procedure. That when you call it, you get
+7. And how do you c all a thunk? It looks
+
+102
+00:09:18.287 --> 00:09:22.654
+strange for people not used to
+parentheses, but if you put e in
+
+103
+00:09:22.666 --> 00:09:28.218
+parentheses, we evaluate e. To get a
+thunk, and then we call the thunk that
+
+104
+00:09:28.230 --> 00:09:34.187
+evaluates the thunk's body, and that is
+our final result. We've seen this. It's
+
+105
+00:09:34.199 --> 00:09:40.004
+why if we put 37 in parentheses we get an
+error. 'Cause 37 is not a thunk, and we
+
+106
+00:09:40.016 --> 00:09:45.220
+put something in parentheses You're
+calling it with 0 arguments but if have
+
+107
+00:09:45.232 --> 00:09:50.080
+lambda (, ) 37, then we could call it as
+you see here with parenthesis around it
+
+108
+00:09:50.092 --> 00:09:54.850
+and you would get back to 37. So we
+haven't done this in a useful way yet, the
+
+109
+00:09:54.862 --> 00:09:59.870
+if that's built into Racket is the right
+thing to use. But the upcoming segments
+
+110
+00:09:59.882 --> 00:10:05.673
+are going to use thunks to code up some
+very powerful things in racket. to use the
+
+111
+00:10:05.685 --> 00:10:11.743
+idea that often delaying or avoiding a
+computation is exactly what you want to
+
+112
+00:10:11.755 --> 00:10:11.944
+do.

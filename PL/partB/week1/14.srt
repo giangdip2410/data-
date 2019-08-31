@@ -1,0 +1,730 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:04.965
+[MUSIC]
+
+2
+00:00:04.965 --> 00:00:09.959
+So now I want to continue our discussion
+of avoiding unnecessary computations
+
+3
+00:00:09.959 --> 00:00:13.871
+by showing how we can use this
+idea of delay in force to get lazy
+
+4
+00:00:13.871 --> 00:00:16.950
+evaluation implemented ourselves.
+
+5
+00:00:16.950 --> 00:00:18.990
+So we're trying to get
+this best of both worlds,
+
+6
+00:00:18.990 --> 00:00:21.310
+where we have some expensive computation.
+
+7
+00:00:21.310 --> 00:00:25.500
+We don't want to compute it unless we need
+it, but if we need it more than once,
+
+8
+00:00:25.500 --> 00:00:29.860
+we want to store the previous answer so
+that we can use it again.
+
+9
+00:00:29.860 --> 00:00:33.480
+So here in one slide is
+how we could do this.
+
+10
+00:00:33.480 --> 00:00:37.890
+We're just going to use a technique of
+a little bit of mutation to get what
+
+11
+00:00:37.890 --> 00:00:38.481
+we want.
+
+12
+00:00:38.481 --> 00:00:42.678
+So we're going to define two functions
+called my-delay and my-force.
+
+13
+00:00:42.678 --> 00:00:45.759
+So that we don't conflict
+with the notional force and
+
+14
+00:00:45.759 --> 00:00:50.990
+delay provided by the standard library
+of racket, and here's how they work.
+
+15
+00:00:50.990 --> 00:00:56.130
+If you want to delay a computation
+call my-delay with a thunk.
+
+16
+00:00:56.130 --> 00:00:58.551
+Because it's a thunk
+whatever body is in there,
+
+17
+00:00:58.551 --> 00:01:00.981
+fortunately has not been evaluated yet,
+okay?
+
+18
+00:01:00.981 --> 00:01:05.137
+And then let's return a mutable
+pair of false and the thunk.
+
+19
+00:01:05.137 --> 00:01:09.468
+So we never called the thunk,
+there's no parenthesis around the th, so
+
+20
+00:01:09.468 --> 00:01:11.830
+that's going to happen very fast.
+
+21
+00:01:11.830 --> 00:01:12.772
+We're just going to return that pair.
+
+22
+00:01:12.772 --> 00:01:15.970
+We haven't done any
+expensive computations yet.
+
+23
+00:01:17.470 --> 00:01:20.849
+Then when you want to use the thunk,
+we you need the result,
+
+24
+00:01:20.849 --> 00:01:24.379
+you weren't able to avoid it,
+you're going to have to do it.
+
+25
+00:01:24.379 --> 00:01:28.505
+Then you call my-force on the thing
+returned from my-delay, and
+
+26
+00:01:28.505 --> 00:01:30.648
+we'll call that thing a promise.
+
+27
+00:01:30.648 --> 00:01:33.210
+Racket calls them the same thing.
+
+28
+00:01:33.210 --> 00:01:35.830
+This says,
+I promise if you need this thing,
+
+29
+00:01:35.830 --> 00:01:38.860
+you can force me to give it to you and
+I will.
+
+30
+00:01:38.860 --> 00:01:40.062
+You just do that by calling my-force.
+
+31
+00:01:40.062 --> 00:01:42.456
+Here is what my-force does.
+
+32
+00:01:42.456 --> 00:01:49.990
+If the car of the promise is true,
+then just return the cdr of the promise.
+
+33
+00:01:51.250 --> 00:01:54.525
+Now that is not going to be true the first
+time you call my-force with a promise.
+
+34
+00:01:54.525 --> 00:01:56.930
+because you can see right here,
+the first thing is false.
+
+35
+00:01:56.930 --> 00:01:59.550
+So all the action is
+here in the false branch.
+
+36
+00:01:59.550 --> 00:02:02.690
+We use this begin construct that
+does a sequence of things and
+
+37
+00:02:02.690 --> 00:02:04.650
+the result is the last one.
+
+38
+00:02:04.650 --> 00:02:07.270
+So here's what we do in the false branch.
+
+39
+00:02:07.270 --> 00:02:08.940
+We do three things.
+
+40
+00:02:08.940 --> 00:02:13.180
+First, we change the car
+of the promise to be true,
+
+41
+00:02:13.180 --> 00:02:16.410
+indicating that we not
+have evaluated this thunk.
+
+42
+00:02:16.410 --> 00:02:18.199
+We're never going to
+evaluate it more than once.
+
+43
+00:02:19.380 --> 00:02:24.160
+Then we're going to change the cdr of
+the promise so that it does not hold
+
+44
+00:02:24.160 --> 00:02:28.665
+what it used to hold instead it holds
+the result of calling the thunk.
+
+45
+00:02:29.700 --> 00:02:34.280
+So let's look at these parenthesis
+when you call mcdr of p that gets
+
+46
+00:02:34.280 --> 00:02:35.640
+out the thunk.
+
+47
+00:02:35.640 --> 00:02:41.350
+The next set of parenthesis calls
+the thunk then we take that result and
+
+48
+00:02:41.350 --> 00:02:44.700
+we put it, in the cdr of the promise.
+
+49
+00:02:44.700 --> 00:02:46.660
+We don't store the thunk anymore,
+
+50
+00:02:46.660 --> 00:02:50.630
+because we don't need it anymore,
+we just have the result of the car.
+
+51
+00:02:50.630 --> 00:02:53.760
+So after we've done that,
+when we look up, mcdr of p,
+
+52
+00:02:53.760 --> 00:02:57.589
+we have the result of car in the thunk and
+we return it.
+
+53
+00:02:58.610 --> 00:03:03.728
+If anyone ever calls my force on this
+promise again, the mcar will be true.
+
+54
+00:03:03.728 --> 00:03:07.485
+We won`t evaluate the thunk,
+we won`t have the thunk anymore,
+
+55
+00:03:07.485 --> 00:03:09.206
+we'll just return the mcdr.
+
+56
+00:03:09.206 --> 00:03:14.595
+So all that's really going on here,
+is this is a little one of type.
+
+57
+00:03:14.595 --> 00:03:18.100
+Where the car is true or false,
+indicating whether or not you have
+
+58
+00:03:18.100 --> 00:03:22.940
+to evaluate the thunk or the thunk is gone
+and you have the result in its place.
+
+59
+00:03:22.940 --> 00:03:23.700
+And ideally,
+
+60
+00:03:23.700 --> 00:03:27.180
+this would be a little abstract data
+type that you would hide in a module.
+
+61
+00:03:27.180 --> 00:03:30.840
+But I haven't shown you Racket module
+system, so we'll avoid that and
+
+62
+00:03:30.840 --> 00:03:33.590
+I'll just show you these
+functions as they are here.
+
+63
+00:03:34.710 --> 00:03:38.500
+So this is the implementation of force and
+delay.
+
+64
+00:03:38.500 --> 00:03:40.190
+How would you use it?
+
+65
+00:03:40.190 --> 00:03:44.070
+Well the simplest thing to do is
+if you had some function somewhere
+
+66
+00:03:44.070 --> 00:03:46.180
+that maybe need some computation.
+
+67
+00:03:46.180 --> 00:03:49.690
+Maybe you needed it multiple times, maybe
+you didn't need it at all, is you would
+
+68
+00:03:49.690 --> 00:03:56.220
+just call f, not with a thunk, but
+with this pair my-delay returns.
+
+69
+00:03:56.220 --> 00:04:01.270
+And then anywhere you needed
+the computation, you would write my-force.
+
+70
+00:04:01.270 --> 00:04:02.930
+And by writing my-force,
+
+71
+00:04:02.930 --> 00:04:08.180
+that would either evaluate the thunk that
+happens the first time or just look up
+
+72
+00:04:08.180 --> 00:04:13.350
+the answer that you used the mutation to
+store that's what you do every other time.
+
+73
+00:04:13.350 --> 00:04:16.910
+So now let's go back to the example
+that we had in the previous segment.
+
+74
+00:04:16.910 --> 00:04:20.440
+Where I have this multiplications
+that took in a thunk where I
+
+75
+00:04:20.440 --> 00:04:22.960
+was passing in very slow thunks.
+
+76
+00:04:22.960 --> 00:04:25.910
+And I don't need to evaluate the thunk for
+0.
+
+77
+00:04:25.910 --> 00:04:30.040
+I do for 1, and if it's greater than 1,
+then I need to multiple times.
+
+78
+00:04:30.040 --> 00:04:31.370
+And now I'm going to do a little trick.
+
+79
+00:04:31.370 --> 00:04:35.140
+Here's the implementation of delay in
+force, I showed you on the slides.
+
+80
+00:04:35.140 --> 00:04:36.970
+It's exactly the same.
+
+81
+00:04:36.970 --> 00:04:41.180
+And now I can use these to
+call my-mult in a better way.
+
+82
+00:04:41.180 --> 00:04:44.600
+In a way that, even if I didn't
+know what the first number was,
+
+83
+00:04:44.600 --> 00:04:48.310
+I would never have to evaluate
+the thunk more than once.
+
+84
+00:04:48.310 --> 00:04:50.240
+So that's the idea, okay?
+
+85
+00:04:50.240 --> 00:04:51.143
+So here's what I want to do.
+
+86
+00:04:51.143 --> 00:04:56.400
+I'm going to just run this and
+do this in the REPL for you.
+
+87
+00:04:56.400 --> 00:05:00.033
+Okay, so first,
+suppose we don't know what the number is.
+
+88
+00:05:00.033 --> 00:05:02.485
+I'm going to have to replace this
+because I don't have an x, okay?
+
+89
+00:05:02.485 --> 00:05:07.334
+But what I want to do is I'm
+going to create a little
+
+90
+00:05:07.334 --> 00:05:12.460
+let here to create this delayed thing,
+okay?
+
+91
+00:05:12.460 --> 00:05:18.830
+So this delayed thing,
+This promise, all right?
+
+92
+00:05:18.830 --> 00:05:21.028
+Is now held in this value x.
+
+93
+00:05:21.028 --> 00:05:26.328
+And now what I need to pass in the my
+model, it doesn't expect the promise.
+
+94
+00:05:26.328 --> 00:05:30.240
+I've wrote in the previews segment
+when we didn't have promises.
+
+95
+00:05:30.240 --> 00:05:31.750
+It expects a thunk.
+
+96
+00:05:31.750 --> 00:05:37.215
+So I'll just pass in a thunk
+that when you call it forces x.
+
+97
+00:05:39.310 --> 00:05:40.770
+In fact, instead of calling it x,
+
+98
+00:05:40.770 --> 00:05:44.580
+how about I call it p to
+emphasize that that is a promise?
+
+99
+00:05:44.580 --> 00:05:47.972
+So I create a promise that when
+you force it, will add 3 and
+
+100
+00:05:47.972 --> 00:05:50.755
+4 which remember is this
+very slow operation.
+
+101
+00:05:50.755 --> 00:05:55.452
+And now I'm going to pass into mult
+a thunk that says if you call this thunk,
+
+102
+00:05:55.452 --> 00:06:00.760
+okay, I'm going to force p and then
+whatever that result is I will return.
+
+103
+00:06:00.760 --> 00:06:02.880
+But notice,
+we call this thunk more than once,
+
+104
+00:06:02.880 --> 00:06:04.850
+its going to force the p more than once.
+
+105
+00:06:06.890 --> 00:06:10.910
+The force will therefore return very
+quickly and we'll be fine, okay?
+
+106
+00:06:10.910 --> 00:06:14.700
+So that is the idea,
+it just we don't have an x.
+
+107
+00:06:14.700 --> 00:06:17.310
+We need to try this for different numbers.
+
+108
+00:06:17.310 --> 00:06:21.360
+So it turns out that if you try to
+multiply it by 0, this is very fast.
+
+109
+00:06:21.360 --> 00:06:23.189
+But it is not do that for
+any of our fancy, all right?
+
+110
+00:06:23.189 --> 00:06:27.094
+This is because we never
+evaluate the thunk, and
+
+111
+00:06:27.094 --> 00:06:32.770
+we never evaluate the slow ad and
+so everything's very fast.
+
+112
+00:06:32.770 --> 00:06:38.360
+If we do this one time, if we multiply by
+1 then we are going to end up forcing this
+
+113
+00:06:38.360 --> 00:06:43.370
+promise one time and
+it takes a second and then we get 7.
+
+114
+00:06:43.370 --> 00:06:48.325
+But if we multiply 107,
+thanks to our lazy evaluation,
+
+115
+00:06:48.325 --> 00:06:53.081
+the fact that after the first
+time we forced the promise,
+
+116
+00:06:53.081 --> 00:06:56.864
+we updated the promise
+to have the answer 7.
+
+117
+00:06:56.864 --> 00:07:01.397
+So it's just sitting there,
+the next time we call my-force,
+
+118
+00:07:01.397 --> 00:07:04.260
+it just says, the car is true.
+
+119
+00:07:04.260 --> 00:07:08.320
+I'll return the cdr, the cdr is 7 and
+we get the result immediately.
+
+120
+00:07:08.320 --> 00:07:13.700
+So we didn't have to slow add 3 and
+4 100 times, we had to slow add it 1time.
+
+121
+00:07:14.760 --> 00:07:16.760
+So let's review the example.
+
+122
+00:07:16.760 --> 00:07:20.420
+I know I split it across two segments
+in the interest of time, but
+
+123
+00:07:20.420 --> 00:07:24.800
+we basically called my-mult
+three different ways, okay?
+
+124
+00:07:24.800 --> 00:07:28.180
+The first time, we just pass in
+the normal thunk for the second argument,
+
+125
+00:07:28.180 --> 00:07:30.230
+delaying evaluation.
+
+126
+00:07:30.230 --> 00:07:34.910
+And that delayed evaluation was great
+when you were multiplying by 0.
+
+127
+00:07:34.910 --> 00:07:36.890
+It's fine when we were multiplying by 1,
+
+128
+00:07:36.890 --> 00:07:39.159
+we delayed something we were going
+to have to do and then we did it.
+
+129
+00:07:40.250 --> 00:07:44.239
+For greater than 1, it was terrible
+because we ended up slow adding 3 and
+
+130
+00:07:44.239 --> 00:07:45.980
+4 multiple times.
+
+131
+00:07:45.980 --> 00:07:48.860
+Even though it would have been better to
+now use thunks at all and just do it once.
+
+132
+00:07:51.160 --> 00:07:55.490
+The second version I showed you,
+this was also in the previous segment.
+
+133
+00:07:55.490 --> 00:08:00.230
+I precomputed I passed in a thunk
+that just looked up a variable
+
+134
+00:08:00.230 --> 00:08:04.040
+that already had the answer to 3 plus 4.
+
+135
+00:08:04.040 --> 00:08:07.530
+Now that precomputation
+was something I paid once,
+
+136
+00:08:07.530 --> 00:08:09.610
+regardless of the other argument.
+
+137
+00:08:09.610 --> 00:08:12.560
+So that's okay, I only did it once, but
+
+138
+00:08:12.560 --> 00:08:16.020
+I didn't get to great thing
+when I was multiplying by 0.
+
+139
+00:08:16.020 --> 00:08:19.560
+This was just the normal or
+lesser value of everything once and
+
+140
+00:08:19.560 --> 00:08:21.490
+that's as best as I can do and
+that's okay.
+
+141
+00:08:22.520 --> 00:08:27.680
+Now with promises, I'm getting the both
+best of these two these two worlds.
+
+142
+00:08:27.680 --> 00:08:31.770
+That when the first argument was 0,
+I never forced the promise, so
+
+143
+00:08:31.770 --> 00:08:33.280
+I never did the slow add.
+
+144
+00:08:34.280 --> 00:08:37.730
+If it was one, I did do the slow add.
+
+145
+00:08:37.730 --> 00:08:41.240
+That's basically as good as
+I did in the first version.
+
+146
+00:08:41.240 --> 00:08:47.140
+But then thanks to how promises work,
+I stored the result, okay?
+
+147
+00:08:47.140 --> 00:08:50.050
+So if it was going to be called again,
+I would have it.
+
+148
+00:08:50.050 --> 00:08:53.480
+And in fact that is what happened
+when I multiplied by a 100,
+
+149
+00:08:53.480 --> 00:08:57.250
+the first time that it's lowered and
+the other 99 times.
+
+150
+00:08:57.250 --> 00:09:00.350
+I just looked up the answer
+that was stored in the promise.
+
+151
+00:09:00.350 --> 00:09:05.970
+So that's our example of how we
+can use mutation and thunking.
+
+152
+00:09:05.970 --> 00:09:10.370
+To get this idea of lazy evaluation
+which can be the best of both
+
+153
+00:09:10.370 --> 00:09:14.690
+worlds in terms of delaying
+computations you might not need.
+
+154
+00:09:14.690 --> 00:09:17.290
+But making sure you do not
+do them more than once.

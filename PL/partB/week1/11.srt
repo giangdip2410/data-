@@ -1,0 +1,391 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:07.543
+, In this segment, I want to introduce
+mcons cells, which are separate from cons
+
+2
+00:00:07.555 --> 00:00:15.073
+cells, and the difference is an mcons cell
+supports changing the contents of the car
+
+3
+00:00:15.073 --> 00:00:22.553
+encoder fields. So what if you had a cons
+cell, like we've been studying, like we've
+
+4
+00:00:22.565 --> 00:00:27.405
+learned is just a pair, and you wanted to
+change its car, so it didn't have 42, it
+
+5
+00:00:27.417 --> 00:00:32.436
+had 43 or you wanted to change its cdr so
+it didn't have null, it had some other
+
+6
+00:00:32.448 --> 00:00:37.084
+value. Well, in Racket it turns out there
+is no way to do that and this is the
+
+7
+00:00:37.096 --> 00:00:42.058
+biggest change between Racket and its
+predecessors like Scheme and Lisp. And the
+
+8
+00:00:42.070 --> 00:00:46.835
+reason why they made this change is so we
+could use cons cells to make pairs and
+
+9
+00:00:46.847 --> 00:00:51.879
+lists that were immutable and get all the
+advantages we had in ML when we saw that
+
+10
+00:00:51.891 --> 00:00:56.626
+lists and tupples were immutable. The
+biggest advantage we'd like to emphasize
+
+11
+00:00:56.638 --> 00:01:01.300
+is that it made aliasing irrelevant. It
+did not matter if one part of a list was
+
+12
+00:01:01.312 --> 00:01:06.163
+aliased with another part of another list,
+because no one would have ever been able
+
+13
+00:01:06.175 --> 00:01:10.696
+to tell the difference, because we
+couldn't update things. We made a big deal
+
+14
+00:01:10.708 --> 00:01:15.320
+about this back in section one and it's
+nice that we can program with cons cells
+
+15
+00:01:15.332 --> 00:01:19.915
+in Racket and get the same advantages. As
+a minor side point, it turns out in a
+
+16
+00:01:19.927 --> 00:01:24.456
+dynamically typed language like Racket,
+there is another advantage, which is the
+
+17
+00:01:24.468 --> 00:01:29.059
+implementation of the list question mark
+procedure we saw in the previous segment
+
+18
+00:01:29.071 --> 00:01:35.055
+can be more efficient. Because, when we
+create a cons cell, we know at that moment
+
+19
+00:01:35.067 --> 00:01:40.780
+whether or not it'll be a list and it will
+always be a list because no one can ever
+
+20
+00:01:40.792 --> 00:01:46.230
+change any of the contents of any of the
+cons cells that are relevant to it being a
+
+21
+00:01:46.242 --> 00:01:51.366
+list or not. And so, the implementation is
+able to record that fact and not have to
+
+22
+00:01:51.378 --> 00:01:56.594
+implement list? by running down the entire
+list, seeing if the list is actually
+
+23
+00:01:56.606 --> 00:02:01.684
+proper or not. But, suppose that you did
+want to mutate things, how might you go
+
+24
+00:02:01.696 --> 00:02:06.749
+about it? What would work? What would not?
+And this is important, because we are
+
+25
+00:02:06.761 --> 00:02:12.215
+going to have some programming idioms come
+up where mutation is g oing to be useful
+
+26
+00:02:12.227 --> 00:02:17.432
+and its typical limited only because we
+really want to do it way. So the first
+
+27
+00:02:17.444 --> 00:02:23.412
+thing I want to emphasize is that set bang
+really does not mutate cons cells. So here
+
+28
+00:02:22.925 --> 00:02:28.128
+is a little list I've defined, I've
+bounded to x, x holds the list 14. If I
+
+29
+00:02:28.140 --> 00:02:35.040
+say that y is now x, then y also holds the
+list 14. suppose I said set bang x to be
+
+30
+00:02:35.052 --> 00:02:41.728
+some different list. We saw set bang. What
+that does is change x to refer to some new
+
+31
+00:02:41.740 --> 00:02:48.036
+and different thing. So if I ask what x
+is, I get this new list. But if I ask what
+
+32
+00:02:48.048 --> 00:02:54.244
+y is, it's still the list holding 14,
+because when I defined y, previously, I
+
+33
+00:02:54.256 --> 00:03:00.952
+looked up x, I got the current value for x
+14, and null, and so that's what y is. Set
+
+34
+00:03:00.964 --> 00:03:07.251
+bang changed x, but it did not change the
+cons cell that x referred to. There is
+
+35
+00:03:07.263 --> 00:03:13.534
+still a cons cell out there with 14 in the
+car and null in the cdr, and so if I ask
+
+36
+00:03:13.546 --> 00:03:19.544
+car of y, I get 14, x now refers to a
+different cons cell, so car of x returns
+
+37
+00:03:19.556 --> 00:03:26.430
+42. So if we wanted to change the contents
+of a cons cell, something, so that if say
+
+38
+00:03:26.750 --> 00:03:32.803
+z and x both referred to the same thing,
+and then I wanted to update that thing, so
+
+39
+00:03:32.815 --> 00:03:39.739
+that the car the cdr would be different,
+that is what Racket does not support. So
+
+40
+00:03:39.751 --> 00:03:44.847
+you might think you could do something
+like oh, let's change the car of x to be
+
+41
+00:03:44.859 --> 00:03:50.146
+45 and that's just not what set bang does.
+Set bang only works on identifiers, on
+
+42
+00:03:50.158 --> 00:03:54.670
+variables, and change what, changes what
+they refer to. Now, Scheme, the
+
+43
+00:03:54.682 --> 00:04:00.270
+predecessor to Racket, had a feature
+set-car! that would do exactly kind of
+
+44
+00:04:00.282 --> 00:04:05.785
+what we want. It would look up x in the
+environment, get a cons cell, and mutate
+
+45
+00:04:05.797 --> 00:04:11.380
+the car field of that cons cell to be 45.
+And it's an advantage of Racket that we
+
+46
+00:04:11.392 --> 00:04:17.133
+cannot do that set-car! simply does not
+exist, but what if we want it to? Well,
+
+47
+00:04:17.247 --> 00:04:22.334
+Racket understands there are situations
+where you may want that, and so, it
+
+48
+00:04:22.346 --> 00:04:28.353
+defined a different built-in data type for
+that thing, and the function that you can
+
+49
+00:04:28.365 --> 00:04:33.577
+use is mcons, which is just like cons
+except it does not make a cons cell, it
+
+50
+00:04:33.589 --> 00:04:38.993
+makes an mcons cell. So here is a little
+example wher e I'm actually going to make
+
+51
+00:04:39.005 --> 00:04:45.115
+two mcons cells, where the outer one has a
+car of 1 and a cdr of true that is itself
+
+52
+00:04:45.127 --> 00:04:51.966
+an mcons cell, and then the nested mcons
+cell has a car of true and a cdr of hi.
+
+53
+00:04:52.095 --> 00:04:58.036
+Now, you can't ask car of an mpr, you
+can't ask cdr of an mpr, but you can ask
+
+54
+00:04:58.048 --> 00:05:04.265
+mcar of an mpr and mcdr of an mpr. And of
+course, since the mcdr in this case is
+
+55
+00:05:04.277 --> 00:05:10.755
+itself a cons cell, we could ask something
+like mcar of mcdr of mpr and that would
+
+56
+00:05:10.767 --> 00:05:16.383
+get out the Boolean true. Now, the
+difference between mcons and cons, is
+
+57
+00:05:16.395 --> 00:05:22.118
+that, these things are mutable and there
+is in fact something mcdr-bang!, right,
+
+58
+00:05:22.118 --> 00:05:34.660
+mcdr!, I could apply to the cons cell in
+mpr changes to 47, and now sorry mpr holds
+
+59
+00:05:34.672 --> 00:05:43.160
+the cons cell where the car is one and the
+cdr is 47. Alright? I could change it
+
+60
+00:05:43.172 --> 00:05:50.860
+back. Right? I could change it back to
+mcons #t hi, alright, and now mpr is back
+
+61
+00:05:50.872 --> 00:06:00.909
+like this. I could even set-mcar! of mcdr
+of mpr to say 14. And now, if I ask mpr,
+
+62
+00:06:01.104 --> 00:06:09.293
+you'll see that the car of the cdr of mpr
+is now 14. It's been changed. Okay? So
+
+63
+00:06:09.305 --> 00:06:15.122
+this is how it works. you cannot mix and
+match things as I pointed out, so length
+
+64
+00:06:15.134 --> 00:06:20.798
+is a wonderful built-in function that
+works just fine on lists like this, so
+
+65
+00:06:20.810 --> 00:06:26.112
+this is a plain old list that returns
+true. Length gives an error on improper
+
+66
+00:06:26.124 --> 00:06:32.029
+lists like we saw in the previous section.
+Length also gives an error on an mcons
+
+67
+00:06:32.041 --> 00:06:37.797
+even if that, you're using mcons in a way
+that is like proper lists. You cannot use
+
+68
+00:06:37.809 --> 00:06:43.070
+mcons to make proper lists. Length
+requires a proper list and so you're not
+
+69
+00:06:43.082 --> 00:06:49.050
+allowed to mix and match these things. And
+of course, something like mcar bang is not
+
+70
+00:06:49.062 --> 00:06:54.800
+going to work on a cons cell that is not
+an mcons cell. Okay? So that's the idea.
+
+71
+00:06:54.917 --> 00:07:00.290
+Let me just flip back to the slides to
+emphasize it. All we've really done is
+
+72
+00:07:00.302 --> 00:07:05.945
+introduce a new set of functions and
+constructs that are separate from cons
+
+73
+00:07:05.957 --> 00:07:11.375
+cells. We make a mutable cons cell with
+mcons, get its first thing with mcar,
+
+74
+00:07:11.492 --> 00:07:16.940
+second thing with mcdr. We can find out if
+we have one, this is the one thing I
+
+75
+00:07:16.952 --> 00:07:22.620
+didn't demonstrate for you with mpair?.
+Set the content, set the car field with
+
+76
+00:07:22.632 --> 00:07:28.165
+set-mcar! and set the cdr field with
+set-mcdr!. So when we need a mutable data
+
+77
+00:07:28.177 --> 00:07:33.435
+structure Something that has multiple
+pieces whose content can change we'll use
+
+78
+00:07:33.447 --> 00:07:38.245
+mcon cells, and when we do not want
+mutability, we'll use regular cons cells.

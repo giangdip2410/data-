@@ -1,0 +1,701 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:04.612
+[MUSIC] So, let's now jump in and get the 
+Racket basics out of the way. 
+
+2
+00:00:04.612 --> 00:00:10.137
+Let's learn how to define functions, 
+variables, conditionals, and so forth, 
+
+3
+00:00:10.137 --> 00:00:13.437
+covering a lot of the ground we already 
+did in ML. 
+
+4
+00:00:13.437 --> 00:00:18.562
+I have a few slides posted with this 
+lecture but I think I'll primarily just 
+
+5
+00:00:18.562 --> 00:00:22.437
+stay over here in Dr. 
+Racket and write a bunch of code with 
+
+6
+00:00:22.437 --> 00:00:25.268
+you. 
+So, I already have #lang Racket, and this 
+
+7
+00:00:25.268 --> 00:00:29.839
+thing, so that I could test in a second 
+file if I wanted to, although we'll just 
+
+8
+00:00:29.839 --> 00:00:33.261
+use the RPL here. 
+And now, let's do a couple of variable 
+
+9
+00:00:33.261 --> 00:00:36.416
+definitions. 
+So, (define, the name of the variable you 
+
+10
+00:00:36.416 --> 00:00:42.073
+want to define, and then an expression 
+that you evaluate to the variable. 
+
+11
+00:00:42.073 --> 00:00:48.143
+So, this is really like, val x=3 in ML, 
+okay? And now, we can do another one. 
+
+12
+00:00:48.143 --> 00:00:52.782
+So, a definition can use x. 
+So, suppose I want y to be x+2. 
+
+13
+00:00:52.782 --> 00:00:56.855
+So, what I do is I call the plus function 
+with x and 2. 
+
+14
+00:00:56.855 --> 00:01:02.820
+The way you call a function in Racket is 
+you write parenthesis, the function you 
+
+15
+00:01:02.820 --> 00:01:08.097
+want to call, and then the arguments. 
+So, plus plus is really just a function 
+
+16
+00:01:08.097 --> 00:01:11.210
+so plus is a function and we call it 
+here. 
+
+17
+00:01:11.210 --> 00:01:16.459
+So, this variable y is being bound to the 
+result of this function call and in 
+
+18
+00:01:16.459 --> 00:01:21.927
+general, function calls are written with 
+a perenthesis before the function your 
+
+19
+00:01:21.927 --> 00:01:26.660
+calling, then the argument, then a 
+parenthesis after the arguments. 
+
+20
+00:01:26.660 --> 00:01:32.000
+It's a different syntax than in languages 
+you may be familiar with but that is a 
+
+21
+00:01:32.000 --> 00:01:35.872
+function call calling the plus function 
+with x and 2. 
+
+22
+00:01:35.872 --> 00:01:41.148
+So now, let's define our own function. 
+Let's I'm going to write a few versions 
+
+23
+00:01:41.148 --> 00:01:45.660
+of the cubing function, so I'll call this 
+one cube1, and now I'm defining a 
+
+24
+00:01:45.660 --> 00:01:48.372
+function. 
+So, what I'm going to do is I use this 
+
+25
+00:01:48.372 --> 00:01:51.752
+key word lambda, it's spelled like the 
+Greek letter. 
+
+26
+00:01:51.752 --> 00:01:55.652
+Racket, in earlier dialects of this 
+language, like Scheme have been using 
+
+27
+00:01:55.652 --> 00:01:59.062
+that Greek letter for decades, it's a bit 
+of a strange choice. 
+
+28
+00:01:59.062 --> 00:02:02.747
+Then, the arguments in parenthesis, so 
+this will take one argument. 
+
+29
+00:02:02.747 --> 00:02:06.447
+So, lambda is a keyword that says I 
+wanted to find a function, put the 
+
+30
+00:02:06.447 --> 00:02:09.542
+arguments in parenthesis, and then you 
+have the body. 
+
+31
+00:02:09.542 --> 00:02:15.994
+And the body I want is to call the 
+multiply function with two arguments. 
+
+32
+00:02:15.994 --> 00:02:20.798
+With x and with the result of this other 
+call x and x. 
+
+33
+00:02:20.798 --> 00:02:26.735
+And then, and that call, this call the 
+lambda form and the defined form. 
+
+34
+00:02:26.735 --> 00:02:33.031
+So, this body, the, just the body here 
+this part here would be like in other 
+
+35
+00:02:33.031 --> 00:02:38.598
+languages writing x times x times x. 
+But in Racket, everything always has the 
+
+36
+00:02:38.598 --> 00:02:42.951
+function first, and all these operators 
+are just functions, and so it looks like 
+
+37
+00:02:42.951 --> 00:02:45.291
+this. 
+We get very used to in Racket, ending 
+
+38
+00:02:45.291 --> 00:02:49.097
+things with lots of parenthesis. 
+I'll talk more about parenthesis in a 
+
+39
+00:02:49.097 --> 00:02:53.182
+future segment, but for now, notice all I 
+did was introduce a val binding, 
+
+40
+00:02:53.182 --> 00:02:57.347
+right, for cube1 and bind it to this 
+anonymous function. 
+
+41
+00:02:57.347 --> 00:03:01.907
+So, lambda is like ML's fn, 
+right? It takes in, this an anonymous 
+
+42
+00:03:01.907 --> 00:03:07.752
+function that takes in one argument, x, 
+and has this body that ends up cubing x, 
+
+43
+00:03:07.752 --> 00:03:09.929
+alright? 
+Let me write a nicer version. 
+
+44
+00:03:09.929 --> 00:03:14.416
+It turns out that you don't have to write 
+it that way because the multiplication 
+
+45
+00:03:14.416 --> 00:03:18.598
+function, which is provided to us already 
+by Racket, can take any number of 
+
+46
+00:03:18.598 --> 00:03:22.963
+arguments and it returns their product. 
+So, we really kind of just write it like 
+
+47
+00:03:22.963 --> 00:03:25.398
+that. 
+So, multiply, in this language, is a 
+
+48
+00:03:25.398 --> 00:03:28.063
+function that can take any number of 
+arguments. 
+
+49
+00:03:28.063 --> 00:03:32.245
+There is a way in Racket to define your 
+own functions that take any number of 
+
+50
+00:03:32.245 --> 00:03:35.792
+arguments but I'm not planning to show 
+that to you. 
+
+51
+00:03:35.792 --> 00:03:41.177
+You can consult it the guide, if you need 
+it you won't need it for any of our 
+
+52
+00:03:41.177 --> 00:03:44.487
+homeworks. 
+the other thing I wanted to point out 
+
+53
+00:03:44.487 --> 00:03:49.842
+here, is that this really is just a 
+function call and so it makes sense that 
+
+54
+00:03:49.842 --> 00:03:54.017
+we're calling it that way. 
+Our function cube2 takes one argument, 
+
+55
+00:03:54.017 --> 00:03:59.683
+multiply takes any number of arguments. 
+Unlike in ML, I'm not lying to you, this 
+
+56
+00:03:59.683 --> 00:04:03.833
+is not syntactic sugar. 
+In Racket, our a functions really do take 
+
+57
+00:04:03.833 --> 00:04:09.465
+0, 1, 2, 3, 4 or any number of arguments. 
+It's not syntactic sugar for coupling or 
+
+58
+00:04:09.465 --> 00:04:14.793
+for currying, okay? let me show you 
+something that we do have syntactic sugar 
+
+59
+00:04:14.793 --> 00:04:19.709
+for though, you do not have to write 
+lambda every time, if you want to do 
+
+60
+00:04:19.709 --> 00:04:22.716
+this. 
+This is exactly like the previous 
+
+61
+00:04:22.716 --> 00:04:25.643
+version. 
+So, what you can do is instead of 
+
+62
+00:04:25.643 --> 00:04:30.935
+essentially defining a variable and 
+binding it to this anonymous function, 
+
+63
+00:04:30.935 --> 00:04:35.522
+you can use this syntax instead, but it 
+is exactly the same thing. 
+
+64
+00:04:35.522 --> 00:04:41.222
+This is syntactic sugar for define the 
+variable cube3 to be bound to a function 
+
+65
+00:04:41.222 --> 00:04:46.161
+that takes one argument x, and returns, 
+has this as its body, x times x times x. 
+
+66
+00:04:46.161 --> 00:04:51.967
+If you had multiple arguments here, you 
+could just do like that before that first 
+
+67
+00:04:51.967 --> 00:04:55.577
+right parenthesis. 
+So, there are three versions of cubing 
+
+68
+00:04:55.577 --> 00:04:58.272
+functions. 
+Now, let's write some recursive 
+
+69
+00:04:58.272 --> 00:05:01.417
+functions. 
+It turns out that unlike in ML, we don't 
+
+70
+00:05:01.417 --> 00:05:05.757
+need anything new to do recursive 
+functions, but you can just use the 
+
+71
+00:05:05.757 --> 00:05:10.357
+lambdas like we have been doing or the 
+syntactic sugar I just showed you. 
+
+72
+00:05:10.357 --> 00:05:14.557
+So, if I wanted to find the 
+exponentiation function, I'm going to do 
+
+73
+00:05:14.557 --> 00:05:17.797
+this two different ways. 
+So, I'll call this pow1. 
+
+74
+00:05:17.797 --> 00:05:24.903
+The purpose here is x to the yth power 
+and I think my solution y only works if y 
+
+75
+00:05:24.903 --> 00:05:30.369
+is non-negative, alright? 
+I just need a body here and now I need an 
+
+76
+00:05:30.369 --> 00:05:34.088
+if. 
+the way you write an if in Racket, is you 
+
+77
+00:05:34.088 --> 00:05:38.361
+write left parenthesis if and then three 
+expressions. 
+
+78
+00:05:38.361 --> 00:05:42.042
+You want e2, e3, and that is the thing to 
+test for. 
+
+79
+00:05:42.042 --> 00:05:46.063
+The true branch and the true, false 
+branch, so we don't use keys then and 
+
+80
+00:05:46.063 --> 00:05:50.605
+else, so they don't exist in Racket, we 
+just write the three expressions in a row 
+
+81
+00:05:50.605 --> 00:05:54.887
+and then end with a right parenthesis. 
+So, the way I want to do this, I want to 
+
+82
+00:05:54.887 --> 00:05:59.280
+say if y=0, equals is function that takes 
+two numbers, returns true if they're 
+
+83
+00:05:59.280 --> 00:06:03.248
+equal then 1. 
+So, I've written two of my three 
+
+84
+00:06:03.248 --> 00:06:07.247
+expressions for if. 
+And now my third one can be * x. 
+
+85
+00:06:07.247 --> 00:06:11.335
+and then recursively call pow1 with x and 
+y-1. 
+
+86
+00:06:11.335 --> 00:06:16.372
+Notice that like every operator in 
+Racket, minus goes first. 
+
+87
+00:06:16.372 --> 00:06:21.151
+And, there it is. 
+So, pow1 is a function that takes two 
+
+88
+00:06:21.151 --> 00:06:27.600
+arguments, x and y, and its body is this 
+if expression, this, sorry, if 
+
+89
+00:06:27.600 --> 00:06:31.318
+expression. 
+The if expression has equal y0, for its 
+
+90
+00:06:31.318 --> 00:06:37.030
+first sub expression, 1 for the second 
+and multiplying x by the result of this 
+
+91
+00:06:37.030 --> 00:06:43.141
+call, this call, pow1 with x and y-1. 
+so this is the exponentiation function. 
+
+92
+00:06:43.141 --> 00:06:48.314
+You'll notice that we, every time we have 
+a function call, its parenthesis function 
+
+93
+00:06:48.314 --> 00:06:51.521
+you want to call, arguments, okay? So, 
+this will work fine. 
+
+94
+00:06:51.521 --> 00:06:55.368
+Why don't we go ahead and run this? I 
+haven't been running much for you. 
+
+95
+00:06:55.368 --> 00:06:58.053
+So, I just clicked Run. 
+Now, I can say pow1, how about 3^2, 
+
+96
+00:06:58.053 --> 00:06:59.669
+right? 
+So, it's a function call. 
+
+97
+00:06:59.669 --> 00:07:01.832
+I pass in the two arguments. 
+I get nine. 
+
+98
+00:07:01.832 --> 00:07:04.591
+And if I ask pow1 3^0, 
+I would get one, 
+
+99
+00:07:04.591 --> 00:07:08.234
+great, 
+okay? So, let's define just a couple more 
+
+100
+00:07:08.234 --> 00:07:12.168
+functions. 
+let's do another version of pow, that's 
+
+101
+00:07:12.168 --> 00:07:15.237
+curried. 
+So, currying has nothing to do with 
+
+102
+00:07:15.237 --> 00:07:18.360
+anything other than an idiom with 
+closures. 
+
+103
+00:07:18.360 --> 00:07:23.958
+and so we can, we can do that in Racket. 
+it's not as common in Racket because 
+
+104
+00:07:23.958 --> 00:07:28.338
+Racket has built-in support for 
+multi-argument functions but there's no 
+
+105
+00:07:28.338 --> 00:07:31.934
+reason why we can't use curreying so 
+let's see. 
+
+106
+00:07:31.934 --> 00:07:35.709
+Well, here's a simple version. 
+I could just call pow1 with the two 
+
+107
+00:07:35.709 --> 00:07:39.031
+argument, 
+right? So, this pow2 is a function that 
+
+108
+00:07:39.031 --> 00:07:43.427
+takes in one argument, x. 
+Its body is this lambda, which returns a 
+
+109
+00:07:43.427 --> 00:07:48.243
+function that takes an argument y and 
+then I just call pow1 with x and y. 
+
+110
+00:07:48.243 --> 00:07:53.808
+Of course, I could have my own 
+conditional down here if I preferred, 
+
+111
+00:07:53.808 --> 00:08:01.906
+okay? And now that I have this this pow2, 
+I could partially apply it and I could 
+
+112
+00:08:01.906 --> 00:08:08.239
+say something like pow2 3, 
+okay? And if I save all that and run it 
+
+113
+00:08:08.239 --> 00:08:13.272
+I could say, three-to-the with 2, and I 
+would get 9, 
+
+114
+00:08:13.272 --> 00:08:18.987
+right? Because I end up, taking this 
+function that pow2 return, calling it 
+
+115
+00:08:18.987 --> 00:08:22.309
+with 2. 
+That ends up calling pow1 with 3 and 2, 
+
+116
+00:08:22.309 --> 00:08:25.687
+and I get 9. 
+So, it's currying exactly like an ML. 
+
+117
+00:08:25.687 --> 00:08:31.888
+because it's less common, if you're not 
+partially applying things you know, so if 
+
+118
+00:08:31.888 --> 00:08:36.311
+I wanted 16, it's quite convenient to 
+call pow1 with 4 and 2. 
+
+119
+00:08:36.311 --> 00:08:42.553
+But if I want to do it with pow2 well, 
+what do I need to do? I need to call pow2 
+
+120
+00:08:42.553 --> 00:08:46.013
+with 4. 
+That gives back a function and now, I 
+
+121
+00:08:46.013 --> 00:08:50.863
+need to call that function with 2. 
+This parenthesis matter. 
+
+122
+00:08:50.863 --> 00:08:56.839
+Parenthesis always matter in Racket. 
+If I want to call pow2 with 4, I have to 
+
+123
+00:08:56.839 --> 00:09:01.184
+write it like this, 
+then that gives me back something that is 
+
+124
+00:09:01.184 --> 00:09:06.452
+the function, and if I want to call that 
+function with 2, I need this parenthesis 
+
+125
+00:09:06.452 --> 00:09:10.917
+to its left and then here. 
+So, it turns out that in Racket, there's 
+
+126
+00:09:10.917 --> 00:09:14.886
+a little bit of syntactic sugar for 
+defining curried functions. 
+
+127
+00:09:14.886 --> 00:09:17.637
+The code posted with this segment will 
+have that. 
+
+128
+00:09:17.637 --> 00:09:21.281
+You don't need to use it. 
+We're actually not going to use currying 
+
+129
+00:09:21.281 --> 00:09:25.061
+so much in Racket. 
+there is no syntactic sugar for calling a 
+
+130
+00:09:25.061 --> 00:09:28.375
+curried function. 
+This line that I have here, really is the 
+
+131
+00:09:28.375 --> 00:09:31.828
+best that you can do. 
+I bring up currying here, both because 
+
+132
+00:09:31.828 --> 00:09:36.109
+it's something familiar and I wanted you 
+to see it in multiple languages. 
+
+133
+00:09:36.109 --> 00:09:40.617
+And also, because it emphasizes that we 
+have anonymous functions, first class 
+
+134
+00:09:40.617 --> 00:09:44.642
+functions, and whenever you want to call 
+a function, it's always, 
+
+135
+00:09:44.642 --> 00:09:50.794
+e0, so parenthesis e0, for the expression 
+that evaluates to the function you want 
+
+136
+00:09:50.794 --> 00:09:56.116
+to call, then e1 up to en for the 
+arguments, then the other parenthesis. 
+
+137
+00:09:56.116 --> 00:09:59.762
+This is what function calls look like in 
+Racket. 
+
+138
+00:09:59.762 --> 00:10:04.841
+Now, if e0 is not an expression, if it's 
+something like if or define or lambda, 
+
+139
+00:10:04.841 --> 00:10:09.400
+then those are not function calls, 
+those are other constructs in Racket. 
+
+140
+00:10:09.400 --> 00:10:13.759
+We'll continue to see those and 
+understand those in the segments ahead. 

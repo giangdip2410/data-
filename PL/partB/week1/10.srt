@@ -1,0 +1,525 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:05.066
+[MUSIC] In this segment, I want to 
+continue studying how Racket is a 
+
+2
+00:00:05.066 --> 00:00:11.271
+dynamically typed language by telling you 
+the truth about this cons primitive that 
+
+3
+00:00:11.271 --> 00:00:16.568
+we have been using to build lists. 
+And that truth is that we can also use 
+
+4
+00:00:16.568 --> 00:00:20.782
+cons to make a pair. 
+In fact, what cons really does is take 
+
+5
+00:00:20.782 --> 00:00:26.459
+two arguments and make a pair and in 
+Racket, as is common in dynamically typed 
+
+6
+00:00:26.459 --> 00:00:32.057
+languages, all a list is, is some number 
+of nested pairs that ends with the empty 
+
+7
+00:00:32.057 --> 00:00:36.644
+list, that ends with null. 
+So, it's probably easiest to see that by 
+
+8
+00:00:36.644 --> 00:00:41.362
+just writing some code or using some code 
+that uses this feature. 
+
+9
+00:00:41.362 --> 00:00:46.999
+So, on this first line here, where I'm 
+defining this variable pr, this is just a 
+
+10
+00:00:46.999 --> 00:00:53.913
+pair with 1 in the first position. 
+And in the second position another pair 
+
+11
+00:00:53.913 --> 00:00:58.076
+that holds true and hi. 
+So, this is not a list. 
+
+12
+00:00:58.076 --> 00:01:05.495
+This is the sort of thing that in ML, we 
+would have written as 1,true,hi, spelling 
+
+13
+00:01:05.495 --> 00:01:11.116
+true correctly. but in Racket, we write 
+it like this with cons because we use 
+
+14
+00:01:11.116 --> 00:01:16.145
+cons to build a pair instead of comma and 
+we can see how this will print in the RPL 
+
+15
+00:01:16.145 --> 00:01:20.819
+by just writing pr and you see that what 
+it actually does is it looks just like a 
+
+16
+00:01:20.819 --> 00:01:25.614
+list except it puts this dot before the 
+last element that says this is not a 
+
+17
+00:01:25.614 --> 00:01:28.550
+list. 
+This was the value that you get from 
+
+18
+00:01:28.550 --> 00:01:32.455
+using cons with 1. 
+And then, 1 more pair of cons with true 
+
+19
+00:01:32.455 --> 00:01:35.969
+and hi. 
+But let's compare that to the variable on 
+
+20
+00:01:35.969 --> 00:01:40.344
+the next line, list. 
+So there, I also use cons, which builds a 
+
+21
+00:01:40.344 --> 00:01:43.779
+pair from 1. 
+And then another cons, which builds a 
+
+22
+00:01:43.779 --> 00:01:46.532
+pair from true, 
+and then another cons. 
+
+23
+00:01:46.532 --> 00:01:50.212
+And then, the last one is the string hi 
+and null. 
+
+24
+00:01:50.212 --> 00:01:56.033
+And that does make a list because a list 
+is just some number of conses where the, 
+
+25
+00:01:56.033 --> 00:02:01.343
+where in the cdr of each one, in the 
+second position of each pair, you have 
+
+26
+00:02:01.343 --> 00:02:06.596
+another cons until you get down to null 
+until you get to the empty list. 
+
+27
+00:02:06.596 --> 00:02:11.682
+So, that is what I mean by lists are just 
+a particular kind of nested pair. 
+
+28
+00:02:11.682 --> 00:02:16.165
+So, once we understand this, we see that 
+cons just builds a pair. 
+
+29
+00:02:16.165 --> 00:02:19.532
+In Racket, it's common to call them a 
+cons cell. 
+
+30
+00:02:19.532 --> 00:02:24.663
+And the you access the pieces of a cons 
+cell is with car and cdr. 
+
+31
+00:02:24.663 --> 00:02:30.903
+So, it turns out that car is really like 
+MLs hash1 and cdr is like ML's hash2. 
+
+32
+00:02:30.903 --> 00:02:36.059
+And that is all that is going on. 
+So, given our pair value which remember, 
+
+33
+00:02:36.059 --> 00:02:40.648
+is just nested pairs which prints 
+slightly funny, if I take the cdr(cdr 
+
+34
+00:02:40.648 --> 00:02:48.495
+pr), that gets me the string hi. 
+It's the second component of the second 
+
+35
+00:02:48.495 --> 00:02:52.790
+component. 
+But if I had my list, and I said of cdr 
+
+36
+00:02:52.790 --> 00:02:58.819
+sorry, of list, well then, I get a one 
+element list back, because the cdr of the 
+
+37
+00:02:58.819 --> 00:03:04.483
+cdr of list, is this pair of hi and null. 
+If I wanted the actual hi, I would have 
+
+38
+00:03:04.483 --> 00:03:08.894
+to take car of that, because if we take 
+car of a pair, you get a string hi. 
+
+39
+00:03:08.894 --> 00:03:13.699
+By the way, sometimes in Racket, we find 
+ourselves writing car of cdr of cdr, and 
+
+40
+00:03:13.699 --> 00:03:18.119
+for a long time in Racket and before its 
+Scheme, there's a bunch of built-in 
+
+41
+00:03:18.119 --> 00:03:21.715
+library functions that combine this So, 
+you can use caddr. 
+
+42
+00:03:21.715 --> 00:03:26.236
+And that is how it's pronounced. 
+And all that it is, is there's a built in 
+
+43
+00:03:26.236 --> 00:03:30.224
+function caddr that takes an x and 
+returns car of cdr of cdr of x. 
+
+44
+00:03:30.224 --> 00:03:34.532
+We could have defined this our self. 
+But it's predefined for us in the 
+
+45
+00:03:34.532 --> 00:03:39.285
+standard library. 
+So now, we know the difference between 
+
+46
+00:03:39.285 --> 00:03:43.705
+lists and pairs. 
+As you might imagine, we have built in 
+
+47
+00:03:43.705 --> 00:03:47.761
+functions for asking, do you have a list 
+or a pair. 
+
+48
+00:03:47.761 --> 00:03:51.619
+So, if we ask, is pr a list, the answer 
+is false. 
+
+49
+00:03:51.619 --> 00:03:57.181
+The only things that are lists are the 
+empty list and cons is where you 
+
+50
+00:03:57.181 --> 00:04:03.672
+eventually get down to the empty list. 
+On the other hand, pr is a pair. 
+
+51
+00:04:03.672 --> 00:04:11.736
+Anything built from cons is a pair. 
+And if we do ask about list lst, that 
+
+52
+00:04:11.736 --> 00:04:16.363
+variable, that is a list and it's also a 
+pair. 
+
+53
+00:04:16.363 --> 00:04:19.098
+So here, I'm just using the and 
+primitive, 
+
+54
+00:04:19.098 --> 00:04:24.163
+where I can ask a bunch of questions. 
+I'll get the result true if they're all 
+
+55
+00:04:24.163 --> 00:04:26.969
+true. 
+So, that is our introduction to pairs 
+
+56
+00:04:26.969 --> 00:04:30.464
+versus lists. 
+I should warn you that there are a number 
+
+57
+00:04:30.464 --> 00:04:34.815
+of built-in functions, like length, which 
+works just fine on lists. 
+
+58
+00:04:34.815 --> 00:04:37.537
+If I pass it a list with 
+3 elements, 
+
+59
+00:04:37.537 --> 00:04:42.241
+I get 3. But if you try to pass it 
+something that's not a list, even if it's 
+
+60
+00:04:42.241 --> 00:04:44.836
+built from cons, you get an error 
+message. 
+
+61
+00:04:44.836 --> 00:04:48.662
+This error message is introducing a 
+little bit of terminology. 
+
+62
+00:04:48.662 --> 00:04:53.526
+Sometimes when we want to emphasize this 
+distinction, we say that lists like lst 
+
+63
+00:04:53.526 --> 00:04:58.214
+are proper lists, whereas something like 
+pair, which is built from cons, but 
+
+64
+00:04:58.214 --> 00:05:01.852
+doesn't end with null, we would call an 
+improper list, 
+
+65
+00:05:01.852 --> 00:05:06.457
+okay? So, that is the code I wanted to 
+show you, lets go back quickly to the 
+
+66
+00:05:06.457 --> 00:05:09.372
+slides. 
+And ask why does, do we allow this, why 
+
+67
+00:05:09.372 --> 00:05:14.137
+does Racket have this? Well, we know 
+pairs are useful, they were useful in ML 
+
+68
+00:05:14.137 --> 00:05:18.852
+and if you earn a dynamically typed 
+language that isn't going to have a type 
+
+69
+00:05:18.852 --> 00:05:23.707
+checker that distinguishes lists from 
+pairs, then why have one kind of way to 
+
+70
+00:05:23.707 --> 00:05:26.972
+build a pair and another kind of way to 
+build a list. 
+
+71
+00:05:26.972 --> 00:05:31.102
+Lets just use the same thing, in Racket's 
+case, cons for building both. 
+
+72
+00:05:31.102 --> 00:05:35.445
+So, in, unlike in ML, we don't need the 
+comma for building a pair and the colon, 
+
+73
+00:05:35.445 --> 00:05:39.114
+colon for building a list. 
+Let's just use the same thing for both, 
+
+74
+00:05:39.114 --> 00:05:43.662
+and programmers will just have to keep 
+track of which things are proper lists 
+
+75
+00:05:43.662 --> 00:05:47.212
+and which things are not. 
+Now as a matter of style, if you have a 
+
+76
+00:05:47.212 --> 00:05:51.543
+collection of unknown size, I don't know 
+how many numbers I need to pass to a 
+
+77
+00:05:51.543 --> 00:05:55.547
+function or something like that, you 
+really should use a proper list. 
+
+78
+00:05:55.547 --> 00:05:58.103
+That's the convention. 
+That's what we want. 
+
+79
+00:05:58.103 --> 00:06:02.270
+Put null at the end of your lists. 
+But if you really just need a quick pair 
+
+80
+00:06:02.270 --> 00:06:06.336
+or a triple, I just need to hold three 
+things, then a pair or a pair with 
+
+81
+00:06:06.336 --> 00:06:09.112
+another pair inside of it is perfectly 
+fine. 
+
+82
+00:06:09.112 --> 00:06:11.497
+We don't have triples built in to wreck 
+it. 
+
+83
+00:06:11.497 --> 00:06:15.962
+You really do have to say something like, 
+let me just go back here, cons 1 of cons 
+
+84
+00:06:15.962 --> 00:06:18.666
+of true onto hi. 
+That would be a fine way to build 
+
+85
+00:06:18.666 --> 00:06:23.203
+something that is like a triple, although 
+it is really a pair with one thing in the 
+
+86
+00:06:23.203 --> 00:06:27.177
+first position and then another. 
+We could have just as well done it this 
+
+87
+00:06:27.177 --> 00:06:31.553
+way, although this is a different data 
+structure and it will print differently, 
+
+88
+00:06:31.553 --> 00:06:33.644
+excuse me. 
+One too many parantheses. 
+
+89
+00:06:33.644 --> 00:06:37.012
+There we go. 
+And this shows that we have an improper 
+
+90
+00:06:37.012 --> 00:06:38.547
+list, 
+we have a pair. 
+
+91
+00:06:38.547 --> 00:06:44.332
+That's what this dot shows with hi in the 
+second position and the pair 1 and true 
+
+92
+00:06:44.332 --> 00:06:50.112
+in the first position and we can get the 
+true out, for example, with let's see, 
+
+93
+00:06:50.112 --> 00:06:55.472
+let me first define this to a variables 
+so it's easier to see what I'm doing. 
+
+94
+00:06:55.472 --> 00:07:01.507
+and then just say how about the cdr of 
+the car of x abd that would be that true, 
+
+95
+00:07:01.507 --> 00:07:04.037
+okay? 
+So, this is perfectly reasonable when you 
+
+96
+00:07:04.037 --> 00:07:08.532
+just need a small number of things, but 
+as we'll see in the next section Racket 
+
+97
+00:07:08.532 --> 00:07:12.627
+has some support for defining our own 
+each of types and I would argue that's 
+
+98
+00:07:12.627 --> 00:07:16.927
+even better style than just using cons 
+which is hard to keep track of how you've 
+
+99
+00:07:16.927 --> 00:07:20.057
+organized things and where things are 
+defined. 
+
+100
+00:07:20.057 --> 00:07:25.381
+And as we saw, in the RPL, as I was 
+playing around with this, the list? 
+
+101
+00:07:25.381 --> 00:07:30.967
+predicate built into the language returns 
+true for proper lists, including the 
+
+102
+00:07:30.967 --> 00:07:34.988
+empty list but not, it returns false for 
+improper lists. 
+
+103
+00:07:34.988 --> 00:07:39.702
+Whereas, the pair primitive returns true 
+for anything made by cons. 
+
+104
+00:07:39.702 --> 00:07:44.620
+And so, that includes all proper lists 
+except the empty list and it also 
+
+105
+00:07:44.620 --> 00:07:46.017
+includes any sort of pair. 

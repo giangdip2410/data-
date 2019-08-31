@@ -47,33 +47,48 @@ fun longest_string1 xs =
 			       x
 			   else y)
 	       "" xs
-(*fun longest_string2 xs =*)
-    (*List.foldl(fn (x,y) => if String.size(x) > String.size(y)
-			   then  x  
-			   elsec
-			       y)
-	      "" xs *)
-	       (*Q5 *)
+fun longest_string2 xs =
+    case xs of
+	[] => ""
+      | x::xs' => longest_string1 (List.rev(x::xs'))
+
+fun longest_string_helper f xs  =
+    List.foldl (fn(x,y) => let val lx = String.size(x)
+			       val ly = String.size(y)
+			   in
+			        if f(lx,ly)
+				then x
+				else y
+			   end
+	(*Q4-b *)		       ) "" xs 
+fun longest_string3 xs =
+    longest_string_helper (fn(x,y) => x > y) xs
+(*Q5 *)
+
+fun longest_string4 xs =
+    case xs of
+	[] =>""
+	  | xs::xs' => longest_string3 (List.rev(xs::xs')) 
 val  longest_capitalized  = longest_string1 o only_capitals 
 
 (* Q6 *)
  val rev_string = String.implode o List.rev o String.explode
 (*Q7 *)	       
  fun first_answer f xs =
-     case xs of
-	 [] => 0
+     case xs  of
+	 [] => raise NoAnswer
        | x::xs' => case f x of
 		       NONE  => first_answer f xs'
 		    | SOME y =>  y
 (*Q8 *)
  fun all_answers f xs =
-     let fun local_all_answer(f,xs,acc)=
-	     case xs of
+     let fun local_all_answer(f,y,acc)=
+	     case y of
 		 [] =>acc
-	       | x::xs' =>  case f x of
+	       | x::xs' =>  case (f x) of
 				NONE =>local_all_answer(f,xs',acc)
-			      | SOME [y] => local_all_answer(f,xs',acc @ [y])
-     in
+			      | SOME z => local_all_answer(f,xs',acc @ z)
+     in  
 	 case xs of
 	     [] =>SOME []
 	   | x::xs' => case local_all_answer(f,x::xs',[]) of
@@ -82,5 +97,65 @@ val  longest_capitalized  = longest_string1 o only_capitals
      end
 	 
 	 (*Q9-a*)
-(* fun count_wildcards pa =
-*)     
+ fun count_wildcards pa =
+     g (fn ()  =>1)  (fn x => 0)  pa
+
+       (* Q9-b *)
+ fun count_wild_and_variable_lengths pa =
+     count_wildcards pa + (g (fn x => 0) (fn x => String.size(x)) pa)
+			      
+(* Q9-c *)
+ fun count_some_var (str, pa) =
+	 g (fn x => 0) (fn y => if str = y then 1 else 0) pa    
+
+	         
+	   (*Q10 *)
+ fun check_pat pa =
+     let  fun get_variable_string pa =
+            case pa of
+		Variable x => x::[]
+	      | TupleP PS => List.foldl(fn(m,n)=> (get_variable_string  m) @ n) []  PS
+	   | ConstructorP(s,ps) => get_variable_string ps  
+          | _=> []
+     in
+	 let fun is_repeat xs=
+		 case xs of 
+		 [] =>true
+	       | x::xs' => if List.exists (fn a => x = a) xs'
+			  then false
+			  else
+			      is_repeat xs'
+	 in
+	     is_repeat(get_variable_string pa )
+	 end
+	     
+     end
+	 (*Q11 *)
+ fun match (va,pa)=
+     case pa of
+	 Wildcard => SOME []
+       | Variable s => SOME ((s,va)::[])
+       | UnitP => (case va of
+		       Unit =>SOME []
+		     | _  => NONE)
+       | ConstP x => (case  va of
+			 Const y => if(x = y)then  SOME [] else NONE
+		       | _ => NONE ) 
+       | TupleP ps =>(case  va of
+			  Tuple vs =>(if List.length(ps) = List.length(vs)
+				      then all_answers match (ListPair.zip(vs,ps))
+				      else
+					  NONE)
+			| _ =>NONE)
+       | ConstructorP(s1,p) =>(case va of
+				   Constructor(s2,v)=>(if s1 = s2
+			       then match(v,p)
+			       else
+				   NONE)
+							  
+				 | _ => NONE)
+				                   	  
+	      
+
+	
+(*Q12 * sorry I do not solve the Q12 *)

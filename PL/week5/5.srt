@@ -1,0 +1,797 @@
+WEBVTT
+
+1
+00:00:04.180 --> 00:00:07.800
+I want to finish up our discussion of type inference with
+
+2
+00:00:07.800 --> 00:00:11.910
+a few more topics that are necessary to finish the story.
+
+3
+00:00:11.910 --> 00:00:14.564
+The first issue is that type inference for ML,
+
+4
+00:00:14.564 --> 00:00:18.240
+as I have shown it to you so far, is too lenient.
+
+5
+00:00:18.240 --> 00:00:22.520
+It would actually let some things type-check that we really should not-type check.
+
+6
+00:00:22.520 --> 00:00:25.470
+I want to show you that, and it's related to the value restriction that
+
+7
+00:00:25.470 --> 00:00:29.220
+came up once before when we were studying partial application.
+
+8
+00:00:29.220 --> 00:00:32.370
+And then I just want to briefly point out that ML is really in
+
+9
+00:00:32.370 --> 00:00:36.031
+a sweet spot that type inference works very well in ML,
+
+10
+00:00:36.031 --> 00:00:39.705
+but if you tried to make the type system either more permissive,
+
+11
+00:00:39.705 --> 00:00:44.750
+or less permissive, type inference would become more difficult to reason about.
+
+12
+00:00:44.750 --> 00:00:47.865
+Now, in my view, these are important for finishing up the story,
+
+13
+00:00:47.865 --> 00:00:51.110
+but the topics are a bit more advanced and a bit less elegant.
+
+14
+00:00:51.110 --> 00:00:55.245
+So I'm willing to say we will not ask exam questions about these topics.
+
+15
+00:00:55.245 --> 00:00:57.344
+And since there are no more homeworks on ML,
+
+16
+00:00:57.344 --> 00:01:00.760
+that means it's fine to treat this segment as optional.
+
+17
+00:01:00.760 --> 00:01:04.350
+Okay, so as presented so far,
+
+18
+00:01:04.350 --> 00:01:07.740
+the ML type system is unsound.
+
+19
+00:01:07.740 --> 00:01:08.974
+What do I mean by that?
+
+20
+00:01:08.974 --> 00:01:11.925
+The type system is supposed to prevent certain things
+
+21
+00:01:11.925 --> 00:01:15.930
+like never trying to add an int with a string.
+
+22
+00:01:15.930 --> 00:01:19.740
+And as I've shown the type system and type inference so far,
+
+23
+00:01:19.740 --> 00:01:21.715
+you would be able to do that.
+
+24
+00:01:21.715 --> 00:01:26.145
+And so it's unsound, it has an error in it as I've shown it to you so far.
+
+25
+00:01:26.145 --> 00:01:27.975
+So I'm going to show you the problem,
+
+26
+00:01:27.975 --> 00:01:30.810
+and then how ML fixes that problem.
+
+27
+00:01:30.810 --> 00:01:34.200
+So it turns out it's a combination of polymorphism,
+
+28
+00:01:34.200 --> 00:01:36.790
+those type variables and mutation.
+
+29
+00:01:36.790 --> 00:01:41.180
+And here's the shortest example I can think of that shows the problem.
+
+30
+00:01:41.180 --> 00:01:42.720
+If on the first line here,
+
+31
+00:01:42.720 --> 00:01:45.832
+we say val r equals ref NONE,
+
+32
+00:01:45.832 --> 00:01:49.500
+then using the type system as I've shown it to you so far,
+
+33
+00:01:49.500 --> 00:01:52.715
+you would give r the type alpha option ref.
+
+34
+00:01:52.715 --> 00:01:54.475
+It's clearly a ref.
+
+35
+00:01:54.475 --> 00:01:58.515
+It clearly holds an option and there are no additional constraints.
+
+36
+00:01:58.515 --> 00:02:01.530
+It could hold an option of anything because NONE doesn't have
+
+37
+00:02:01.530 --> 00:02:05.930
+enough data in it to say what kind of option should be in that ref.
+
+38
+00:02:05.930 --> 00:02:09.120
+But now, once we give r the type alpha option ref,
+
+39
+00:02:09.120 --> 00:02:12.090
+we're in big trouble because, colon equal,
+
+40
+00:02:12.090 --> 00:02:14.280
+the assignment operator, is essentially
+
+41
+00:02:14.280 --> 00:02:17.610
+just a function that takes an alpha ref and an alpha,
+
+42
+00:02:17.610 --> 00:02:20.525
+and returns unit for any alpha.
+
+43
+00:02:20.525 --> 00:02:26.055
+So if I just use r here as though it's a string option ref,
+
+44
+00:02:26.055 --> 00:02:30.220
+then I can assign into it a string option like SOME of hi.
+
+45
+00:02:30.220 --> 00:02:35.670
+And then on the next line I could use the dereference operator, the exclamation point,
+
+46
+00:02:35.670 --> 00:02:38.760
+which has type alpha ref arrow alpha and say, oh,
+
+47
+00:02:38.760 --> 00:02:42.860
+I want that to now treat r as an int option ref.
+
+48
+00:02:42.860 --> 00:02:44.150
+So I dereference it.
+
+49
+00:02:44.150 --> 00:02:47.349
+I actually get back a string option because that's what's in there.
+
+50
+00:02:47.349 --> 00:02:49.405
+When I call valOf I'll get a string,
+
+51
+00:02:49.405 --> 00:02:51.315
+but the type system thought it was an int,
+
+52
+00:02:51.315 --> 00:02:54.150
+and now I'm trying to add an int in a string.
+
+53
+00:02:54.150 --> 00:02:56.760
+So that is the problem, and somehow,
+
+54
+00:02:56.760 --> 00:03:01.660
+if we want ML to have a sound type system, we need to fix this.
+
+55
+00:03:01.660 --> 00:03:03.480
+So to restore soundness,
+
+56
+00:03:03.480 --> 00:03:07.615
+we need a stricter type system that rejects at least one of these three lines.
+
+57
+00:03:07.615 --> 00:03:09.360
+If all three lines type check,
+
+58
+00:03:09.360 --> 00:03:11.100
+we know that when we run it we're going to have
+
+59
+00:03:11.100 --> 00:03:13.570
+something happen that should never happen.
+
+60
+00:03:13.570 --> 00:03:16.140
+Now one's natural reaction is that you
+
+61
+00:03:16.140 --> 00:03:18.990
+should make up some special rules for reference types,
+
+62
+00:03:18.990 --> 00:03:22.905
+and maybe not let references hold polymorphic things,
+
+63
+00:03:22.905 --> 00:03:25.734
+that they would have to have a type like int option ref,
+
+64
+00:03:25.734 --> 00:03:28.796
+but not alpha option ref.
+
+65
+00:03:28.796 --> 00:03:31.140
+Now, when we study the module system,
+
+66
+00:03:31.140 --> 00:03:33.300
+which is one of the major topics coming up,
+
+67
+00:03:33.300 --> 00:03:36.750
+we'll learn that this is actually impossible for the type checker to do,
+
+68
+00:03:36.750 --> 00:03:39.360
+because there will be ways to hide references,
+
+69
+00:03:39.360 --> 00:03:41.850
+and make them seem like they are other types.
+
+70
+00:03:41.850 --> 00:03:44.490
+So I have some code here where I actually end up creating a
+
+71
+00:03:44.490 --> 00:03:48.840
+function f that would have type alpha arrow alpha foo,
+
+72
+00:03:48.840 --> 00:03:51.379
+and, well, foo's not ref, right?
+
+73
+00:03:51.379 --> 00:03:54.285
+But it turns out there's a type synonym here right above it.
+
+74
+00:03:54.285 --> 00:03:58.860
+But in general, it could be somewhere in the program that the type checker cannot see,
+
+75
+00:03:58.860 --> 00:04:00.505
+because of the module system.
+
+76
+00:04:00.505 --> 00:04:02.400
+And in fact, when you make it alpha foo,
+
+77
+00:04:02.400 --> 00:04:04.525
+you're actually making an alpha ref.
+
+78
+00:04:04.525 --> 00:04:06.539
+So if I called f with NONE,
+
+79
+00:04:06.539 --> 00:04:10.780
+I would be in the same problem that I had above with the function ref.
+
+80
+00:04:10.780 --> 00:04:12.985
+So it turns out because of the module system,
+
+81
+00:04:12.985 --> 00:04:16.380
+it doesn't work to make special rules for references.
+
+82
+00:04:16.380 --> 00:04:22.330
+So instead, we're going to restrict everybody just because references might be a problem.
+
+83
+00:04:22.330 --> 00:04:25.419
+And so this solution is called the value restriction,
+
+84
+00:04:25.419 --> 00:04:26.969
+and here's how it works.
+
+85
+00:04:26.969 --> 00:04:28.965
+When you have a val binding,
+
+86
+00:04:28.965 --> 00:04:34.215
+if you want to give the variable that you are introducing into the environment,
+
+87
+00:04:34.215 --> 00:04:37.875
+a polymorphic type, then the expression you use
+
+88
+00:04:37.875 --> 00:04:42.120
+for that variable has to be a value, or a variable.
+
+89
+00:04:42.120 --> 00:04:45.180
+It can't be something that computes a result.
+
+90
+00:04:45.180 --> 00:04:46.995
+Now that might seem like a weird restriction,
+
+91
+00:04:46.995 --> 00:04:48.255
+but it doesn't come up too much,
+
+92
+00:04:48.255 --> 00:04:50.325
+and it happens to solve the problem,
+
+93
+00:04:50.325 --> 00:04:53.810
+even though it's not at all obvious that it would solve the problem.
+
+94
+00:04:53.810 --> 00:04:58.920
+You can see that it will make this first line not have the type we expect.
+
+95
+00:04:58.920 --> 00:05:01.007
+So this is a function call ref.
+
+96
+00:05:01.007 --> 00:05:03.967
+It's treated as a function by the type checker. NONE is an argument.
+
+97
+00:05:03.967 --> 00:05:06.685
+Function calls are not variables or values,
+
+98
+00:05:06.685 --> 00:05:10.602
+so we cannot give r a polymorphic type.
+
+99
+00:05:10.602 --> 00:05:15.730
+Instead, Standard ML of New Jersey will give a warning about this and say,
+
+100
+00:05:15.730 --> 00:05:17.230
+"I can't give it a polymorphic type,
+
+101
+00:05:17.230 --> 00:05:18.565
+I don't know what type to give it,
+
+102
+00:05:18.565 --> 00:05:22.340
+so I'm going to give it question mark dot X one option ref."
+
+103
+00:05:22.340 --> 00:05:25.475
+This is just some dummy type in here under the option ref.
+
+104
+00:05:25.475 --> 00:05:28.125
+It's going to make r essentially unusable.
+
+105
+00:05:28.125 --> 00:05:30.775
+And these next two lines are definitely not going to type check
+
+106
+00:05:30.775 --> 00:05:34.060
+because you can't assign a string option into one of these,
+
+107
+00:05:34.060 --> 00:05:37.255
+and you can't read out one of these and pretend that it's an int.
+
+108
+00:05:37.255 --> 00:05:39.820
+So that does actually take care of the problem.
+
+109
+00:05:39.820 --> 00:05:43.455
+So the general rule is if you want to give something a polymorphic type,
+
+110
+00:05:43.455 --> 00:05:46.615
+it cannot be something that looks like a function call,
+
+111
+00:05:46.615 --> 00:05:50.090
+it has to be something that looks like a value or a variable.
+
+112
+00:05:50.090 --> 00:05:52.635
+Okay, so this has a downside.
+
+113
+00:05:52.635 --> 00:05:54.084
+We've seen this before.
+
+114
+00:05:54.084 --> 00:05:58.025
+That if you have something else that would work absolutely fine,
+
+115
+00:05:58.025 --> 00:06:01.240
+but it fails the value restriction rule,
+
+116
+00:06:01.240 --> 00:06:03.570
+then you can't give it a polymorphic type.
+
+117
+00:06:03.570 --> 00:06:06.445
+So the example I showed you before was a call to list
+
+118
+00:06:06.445 --> 00:06:11.245
+dot map with a function here that does not constrain the type of x.
+
+119
+00:06:11.245 --> 00:06:13.960
+So the type you would like to give to this expression,
+
+120
+00:06:13.960 --> 00:06:15.490
+and therefore to pair with one,
+
+121
+00:06:15.490 --> 00:06:18.670
+is alpha list arrow alpha star int list.
+
+122
+00:06:18.670 --> 00:06:22.225
+But that would violate the value restriction so you'd get an error message,
+
+123
+00:06:22.225 --> 00:06:24.730
+a warning message, and these 'a's would be
+
+124
+00:06:24.730 --> 00:06:28.230
+replaced with that same dummy type question mark dot x one.
+
+125
+00:06:28.230 --> 00:06:31.160
+And we've seen workarounds for this before.
+
+126
+00:06:31.160 --> 00:06:35.975
+One of the simplest in this case is to go ahead and do a function wrapping.
+
+127
+00:06:35.975 --> 00:06:38.560
+What I would normally call unnecessary function wrapping,
+
+128
+00:06:38.560 --> 00:06:40.630
+but here it actually gets the thing to type check,
+
+129
+00:06:40.630 --> 00:06:42.880
+and get the type that we want.
+
+130
+00:06:42.880 --> 00:06:45.040
+So I do have all the code over here.
+
+131
+00:06:45.040 --> 00:06:46.540
+It's exactly the code I showed you.
+
+132
+00:06:46.540 --> 00:06:49.510
+And so we have three times that the value restriction would
+
+133
+00:06:49.510 --> 00:06:54.070
+refuse to give something a polymorphic type.
+
+134
+00:06:54.070 --> 00:06:55.480
+This function body is fine,
+
+135
+00:06:55.480 --> 00:06:57.130
+value [inaudible] are generally fine.
+
+136
+00:06:57.130 --> 00:07:01.120
+It's just that these three do violate the value restriction.
+
+137
+00:07:01.120 --> 00:07:06.760
+And sure enough, if I compile this as I already have up here at the top,
+
+138
+00:07:06.760 --> 00:07:08.365
+you will see three warnings,
+
+139
+00:07:08.365 --> 00:07:11.350
+referring to the line numbers where we have those issues.
+
+140
+00:07:11.350 --> 00:07:13.795
+And in all three cases we get these dummy types
+
+141
+00:07:13.795 --> 00:07:16.850
+which makes the results significantly less useful.
+
+142
+00:07:16.850 --> 00:07:20.395
+Okay, so that is our study of the value restriction and
+
+143
+00:07:20.395 --> 00:07:24.205
+hopefully the last time we have to discuss it because I'm not a huge fan of it,
+
+144
+00:07:24.205 --> 00:07:26.350
+although there really isn't a better solution.
+
+145
+00:07:26.350 --> 00:07:28.900
+So it's one we've learned to put up with.
+
+146
+00:07:28.900 --> 00:07:32.638
+Now I just want to talk about a couple of other things with ML type inference.
+
+147
+00:07:32.638 --> 00:07:34.990
+And that is that despite the value restriction,
+
+148
+00:07:34.990 --> 00:07:38.709
+the basic idea is quite elegant and fairly easy to understand.
+
+149
+00:07:38.709 --> 00:07:42.550
+It really only took us a couple of video segments to get the hang of it.
+
+150
+00:07:42.550 --> 00:07:46.821
+What if ML did not have polymorphism?
+
+151
+00:07:46.821 --> 00:07:48.904
+Then how would type inference work?
+
+152
+00:07:48.904 --> 00:07:51.540
+It turns out we would have a simpler type system,
+
+153
+00:07:51.540 --> 00:07:53.725
+a more restrictive type system,
+
+154
+00:07:53.725 --> 00:07:56.890
+and yet it would be harder to do type inference because,
+
+155
+00:07:56.890 --> 00:07:59.155
+when we wrote a function like list length,
+
+156
+00:07:59.155 --> 00:08:01.090
+what type would you give it?
+
+157
+00:08:01.090 --> 00:08:02.499
+You'd have to kind of pick one,
+
+158
+00:08:02.499 --> 00:08:03.940
+and then it wouldn't be as useful,
+
+159
+00:08:03.940 --> 00:08:06.579
+and it's not clear to the type inferencer what
+
+160
+00:08:06.579 --> 00:08:11.025
+kind of list element you wanted to have for your list length function.
+
+161
+00:08:11.025 --> 00:08:13.655
+So you can do type inference without polymorphism,
+
+162
+00:08:13.655 --> 00:08:16.950
+but in some sense it can be clumsier.
+
+163
+00:08:16.950 --> 00:08:19.317
+It can be less obvious what to do.
+
+164
+00:08:19.317 --> 00:08:21.790
+Let's think of a second example.
+
+165
+00:08:21.790 --> 00:08:23.965
+Now we haven't studied subtyping in the course yet,
+
+166
+00:08:23.965 --> 00:08:25.660
+but you may have seen it in another language,
+
+167
+00:08:25.660 --> 00:08:27.960
+and we will study it later in the course.
+
+168
+00:08:27.960 --> 00:08:31.740
+But suppose certain expressions could have multiple types.
+
+169
+00:08:31.740 --> 00:08:34.230
+So for example, suppose a triple,
+
+170
+00:08:34.230 --> 00:08:36.025
+like int star int star int,
+
+171
+00:08:36.025 --> 00:08:39.160
+could also have the type of a pair int star int.
+
+172
+00:08:39.160 --> 00:08:42.379
+You could just forget that there was a third field.
+
+173
+00:08:42.379 --> 00:08:44.714
+That would be a form of subtyping.
+
+174
+00:08:44.714 --> 00:08:48.275
+But if we had that, that would be a more permissive type system,
+
+175
+00:08:48.275 --> 00:08:50.090
+more things would type check.
+
+176
+00:08:50.090 --> 00:08:53.190
+And yet, just like when we had fewer things type check,
+
+177
+00:08:53.190 --> 00:08:54.489
+and type inference got harder,
+
+178
+00:08:54.489 --> 00:08:56.110
+now that more things type check,
+
+179
+00:08:56.110 --> 00:08:58.270
+type inference also gets harder.
+
+180
+00:08:58.270 --> 00:08:59.808
+The reason is different though.
+
+181
+00:08:59.808 --> 00:09:04.569
+It's because when you have patterns like val y, z equal x,
+
+182
+00:09:04.569 --> 00:09:07.105
+we used to be able to look at that and say, "Aha,
+
+183
+00:09:07.105 --> 00:09:11.229
+x must be a pair SUM t1 star t2."
+
+184
+00:09:11.229 --> 00:09:13.690
+But now we have to account for the fact that it
+
+185
+00:09:13.690 --> 00:09:16.540
+has to be some tuple that has at least two fields,
+
+186
+00:09:16.540 --> 00:09:18.390
+and it might have more.
+
+187
+00:09:18.390 --> 00:09:19.480
+Now this can be handled,
+
+188
+00:09:19.480 --> 00:09:20.680
+and depending on the details,
+
+189
+00:09:20.680 --> 00:09:25.291
+you can have a language with this sort of polymorphism and still do type inference.
+
+190
+00:09:25.291 --> 00:09:27.715
+But the types are often more difficult to infer,
+
+191
+00:09:27.715 --> 00:09:31.090
+and it's even harder to understand what's going on when
+
+192
+00:09:31.090 --> 00:09:34.694
+you go to do type inference and you get a type error message back.
+
+193
+00:09:34.694 --> 00:09:38.130
+So that finishes our discussion of type inference.
+
+194
+00:09:38.130 --> 00:09:41.788
+We've used ML as a great example of a language that does inference.
+
+195
+00:09:41.788 --> 00:09:43.835
+ML is not the only language with inference,
+
+196
+00:09:43.835 --> 00:09:45.842
+the details always differ by language,
+
+197
+00:09:45.842 --> 00:09:47.350
+but it's pretty neat that you can have
+
+198
+00:09:47.350 --> 00:09:49.930
+a statically typed language even
+
+199
+00:09:49.930 --> 00:09:53.000
+if you don't have to write down any of the types in your program.

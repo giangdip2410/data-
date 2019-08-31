@@ -7,12 +7,12 @@ val test1 = only_capitals ["A","B","C"] = ["A","B","C"]
 val test1_1 = only_capitals["abs","Ab","Bc","syx"] = ["Ab","Bc"]
 val test2 = longest_string1 ["A","bc","C"] = "bc"
 val test2_2 = longest_string1["sun", "yu", "xin"] = "sun"
-(*val test3 = longest_string2 ["A","bc","C"] = "bc"
+val test3 = longest_string2 ["A","bc","C"] = "bc"
 val test3_ = longest_string2["a","b","c"] = "c"
-val test3_3 = longest_string2["sun","yu","xin"] = "xin"*)
-(*val test4a = longest_string3 ["A","bc","C"] = "bc"
-
-val test4b = longest_string4 ["A","B","C"] = "C"*)
+val test3_3 = longest_string2["sun","yu","xin"] = "xin"
+val test4a = longest_string3 ["A","bc","C"] = "bc"
+val test4a_a = longest_string3[""] = ""
+val test4b = longest_string4 ["A","B","C"] = "C"
 
 val test5 = longest_capitalized ["A","bc","C"] = "A"
 
@@ -20,18 +20,34 @@ val test6 = rev_string "abc" = "cba"
 
 val test7 = first_answer (fn x => if x > 3 then SOME x else NONE) [1,2,3,4,5] = 4
 
-val test8 = all_answers (fn x => if x = 1 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE 
+val test8 = all_answers (fn x => if x < 1 then SOME [x] else NONE) [2,3,4,5,6,7] = NONE 
 val test8_ = all_answers (fn x => if x > 5 then SOME [x] else NONE) [2,3,4,5,6,7] = SOME [6 ,7]
 
 val test9a = count_wildcards Wildcard = 1
-
-(*val test9b = count_wild_and_variable_lengths (Variable("a")) = 1
+val test9b = count_wild_and_variable_lengths (Variable("a")) = 1
 
 val test9c = count_some_var ("x", Variable("x")) = 1
 
-val test10 = check_pat (Variable("x")) = true
+val test10 = check_pat (TupleP [Variable("x"),Variable("z"), (TupleP [Variable("y")])]) = true
 
-val test11 = match (Const(1), UnitP) = NONE
-
+val t10_0 = check_pat(TupleP [ConstP 1, Wildcard, ConstructorP ("S", TupleP [Wildcard, Wildcard, Variable("DD")])])
+(*val 0= true : bool*)
+ val   t10_1 = check_pat(TupleP [Variable("DD"), ConstP 1, Wildcard, ConstructorP ("S", TupleP [Wildcard, Wildcard, Variable("DD")])])
+(*val 1= false : bool*)
+ val   t10_2 = check_pat(TupleP [Variable("DD"), ConstP 1, Wildcard, ConstructorP ("S", TupleP [Wildcard, Wildcard, Variable("dDD")])])
+(*val 2 = true : bool*)
+ val   t10_4 = check_pat(TupleP [Variable("DD"), ConstP 1, Wildcard, ConstructorP ("S", TupleP [Wildcard, Wildcard, Variable("dDD"), TupleP [Variable("dDD")]])])
+(*val it = false : bool*)
+ val   t10_5 = check_pat(TupleP [Variable("DD"), ConstP 1, Wildcard, ConstructorP ("S", TupleP [Wildcard, Wildcard, Variable("dDD"), TupleP [Variable("DD")]])])
+(*val it = false : bool*)
+val   t10_6 = check_pat(TupleP [Variable("DD"), ConstP 1, Wildcard, ConstructorP ("S", TupleP [Wildcard, Wildcard, Variable("dDD"), TupleP [Variable("DD1")]])])
+(*val it = true : bool*)
+ val   t10_7 = check_pat(ConstP 1)
+val test11 = match (Const(1), ConstP(3)) = NONE
+val test23 = match(Constructor ("hello",Unit),ConstructorP("hello",UnitP)) = SOME []
+val test13 = match(Const(1),Variable("sunyuxin"))
+												     (*test13 = SOME [("sunyuxin",1)]*)
 val test12 = first_match Unit [UnitP] = SOME []
-*)
+
+fun helo(_,x)=
+    x > 0

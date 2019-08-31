@@ -1,0 +1,450 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:06.339
+[MUSIC] So, let's now begin studying how 
+ML does type inference, how it figures 
+
+2
+00:00:06.339 --> 00:00:12.251
+out the types for all our bindings. 
+And the way we're going to do this in the 
+
+3
+00:00:12.251 --> 00:00:17.882
+next few segments is via examples. 
+So, given the general algorithm 
+
+4
+00:00:17.882 --> 00:00:21.483
+implementing this and actually showing 
+how it does everything in the whole ML 
+
+5
+00:00:21.483 --> 00:00:23.788
+language, 
+it's a slightly more advanced topic. 
+
+6
+00:00:23.788 --> 00:00:27.695
+It would just take more time in the class 
+than I wish to spend on it especially if 
+
+7
+00:00:27.695 --> 00:00:31.142
+you start supporting things like 
+functions defined in other functions. 
+
+8
+00:00:31.142 --> 00:00:35.432
+But I think these series of examples 
+which we will do manually will be enough 
+
+9
+00:00:35.432 --> 00:00:38.028
+for you to do type inference in your 
+head, 
+
+10
+00:00:38.028 --> 00:00:42.969
+to look at a piece of ML code and in most 
+cases, be able to figure out that type or 
+
+11
+00:00:42.969 --> 00:00:48.224
+understand what the ML type checker is 
+telling you and at least appreciate that 
+
+12
+00:00:48.224 --> 00:00:53.295
+there is complete step-by-step procedure 
+that a computer could implement, that 
+
+13
+00:00:53.295 --> 00:00:57.730
+infers types for code in ML. 
+So, here are the key steps we're going to 
+
+14
+00:00:57.730 --> 00:01:01.537
+see for every example we do. This is how 
+Ml type infrence works. 
+
+15
+00:01:01.537 --> 00:01:06.004
+First, it determines types of bindings in 
+order. So, unless you have mutual 
+
+16
+00:01:06.004 --> 00:01:10.521
+recursion, in which case, it needs to 
+look at all of the things that call each 
+
+17
+00:01:10.521 --> 00:01:14.104
+other at the same time as we'll see in a 
+later segment, 
+
+18
+00:01:14.104 --> 00:01:18.472
+you look at the first binding and further 
+type for it, then the next binding and 
+
+19
+00:01:18.472 --> 00:01:22.282
+further type for that, and so on. 
+And this is why you have to put helper 
+
+20
+00:01:22.282 --> 00:01:26.861
+functions before the functions that use 
+them. Otherwise, you just get a type 
+
+21
+00:01:26.861 --> 00:01:30.335
+error because things simple aren't in the 
+environment yet. 
+
+22
+00:01:30.335 --> 00:01:34.269
+That's the semantics of ML. 
+But we do use those earlier bindings. 
+
+23
+00:01:34.269 --> 00:01:37.769
+We already know their types before we 
+move on the the next one, 
+
+24
+00:01:38.852 --> 00:01:41.577
+and we can use that. 
+Then for each binding, 
+
+25
+00:01:41.577 --> 00:01:46.582
+say, a val binding, or file, fun binding, 
+we have to figure out the type of that 
+
+26
+00:01:46.582 --> 00:01:49.632
+binding. 
+What we do is we analyze the definition 
+
+27
+00:01:49.632 --> 00:01:53.617
+for all necessary facts. 
+These are essentially things that are 
+
+28
+00:01:53.617 --> 00:01:58.127
+going to constrain the type in some way. 
+So, for example, if you see the 
+
+29
+00:01:58.127 --> 00:02:02.047
+expression x > or = 0 inside a function 
+that takes a parameter x, 
+
+30
+00:02:02.047 --> 00:02:06.812
+then x must have type int. 
+We simply look at the, function body in 
+
+31
+00:02:06.812 --> 00:02:09.991
+order to figure out the type of the 
+function overall. 
+
+32
+00:02:09.991 --> 00:02:14.458
+We gather all these facts, we figure out 
+what those constraints imply and 
+
+33
+00:02:14.458 --> 00:02:18.099
+sometimes, they imply things that can't 
+possibly all be true. 
+
+34
+00:02:18.099 --> 00:02:23.582
+That's exactly when you get a type error. 
+If we try to have in our function body x 
+
+35
+00:02:23.582 --> 00:02:28.802
+> or = 0, and x concatenated with the 
+string high, then x has to be an int and 
+
+36
+00:02:28.802 --> 00:02:33.497
+a string, and that's impossible and so 
+you get an error message. 
+
+37
+00:02:33.497 --> 00:02:39.387
+Now, after we've figured out everything 
+the constraints imply and it's, if it's 
+
+38
+00:02:39.387 --> 00:02:43.531
+not a contradiction, so the function or 
+variable will type-check. 
+
+39
+00:02:43.531 --> 00:02:46.369
+Sometimes, we still have too few 
+constraints. 
+
+40
+00:02:46.369 --> 00:02:50.831
+Things that can still be anything, it 
+doesn't matter what type they have. 
+
+41
+00:02:50.831 --> 00:02:56.189
+And that's exactly when we get to infer a 
+polymorphic function, something with a a' 
+
+42
+00:02:56.189 --> 00:02:59.603
+or a b' in it. 
+For example, if you have some function 
+
+43
+00:02:59.603 --> 00:03:03.699
+argument that the function body never 
+uses, then it can clearly be anything, it 
+
+44
+00:03:03.699 --> 00:03:07.596
+doesn't have to be the same as any other 
+type and we can introduce a fresh type 
+
+45
+00:03:07.596 --> 00:03:11.082
+variable for that argument. 
+And then, there is this last step, which 
+
+46
+00:03:11.082 --> 00:03:14.680
+is we have to enforce the value 
+restriction and we're going to ignore 
+
+47
+00:03:14.680 --> 00:03:18.882
+that until one segment later in the 
+section that's focused just on the value 
+
+48
+00:03:18.882 --> 00:03:20.415
+restriction. 
+Alright. 
+
+49
+00:03:20.415 --> 00:03:23.851
+So, here's an example. 
+In future segments, we're going to do our 
+
+50
+00:03:23.851 --> 00:03:28.141
+examples much more step-by-step very much 
+like the actual algorithm does it. 
+
+51
+00:03:28.141 --> 00:03:31.785
+But do get a sense of how these 
+constraints work, let's just keep it 
+
+52
+00:03:31.785 --> 00:03:34.891
+high-level and do this like more how 
+humans would do it. 
+
+53
+00:03:34.891 --> 00:03:38.108
+So, we have two bindings, which we're 
+going to do in order. 
+
+54
+00:03:38.108 --> 00:03:40.102
+First, val x = 42. 
+That's easy. 
+
+55
+00:03:40.102 --> 00:03:42.852
+You see 42, it has type int so x must 
+have type int. 
+
+56
+00:03:42.852 --> 00:03:46.632
+Now, we have this function f, so we know 
+it's going to have some function type. 
+
+57
+00:03:46.632 --> 00:03:50.087
+We have to figure out the types of the 
+arguments and the return type. 
+
+58
+00:03:50.087 --> 00:03:53.427
+So, we just look at the function body. 
+We see if y, then something, 
+
+59
+00:03:53.427 --> 00:03:57.220
+well, y must have type bool. 
+We see z + x, z must have type int, 
+
+60
+00:03:57.220 --> 00:04:01.075
+because x is an int and the only thing 
+you can add to an int is an int. 
+
+61
+00:04:01.075 --> 00:04:05.224
+So great, y is a bool, z is an int. 
+There's a bunch of other things we have 
+
+62
+00:04:05.224 --> 00:04:07.964
+to check. 
+We have to check that this x really does 
+
+63
+00:04:07.964 --> 00:04:10.471
+have an appropriate argument for plus, it 
+does. 
+
+64
+00:04:10.471 --> 00:04:14.911
+We have to check that this 0 has the same 
+type as the type of the expression in the 
+
+65
+00:04:14.911 --> 00:04:18.317
+then branch, 
+it does. So, we're checking all this as 
+
+66
+00:04:18.317 --> 00:04:21.717
+we're doing inference and now, we're 
+basically done. 
+
+67
+00:04:21.717 --> 00:04:26.627
+The entire body here can have type int, 
+so the return type of f will be int. And 
+
+68
+00:04:26.627 --> 00:04:30.052
+then, we notice that w over here never 
+got constrained. 
+
+69
+00:04:30.052 --> 00:04:33.642
+w can be anything. 
+There are no facts that constrain, well, 
+
+70
+00:04:33.642 --> 00:04:38.557
+it has to be in any way, so we know that 
+f must return an int, and we know it must 
+
+71
+00:04:38.557 --> 00:04:41.792
+take a bool, 
+an int, and anything you want. 
+
+72
+00:04:41.792 --> 00:04:46.840
+So, as that sort of last step, we turn 
+that anything you want into a type 
+
+73
+00:04:46.840 --> 00:04:51.996
+variable and we give f this type, bool * 
+int * alpha arrow int. 
+
+74
+00:04:51.996 --> 00:04:57.152
+And if we go over here and try it out, 
+we'll see that that's exactly what the 
+
+75
+00:04:57.152 --> 00:05:02.191
+type checker says as well, 
+okay? So, one more point I want to make, 
+
+76
+00:05:02.191 --> 00:05:08.269
+which is that a central feature of ML 
+type inference is that it does generate 
+
+77
+00:05:08.269 --> 00:05:14.492
+these polymorphic expressions things with 
+type variables whenever it can. 
+
+78
+00:05:14.492 --> 00:05:18.147
+This is great for code reuse and for 
+understanding functions. 
+
+79
+00:05:18.147 --> 00:05:23.277
+It actually tells us in that example that 
+you know, you're never using the argument 
+
+80
+00:05:23.277 --> 00:05:26.952
+w which is why I was able to give it this 
+more general type. 
+
+81
+00:05:26.952 --> 00:05:31.568
+But I want to emphasize because it is 
+often confused, that type inference and 
+
+82
+00:05:31.568 --> 00:05:36.727
+polymorphism with type variables are 
+entirely different concepts, you could 
+
+83
+00:05:36.727 --> 00:05:41.492
+have a language that has type inference 
+and doesn't have type variable. 
+
+84
+00:05:41.492 --> 00:05:46.813
+It would make it harder to infer a type 
+for that previous example but they really 
+
+85
+00:05:46.813 --> 00:05:50.920
+are separate concepts. And conversely, 
+you can have languages with type 
+
+86
+00:05:50.920 --> 00:05:54.940
+variables that do not have type 
+inference, that require programmers to 
+
+87
+00:05:54.940 --> 00:05:59.482
+write down all the types. And Java, in 
+most situations, is a pretty good example 
+
+88
+00:05:59.482 --> 00:06:02.088
+of that. 
+If you want a polymorphic function in 
+
+89
+00:06:02.088 --> 00:06:06.295
+Java, you still have to write down all 
+the types of all the arguments of the 
+
+90
+00:06:06.295 --> 00:06:08.417
+method that happens to be polymorphic. 

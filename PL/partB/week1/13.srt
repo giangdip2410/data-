@@ -1,0 +1,376 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:07.525
+, So let's now continue our study of using
+thunks to delay computations we might not
+
+2
+00:00:07.537 --> 00:00:14.345
+need. See how it's, that's a good idea and
+how that is a less good idea. So, thunks
+
+3
+00:00:14.357 --> 00:00:20.945
+let you skip an expensive computation if
+you're not going to need it. So this is
+
+4
+00:00:20.957 --> 00:00:27.704
+great in this sort of first code skeleton
+you see here. If I have some function that
+
+5
+00:00:27.716 --> 00:00:33.483
+takes in a thunk, and I have some if that
+ends up taking the true-branch, the branch
+
+6
+00:00:33.495 --> 00:00:39.134
+that doesn't use the thunk, this is much
+better than passing in the result of some
+
+7
+00:00:39.146 --> 00:00:44.341
+expensive computation. If I didn't use a
+thunk here and I had to pass in the result
+
+8
+00:00:44.353 --> 00:00:49.264
+of the expensive computation, I would have
+done a lot of unnecessary work. So, that's
+
+9
+00:00:49.276 --> 00:00:53.885
+fine, and in those situations, using thunk
+is straightforward. But what if you're
+
+10
+00:00:53.620 --> 00:00:58.065
+more in the situation like here at the
+bottom where I have a bunch of separate
+
+11
+00:00:58.077 --> 00:01:02.988
+conditionals? I don't know if any of them
+are going to evealuate to true or evaluate
+
+12
+00:01:03.000 --> 00:01:08.254
+to false. I don't know how many. But they
+do all need, if they're false as in this
+
+13
+00:01:08.266 --> 00:01:12.942
+case, doesn't matter whether they're true
+or false, they do all need the same
+
+14
+00:01:12.954 --> 00:01:18.099
+result. So should I precompute the results
+of the expensive computations for all of
+
+15
+00:01:18.111 --> 00:01:22.904
+them? That would be wasteful if none of
+them need it, but if multiple of them need
+
+16
+00:01:22.916 --> 00:01:27.115
+it, this situation with the thunk is
+actually worse, because I'm going to
+
+17
+00:01:27.286 --> 00:01:32.085
+reevaluate the thunk every time one of
+these ifs ends up being false. So that's
+
+18
+00:01:32.097 --> 00:01:36.230
+the trade-off, we're going to end up
+getting the best of both worlds in a few
+
+19
+00:01:36.242 --> 00:01:40.955
+minutes. But first, I want to show you an
+actual example it's a silly example, but
+
+20
+00:01:40.967 --> 00:01:45.000
+it's actual code instead of something
+where I've left out all the interesting
+
+21
+00:01:45.012 --> 00:01:49.685
+parts. So just to make this interesting,
+this first function is ridiculous, it adds
+
+22
+00:01:49.697 --> 00:01:54.414
+its arguements, but I've put in enough
+extra code that it takes a long time to
+
+23
+00:01:54.426 --> 00:01:58.956
+evaluate. So if I do something like
+slow-add 3 4, you see it actually takes a
+
+24
+00:01:58.968 --> 00:02:04.142
+second before it produces 7. that way we
+can actually see the difference in, in the
+
+25
+00:02:04.154 --> 00:02:09.707
+example I'm about to show you. Okay? Then
+I have this functi on that does
+
+26
+00:02:09.719 --> 00:02:16.429
+multiplication, but in sort of a strange
+way. It takes in a number x, and it takes
+
+27
+00:02:16.441 --> 00:02:22.388
+in a thunk y that when you call it,
+returns a number. And here is how it then
+
+28
+00:02:22.400 --> 00:02:27.885
+multiplies x and the result of calling y.
+If x is 0, it returns zero without ever
+
+29
+00:02:27.897 --> 00:02:34.376
+executing the thunk, because that's how
+multiplication works. We don't care what
+
+30
+00:02:34.388 --> 00:02:39.118
+the thunk is. If x is 1, then, we evaluate
+the thunk and that's our answer.
+
+31
+00:02:39.229 --> 00:02:43.994
+Otherwise, we evaluate the thunk and we
+recursively call my-mult with x minus 1
+
+32
+00:02:44.266 --> 00:02:49.835
+and not the result of calling the thunk,
+but with the thunk itself, because that is
+
+33
+00:02:49.847 --> 00:02:55.578
+what the my-mult expects, it expects a
+thunk for its second argument. So if you
+
+34
+00:02:55.590 --> 00:03:02.340
+look at this, this is going to end up
+calling y-thunk once every time for x. So,
+
+35
+00:03:02.478 --> 00:03:07.192
+if, if x is seven, its going to call the
+thunk seven times, alright?
+
+36
+00:03:07.196 --> 00:03:13.997
+So, indeed, therefore, even though,
+something like slow-add of 3 and 4 is very
+
+37
+00:03:14.009 --> 00:03:21.715
+slow. Right? If I call my-mult with 0 and
+a thunk of slow-add 3 and 4, that's very
+
+38
+00:03:21.727 --> 00:03:28.539
+fast. want to see it again? Very fast. But
+if I were instead multiplying by 1, well,
+
+39
+00:03:28.551 --> 00:03:34.488
+this is sort of unavoidable. I need to add
+three and four, but that's okay. I mean,
+
+40
+00:03:34.488 --> 00:03:40.531
+what, what else am I going to do? But if I
+called it with 2, it's actually going to
+
+41
+00:03:40.543 --> 00:03:46.347
+take twice as long, because it's calling
+that thunk twice. and I don't even want to
+
+42
+00:03:46.522 --> 00:03:51.050
+sit here while I did something like
+multiply by 20. Okay? So thunking was
+
+43
+00:03:51.062 --> 00:03:55.922
+great in the zero case. It was fine in the
+one case, we did have to add three and
+
+44
+00:03:55.934 --> 00:04:01.199
+four. but it was terrible if for anything
+greater than one, because it was actually
+
+45
+00:04:01.211 --> 00:04:05.247
+a net loss compared to the version of
+multiplication that just took in an x and
+
+46
+00:04:05.259 --> 00:04:09.652
+a y, and therefore, the caller would have
+to precomputed the two numbers and
+
+47
+00:04:10.414 --> 00:04:16.231
+therefore, it would have already done
+slow-add. In fact let me show you that
+
+48
+00:04:16.243 --> 00:04:22.669
+version as well. I can actually do it with
+my-mult. So suppose I passed in zero, but
+
+49
+00:04:22.681 --> 00:04:28.466
+then for the second argument, I
+precomputed slow-add, put that in a let,
+
+50
+00:04:28.586 --> 00:04:34.257
+and then in my lambda, just look up x.
+Alright? So, all I'm doing is my second a
+
+51
+00:04:34.257 --> 00:04:40.040
+rgument to my-mult, which is evaluated
+right away, it evaluates x to slow-add of
+
+52
+00:04:40.052 --> 00:04:46.533
+3 and 4, and then, creates a thunk that
+when you call it, will look up x. So, this
+
+53
+00:04:46.545 --> 00:04:53.044
+is going to call slow-add 3 and 4 once
+before you ever call my-mult. So now, if
+
+54
+00:04:53.056 --> 00:04:58.975
+you call it with 0, it does just take a
+little bit because we did call slow-add.
+
+55
+00:04:59.099 --> 00:05:05.500
+But two doesn't take any longer, and in
+fact, 20 doesn't take any longer. They all
+
+56
+00:05:05.512 --> 00:05:11.675
+take about the same amount of time. Okay?
+So that's all fine, but I gave up zero
+
+57
+00:05:11.687 --> 00:05:18.484
+being fast. It's not fast anymore. Okay?
+So that's sort of our motivation. So, what
+
+58
+00:05:18.496 --> 00:05:23.645
+if we could get the best of both worlds?
+What if we could take some computation
+
+59
+00:05:23.657 --> 00:05:29.102
+that always return the same result, had no
+side effects, didn't matter when it was
+
+60
+00:05:29.114 --> 00:05:34.288
+executed, and we did not compute it until
+we needed it? But then, once we did need
+
+61
+00:05:34.300 --> 00:05:39.904
+it we remembered the answer, so in the
+future we, didn't have to compute it
+
+62
+00:05:39.916 --> 00:05:45.017
+again. We would just return that
+remembered result immediately. Well, this
+
+63
+00:05:45.029 --> 00:05:50.535
+has a name, it's called lazy evaluation,
+and languages where most constructs work
+
+64
+00:05:50.547 --> 00:05:56.309
+this way, were in fact all function work
+this way, are called lazy languages and
+
+65
+00:05:56.321 --> 00:06:02.272
+Haskell is the most well-known, successful
+example today. But what I'm going to do in
+
+66
+00:06:02.284 --> 00:06:07.299
+the next segment in racket, is show you
+how we could just code this up. Now,
+
+67
+00:06:07.311 --> 00:06:13.061
+racket does not work this way for function
+argument. Function arguments are all
+
+68
+00:06:13.073 --> 00:06:17.761
+evaluated at the call site. We do not have
+lazy evaluation in Racket just like we
+
+69
+00:06:17.773 --> 00:06:21.884
+didn't in ML. But we will be able to code
+it up, just ourselves. Racket does have
+
+70
+00:06:21.896 --> 00:06:25.889
+some built-in support that is very
+slightly different syntactically in what
+
+71
+00:06:25.901 --> 00:06:30.360
+it's doing. I'd rather show you the
+implementation, so we will use our own,
+
+72
+00:06:30.462 --> 00:06:34.985
+and then, we will come back and revisit
+this multiplication example. So, in our
+
+73
+00:06:34.997 --> 00:06:39.157
+implementation, all we're going to need
+are thunks and mutable pairs, and the
+
+74
+00:06:39.377 --> 00:06:44.300
+cons, two things we've seen from previous
+segments. So we're going to be able to put
+
+75
+00:06:44.312 --> 00:06:47.890
+together some previous ideas and get these
+best of both worlds.

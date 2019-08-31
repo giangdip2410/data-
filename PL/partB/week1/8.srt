@@ -1,0 +1,365 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:06.258
+[MUSIC] So, now that we've discussed how 
+local bindings work and the semantics of 
+
+2
+00:00:06.258 --> 00:00:11.712
+them, I just want to tell you the 
+semantics of top-level bindings that 
+
+3
+00:00:11.712 --> 00:00:17.343
+defines in a file because it would be an 
+omission not to go through that. 
+
+4
+00:00:17.343 --> 00:00:21.699
+So, the short version is, when you have a 
+bunch of bindings in a file, they work 
+
+5
+00:00:21.699 --> 00:00:24.733
+like a letrec, or they work just like a 
+local define. 
+
+6
+00:00:24.733 --> 00:00:27.679
+So, you can have things referred to later 
+by names. 
+
+7
+00:00:27.679 --> 00:00:32.438
+So, like in ML, the things are evaluated 
+in order and you can refer to early 
+
+8
+00:00:32.438 --> 00:00:36.639
+bindings. But unlike ML, you can also 
+refer to later bindings. 
+
+9
+00:00:36.639 --> 00:00:41.625
+Now, because this evaluated an order 
+issue, you should only refer to later 
+
+10
+00:00:41.625 --> 00:00:46.814
+bindings in function bodies, and you 
+should make sure that those functions do 
+
+11
+00:00:46.814 --> 00:00:51.395
+not get called until after the thing 
+you're referring to has had its 
+
+12
+00:00:51.395 --> 00:00:55.842
+expression evaluated. 
+Unlike insider functions where you get an 
+
+13
+00:00:55.842 --> 00:01:00.697
+undefined result, you'll actually get an 
+error in racket, but that's a detail that 
+
+14
+00:01:00.697 --> 00:01:04.472
+we don't need to focus on. 
+but, you might be thinking, oh, great, 
+
+15
+00:01:04.472 --> 00:01:07.782
+finally I can refer to later things. 
+Everything is better. 
+
+16
+00:01:07.782 --> 00:01:11.672
+Well, it turns out there's a couple of 
+disadvantages to this semantics. 
+
+17
+00:01:11.672 --> 00:01:15.780
+One, as we've seen, is you can get these 
+errors if you refer to something too 
+
+18
+00:01:15.780 --> 00:01:18.070
+early. 
+But the second is, you cannot shadow 
+
+19
+00:01:18.070 --> 00:01:20.621
+inside of a file. 
+That wouldn't mean anything. 
+
+20
+00:01:20.621 --> 00:01:24.679
+If you have two bindings of the same 
+variable in the same file, this doesn't 
+
+21
+00:01:24.679 --> 00:01:28.687
+make any sense because we're trying to 
+add them to the same environment and 
+
+22
+00:01:28.687 --> 00:01:31.122
+you'll get an error if you try to do 
+that. 
+
+23
+00:01:31.122 --> 00:01:34.138
+So, quick example here. 
+this is just silly code. 
+
+24
+00:01:34.138 --> 00:01:36.521
+In this first line, I define a function, 
+f. 
+
+25
+00:01:36.521 --> 00:01:40.902
+And if you look in its body, it not just 
+uses its argument but it also uses some 
+
+26
+00:01:40.902 --> 00:01:44.252
+variable b that is actually introduced 
+later in the file. 
+
+27
+00:01:44.252 --> 00:01:50.292
+This is okay because the body of f is not 
+called until after we have the binding b 
+
+28
+00:01:50.292 --> 00:01:54.401
+initialized to 3. 
+In fact, in this file, we don't call it 
+
+29
+00:01:54.401 --> 00:02:00.097
+at all. But once someone uses this 
+module, uses this file or clicks Run, we 
+
+30
+00:02:00.097 --> 00:02:04.317
+will be bound to 3 and any call to f will 
+work correctly. 
+
+31
+00:02:04.317 --> 00:02:10.425
+Now, you can go ahead and use in earlier 
+binding, even not inside a function body. 
+
+32
+00:02:10.425 --> 00:02:14.056
+This works just like in ML, or just like 
+with a letrec. 
+
+33
+00:02:14.056 --> 00:02:18.774
+we evaluate things in order. 
+So, by the time we get to the +b4, b is 
+
+34
+00:02:18.774 --> 00:02:21.718
+already 3, 
+so c would be evaluated to 7, there's no 
+
+35
+00:02:21.718 --> 00:02:24.139
+trouble. 
+You cannot do this to a later thing. 
+
+36
+00:02:24.139 --> 00:02:28.334
+So, this is what I've been emphasizing. 
+If I uncomment this line, then trying to 
+
+37
+00:02:28.334 --> 00:02:31.808
+execute this line d will give an error, I 
+can just click run here. 
+
+38
+00:02:31.808 --> 00:02:35.402
+It says reference to an identifier before 
+its definition, 
+
+39
+00:02:35.402 --> 00:02:40.780
+that's exactly the mistake we made, okay? 
+so and then on this last line, define 
+
+40
+00:02:40.780 --> 00:02:43.503
+f17. 
+This would also be an error because you 
+
+41
+00:02:43.503 --> 00:02:47.822
+can't introduce two variables f in the 
+same file like this, you would get 
+
+42
+00:02:47.822 --> 00:02:51.187
+duplicate definition for identifier in f, 
+okay? 
+
+43
+00:02:51.187 --> 00:02:55.262
+So, that's the advantages and 
+disadvantages of this letrec-style 
+
+44
+00:02:55.262 --> 00:03:00.467
+semantics for the top-level bindings, and 
+that's really what you need to know from 
+
+45
+00:03:00.467 --> 00:03:03.612
+this segment. 
+Now, a couple other details, just to 
+
+46
+00:03:03.612 --> 00:03:07.367
+finish up. One is the REPL doesn't quite 
+work like letrec. 
+
+47
+00:03:07.367 --> 00:03:11.942
+It doesn't quite work like let star. 
+In fact, it doesn't quite work properly 
+
+48
+00:03:11.942 --> 00:03:14.737
+at all. 
+And I'm not going to go into the details 
+
+49
+00:03:14.737 --> 00:03:19.737
+of how the REPL works because in normal 
+uses, the REPL will do what you want, 
+
+50
+00:03:19.737 --> 00:03:24.274
+just like we've been a REPL in ML, and 
+now in Racket. But, it turns out there's 
+
+51
+00:03:24.274 --> 00:03:28.979
+some things that don't work well. If you 
+shadow something that's already been 
+
+52
+00:03:28.979 --> 00:03:33.885
+defined even in the standard library, and 
+you're defining a recursive function, 
+
+53
+00:03:33.885 --> 00:03:37.610
+things can go very wrong. 
+And so, the easy work around is in the 
+
+54
+00:03:37.610 --> 00:03:40.712
+REPL, do not define your own recursive 
+functions. 
+
+55
+00:03:40.712 --> 00:03:45.377
+It's fine to call recursive functions 
+that have been defined by a file that you 
+
+56
+00:03:45.377 --> 00:03:48.383
+are running. 
+Don't define your own in the REPL, go 
+
+57
+00:03:48.383 --> 00:03:51.992
+ahead and put them in a file and then we 
+can avoid this issue. 
+
+58
+00:03:51.992 --> 00:03:56.575
+And then, one other optional thing is 
+later in the course, I'd like to at least 
+
+59
+00:03:56.575 --> 00:04:01.652
+optionally study Racket's module system. 
+And I'm being technically incorrect here. 
+
+60
+00:04:01.652 --> 00:04:06.078
+Inside of file and Racket is not really 
+top level bindings, which is what I 
+
+61
+00:04:06.078 --> 00:04:09.849
+called the segment. 
+In Racket, every file is implicitly in 
+
+62
+00:04:09.849 --> 00:04:13.164
+its own module. 
+Now, in that module still has letrec 
+
+63
+00:04:13.164 --> 00:04:17.061
+style semantics, so all the code I showed 
+you is correct. 
+
+64
+00:04:17.061 --> 00:04:22.122
+But it turns out that across files, it's 
+not one big letrec, it's actually a 
+
+65
+00:04:22.122 --> 00:04:26.956
+separate letrec for each file. 
+And you can include things from another 
+
+66
+00:04:26.956 --> 00:04:29.993
+file. 
+And you can shadow things from another 
+
+67
+00:04:29.993 --> 00:04:33.915
+file from another module. 
+So, in fact, since plus is just a 
+
+68
+00:04:33.915 --> 00:04:38.513
+function and it's just defined in some 
+other module that's part of the standard 
+
+69
+00:04:38.513 --> 00:04:41.280
+library, 
+you could even shadow the plus function 
+
+70
+00:04:41.280 --> 00:04:44.668
+inside your own file, but each file can 
+only define it once. 
+
+71
+00:04:44.668 --> 00:04:49.247
+Of course, that sort of shadowing is, is 
+poor style, but it helps explain Racket's 
+
+72
+00:04:49.247 --> 00:04:52.461
+module system. 
+Which as I mentioned, will be an optional 
+
+73
+00:04:52.461 --> 00:04:53.280
+topic later in the course. 

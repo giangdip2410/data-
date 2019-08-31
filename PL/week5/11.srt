@@ -1,0 +1,300 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:06.169
+At this point in our study of modular 
+systems, I just want to give a more 
+
+2
+00:00:06.169 --> 00:00:12.308
+precise definition of what is called 
+signature matching. 
+
+3
+00:00:12.308 --> 00:00:16.125
+So we have a structure, we have a 
+signature, we want to know if the 
+
+4
+00:00:16.125 --> 00:00:20.251
+structure can have that signature. 
+This is what the type checker has to 
+
+5
+00:00:20.251 --> 00:00:22.755
+check, 
+and that's the process of signature 
+
+6
+00:00:22.755 --> 00:00:25.654
+matching. 
+So as usual, we had our informal notion 
+
+7
+00:00:25.654 --> 00:00:29.902
+of well, the structure has to have 
+everything the signature says it has, 
+
+8
+00:00:29.902 --> 00:00:34.441
+but we can give it a more precise and 
+elegant definition of exactly what the 
+
+9
+00:00:34.441 --> 00:00:37.464
+rules are. 
+So, I have the basic idea here on the 
+
+10
+00:00:37.464 --> 00:00:40.341
+slide. 
+If you have some structure Foo and you 
+
+11
+00:00:40.341 --> 00:00:45.310
+want to know if it has signature BAR, you 
+go through everything in BAR and make 
+
+12
+00:00:45.310 --> 00:00:48.400
+sure that Foo provides it in an 
+appropriate way. 
+
+13
+00:00:48.400 --> 00:00:51.440
+So let's go through the various 
+possibilities. 
+
+14
+00:00:51.440 --> 00:00:56.556
+If in the signature BAR there's a full 
+type definition, not just an abstract 
+
+15
+00:00:56.556 --> 00:01:00.243
+type, but maybe say a data type binding 
+or a type synonym, 
+
+16
+00:01:00.243 --> 00:01:04.068
+well then the module better provide that 
+data type binding. 
+
+17
+00:01:04.068 --> 00:01:09.250
+It better have all of those constructors. 
+On the other hand, if the signature bar 
+
+18
+00:01:09.250 --> 00:01:14.432
+just has an abstract type, like we built 
+up to in the previous segment, something 
+
+19
+00:01:14.432 --> 00:01:18.236
+like type rational, 
+then all we have to check is that indeed 
+
+20
+00:01:18.236 --> 00:01:23.218
+the structure Foo defines such a type. 
+It could define it with a type synonym, 
+
+21
+00:01:23.218 --> 00:01:26.060
+it could define it with a data type 
+binding. 
+
+22
+00:01:26.060 --> 00:01:30.636
+We've seen a data type binding. 
+I'll show you a type synonym in a couple 
+
+23
+00:01:30.636 --> 00:01:33.857
+segments. 
+Now if bar has a val-binding, then the 
+
+24
+00:01:33.857 --> 00:01:36.477
+structure better provide that 
+val-binding. 
+
+25
+00:01:36.477 --> 00:01:40.802
+It could do it with a val-binding. 
+It could do it with a function binding. 
+
+26
+00:01:40.802 --> 00:01:44.337
+That doesn't matter. 
+It does have to provide it, and it has to 
+
+27
+00:01:44.337 --> 00:01:49.392
+have something of the appropriate type. 
+Now, this is the interesting part, okay. 
+
+28
+00:01:49.392 --> 00:01:54.847
+So the type that, that binding has inside 
+the module does not have to be the same 
+
+29
+00:01:54.847 --> 00:01:58.918
+as the type it has outside the module. It 
+has to be related. 
+
+30
+00:01:58.918 --> 00:02:03.622
+Now inside the module it could have a 
+more general type. 
+
+31
+00:02:03.622 --> 00:02:08.630
+Back in section 2, we actually studied 
+the idea of one type being more general 
+
+32
+00:02:08.630 --> 00:02:12.242
+than another. 
+For example, inside the module, it could 
+
+33
+00:02:12.242 --> 00:02:17.156
+have type alpha arrow alpha, quote a 
+arrow quote a, and in the signature, we 
+
+34
+00:02:17.156 --> 00:02:19.998
+could say it has type, string arrow 
+string. 
+
+35
+00:02:19.998 --> 00:02:25.532
+Since string arrow string is less general 
+than alpha arrow alpha, that would be 
+
+36
+00:02:25.532 --> 00:02:28.987
+okay. 
+I'll show you an example soon where 
+
+37
+00:02:28.987 --> 00:02:34.657
+that's actually useful. 
+Also, the type in the module doesn't deal 
+
+38
+00:02:34.657 --> 00:02:36.992
+with abstract types, 
+okay. 
+
+39
+00:02:36.992 --> 00:02:43.712
+So inside the module, maybe we know what 
+a rational is, or what some type synonym 
+
+40
+00:02:43.712 --> 00:02:46.551
+is, 
+but out in the signature it might just be 
+
+41
+00:02:46.551 --> 00:02:49.546
+abstract. 
+And I'll show you an example of that as 
+
+42
+00:02:49.546 --> 00:02:53.550
+well in a future segment. 
+So really what you have to do is take the 
+
+43
+00:02:53.550 --> 00:02:58.395
+type the signature claims, take the type 
+that it has in the module based on type 
+
+44
+00:02:58.395 --> 00:03:03.097
+checking and type inference, and see if 
+the relation between those 2 types are 
+
+45
+00:03:03.097 --> 00:03:05.896
+okay. 
+It does not have to be exactly the same 
+
+46
+00:03:05.896 --> 00:03:08.981
+type. 
+It just has to be something that is that 
+
+47
+00:03:08.981 --> 00:03:13.590
+it makes sense as a way to expose that at 
+a possibly more restrictive type. 
+
+48
+00:03:13.590 --> 00:03:18.381
+Tell clients less about how the function 
+can be used, but everything you tell 
+
+49
+00:03:18.381 --> 00:03:22.250
+clients has to be true enough that 
+clients can use it that way. 
+
+50
+00:03:22.250 --> 00:03:27.624
+And then as the final details here if an 
+exception is declared in the signature 
+
+51
+00:03:27.624 --> 00:03:30.642
+bar then Foo needs to declare that 
+exception. 
+
+52
+00:03:30.642 --> 00:03:33.377
+That makes sense. 
+And these are really the rules. 
+
+53
+00:03:33.377 --> 00:03:37.762
+Now the thing that's not in any of these 
+bullet points, is that the structure foo 
+
+54
+00:03:37.762 --> 00:03:40.737
+can have bindings that aren't mentioned 
+in bar at all. 
+
+55
+00:03:40.737 --> 00:03:44.627
+And we know that's true, and that's 
+actually implied by these bullets. 
+
+56
+00:03:44.627 --> 00:03:48.892
+All you do is you take everything that's 
+in bar and you make sure foo defines it 
+
+57
+00:03:48.892 --> 00:03:52.275
+appropriately. 
+Whatever else Foo happens to define is 
+
+58
+00:03:52.275 --> 00:03:56.977
+just fine, and that's our more precise 
+definintion of signature matching and now 
+
+59
+00:03:56.977 --> 00:04:01.359
+we can go on to see some additional 
+structures that match signatures in some 
+
+60
+00:04:01.359 --> 00:04:02.357
+interesting ways. 

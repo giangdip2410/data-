@@ -1,0 +1,746 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:05.228
+[MUSIC] Let's talk some more about 
+parentheses, and let's particularly 
+
+2
+00:00:05.228 --> 00:00:09.341
+understand that parentheses are not 
+optional in Racket. 
+
+3
+00:00:09.341 --> 00:00:13.928
+They are common, but every time we use 
+them they have a meaning. 
+
+4
+00:00:13.928 --> 00:00:17.387
+So this is a habit you have to break 
+yourself of. 
+
+5
+00:00:17.387 --> 00:00:23.221
+In languages that don't have a syntax 
+like Racket, you're used to just putting 
+
+6
+00:00:23.221 --> 00:00:27.816
+in extra parentheses to help you 
+understand something, and if something 
+
+7
+00:00:27.816 --> 00:00:32.943
+isn't working, maybe you'll just put in 
+more parentheses and then it will start 
+
+8
+00:00:32.943 --> 00:00:35.303
+working. 
+It doesn't work in Racket. 
+
+9
+00:00:35.303 --> 00:00:40.311
+The parentheses always have a meaning. 
+In particular, in most places, if you 
+
+10
+00:00:40.311 --> 00:00:45.483
+write in, something in parentheses that 
+means evaluate e To a result, and then 
+
+11
+00:00:45.483 --> 00:00:50.507
+call it as a function with 0 arguments 
+because the way we do a function call is 
+
+12
+00:00:50.507 --> 00:00:54.238
+parenthesis, thing you want to call, and 
+then argument. 
+
+13
+00:00:54.238 --> 00:00:58.336
+So if there are no arguments, this is 
+call it with 0 arguments. 
+
+14
+00:00:58.336 --> 00:01:03.629
+So, look at this one with 2 parentheses. 
+This says evaluate e, call the result as 
+
+15
+00:01:03.629 --> 00:01:07.741
+a function with 0 arguments. 
+Get back a result and call that as a 
+
+16
+00:01:07.741 --> 00:01:11.015
+function with zero arguments. 
+This makes perfect sense. 
+
+17
+00:01:11.015 --> 00:01:15.585
+We might even do things like this, but if 
+it's not what you mean, you're going to 
+
+18
+00:01:15.585 --> 00:01:19.186
+get an error message. 
+You're going to try to treat something as 
+
+19
+00:01:19.186 --> 00:01:23.421
+a function that is not a function. 
+Now without static typing, this sort of 
+
+20
+00:01:23.421 --> 00:01:27.839
+thing will work just fine when you save 
+your file, when you click run, but once 
+
+21
+00:01:27.839 --> 00:01:32.430
+you actually execute the code, maybe it's 
+inside a function body somewhere, then 
+
+22
+00:01:32.430 --> 00:01:36.240
+you can get an error message. 
+It can be hard to diagnose and your first 
+
+23
+00:01:36.240 --> 00:01:39.662
+reaction is to just start playing with 
+the parentheses, 
+
+24
+00:01:39.662 --> 00:01:42.137
+and it's only going to get you into more 
+trouble. 
+
+25
+00:01:42.137 --> 00:01:45.787
+So let's work through some examples to 
+give you some practice with this. 
+
+26
+00:01:45.787 --> 00:01:49.787
+And the moral of the story is always, 
+slow down, think about your parentheses. 
+
+27
+00:01:49.787 --> 00:01:53.282
+If you're confused why they're there, 
+delete them and start over. 
+
+28
+00:01:53.282 --> 00:01:55.833
+Indent your code well, it'll always work 
+fine. 
+
+29
+00:01:55.833 --> 00:01:59.596
+So what I'm going to do is just show you 
+a bunch of versions of a factorial 
+
+30
+00:01:59.596 --> 00:02:02.762
+function, 1 of my favorite little 
+functions for examples. 
+
+31
+00:02:02.762 --> 00:02:05.397
+And I'm going to start by getting it 
+correct, okay. 
+
+32
+00:02:05.397 --> 00:02:09.626
+So, so far what I've written while I was 
+talking to you is In factors of one 
+
+33
+00:02:09.626 --> 00:02:12.829
+argument function, so these parenthesis 
+have to be here. 
+
+34
+00:02:12.829 --> 00:02:15.228
+Then, I have an if, and I need 3 
+arguments. 
+
+35
+00:02:15.228 --> 00:02:18.445
+This is the first one. 
+It's a call to the equals function. 
+
+36
+00:02:18.445 --> 00:02:22.605
+This is the second one, which is 1. 
+And then this is the third one, which is 
+
+37
+00:02:22.605 --> 00:02:25.087
+multiplication of n. 
+And then another call. 
+
+38
+00:02:25.087 --> 00:02:29.441
+Always put a parenthesis before the call, 
+a fact, to get the argument to that I 
+
+39
+00:02:29.441 --> 00:02:34.391
+need to call minus with n and 1, close, 
+close, close, close close. 
+
+40
+00:02:34.391 --> 00:02:40.292
+And let's run this, and if I do fact of 
+5, I get 120 in, and if I do fact of 10 I 
+
+41
+00:02:40.292 --> 00:02:45.122
+think I get about 300,000. 
+Oh, 3, 3.6 million excuse me. 
+
+42
+00:02:45.122 --> 00:02:51.767
+Okay? So, that version was right. 
+Now, let's do a bunch of versions that 
+
+43
+00:02:51.767 --> 00:02:58.172
+are wrong, and try to figure out why. 
+So let me do, I'll call it fact 1. 
+
+44
+00:02:58.172 --> 00:03:02.378
+N if equal n 0, then 1, 
+else n fact 1 of -n1, 
+
+45
+00:03:02.378 --> 00:03:07.172
+close everything, and run it. 
+It all seems to be fine. 
+
+46
+00:03:07.172 --> 00:03:13.885
+I call fact one with five, [COUGH] and I 
+get procedure application expected 
+
+47
+00:03:13.885 --> 00:03:18.388
+procedure given one. 
+No arguments, and that's exactly right. 
+
+48
+00:03:18.388 --> 00:03:23.028
+If you look up here, what I did while I 
+was talking to you and typing is I put 
+
+49
+00:03:23.028 --> 00:03:27.060
+this 1 in parentheses, and as an 
+expression, that means call 1 as a 
+
+50
+00:03:27.060 --> 00:03:31.293
+function with no arguments. 
+There's no type checker to separate our 
+
+51
+00:03:31.293 --> 00:03:36.341
+functions from our integers, but when we 
+went execute this in the base case when 1 
+
+52
+00:03:36.341 --> 00:03:40.427
+was 0 That's when we got the error. 
+So, we had already made about five 
+
+53
+00:03:40.427 --> 00:03:42.693
+recursive calls, and then we got the 
+error. 
+
+54
+00:03:42.693 --> 00:03:45.544
+And we would fix this us by deleting 
+these parentheses. 
+
+55
+00:03:45.544 --> 00:03:50.677
+We can just leave this in here, because 
+As long as we don't call that function, 
+
+56
+00:03:50.677 --> 00:03:54.627
+it won't be a problem. 
+Let me show you a small variant is 
+
+57
+00:03:54.627 --> 00:03:57.572
+fact1b. 
+Suppose I made the same mistake. 
+
+58
+00:03:57.572 --> 00:04:02.477
+Alright, just like this. 
+Alright, so you might think, if you're 
+
+59
+00:04:02.477 --> 00:04:08.329
+not paying very careful attention, that 
+this fact1b is exactly like the first 
+
+60
+00:04:08.329 --> 00:04:13.809
+line, and yet it totally seams to work. 
+In fact, this will work for almost every 
+
+61
+00:04:13.809 --> 00:04:17.343
+argument. 
+The only argument it won't work for is 0. 
+
+62
+00:04:17.343 --> 00:04:22.848
+So what's going on here? well here I, I, 
+I actually made a totally different 
+
+63
+00:04:22.848 --> 00:04:27.456
+mistake, this is wrong. 
+If you call fact1b with a 0 you will try 
+
+64
+00:04:27.456 --> 00:04:33.582
+to apply 1 with 0 argument, but I'm not 
+actually using fact1b recursively here, 
+
+65
+00:04:33.582 --> 00:04:38.432
+I, I wrote fact here, right. 
+I didn't write fact1b I wrote fact, and 
+
+66
+00:04:38.432 --> 00:04:44.262
+so in fact pardon the pun, when I call 
+fact1b with 5 I end up not calling fact1b 
+
+67
+00:04:44.262 --> 00:04:47.792
+again but going up to this first correct 
+version. 
+
+68
+00:04:47.792 --> 00:04:53.817
+And so that's why we didn't get the error 
+unless we called fact1b originally with 
+
+69
+00:04:53.817 --> 00:04:58.443
+0, okay. 
+Good, let's try another 1 how about fact2 
+
+70
+00:04:58.443 --> 00:05:01.966
+excuse me. 
+I need this parenthesis here. 
+
+71
+00:05:01.966 --> 00:05:05.955
+how about if = n 01. 
+Otherwise, n of fact 2. 
+
+72
+00:05:05.955 --> 00:05:11.227
+I will remember, now, to call the correct 
+thing recursively. 
+
+73
+00:05:11.227 --> 00:05:14.581
+[SOUND]. 
+And like that, and click run. 
+
+74
+00:05:14.581 --> 00:05:20.082
+And this is actually a syntax error. 
+So this, it will not allow. 
+
+75
+00:05:20.082 --> 00:05:23.071
+To start. 
+I don't have to test it out to get an 
+
+76
+00:05:23.071 --> 00:05:23.837
+error. 
+Dr. 
+
+77
+00:05:23.837 --> 00:05:27.615
+Racket will detect that, with a good 
+error message here. 
+
+78
+00:05:27.615 --> 00:05:32.356
+If has five parts after the keyword. 
+If is always supposed to have three 
+
+79
+00:05:32.356 --> 00:05:35.912
+parts, and yet clearly, syntactically, it 
+has five, 
+
+80
+00:05:35.912 --> 00:05:40.116
+equal n zero, one, and this 
+multiplication. 
+
+81
+00:05:40.116 --> 00:05:47.118
+And that makes no sense, If has to have 
+three and what happened is I forgot the 
+
+82
+00:05:47.118 --> 00:05:54.457
+parenthesis around the function call to 
+equal, ok? How about if I do it this way? 
+
+83
+00:05:54.457 --> 00:05:58.838
+If, so I'm going to get almost all of 
+this right. 
+
+84
+00:05:58.838 --> 00:06:03.372
+Three terms multiplied by N fact of minus 
+N one. 
+
+85
+00:06:03.372 --> 00:06:09.203
+Just like this, click run, and I get bad 
+syntax multiple expressions after 
+
+86
+00:06:09.203 --> 00:06:14.267
+identifier, indeed I do. 
+So if I say define in a variable, notice 
+
+87
+00:06:14.267 --> 00:06:20.219
+I forgot this parenthesis after the 
+fact3, then it's expecting like a val 
+
+88
+00:06:20.219 --> 00:06:23.759
+binding in ML, right, that I evaluate 
+something here. 
+
+89
+00:06:23.759 --> 00:06:28.914
+But I have 2 things after the variable, 
+this is the first one, this is the second 
+
+90
+00:06:28.914 --> 00:06:32.094
+one, right. 
+I messed up 1 parenthesis, this left 
+
+91
+00:06:32.094 --> 00:06:37.005
+parenthesis is supposed to be over here 
+before the name of the function, not 
+
+92
+00:06:37.005 --> 00:06:40.894
+before the argument. 
+Okay, parenthesis matter, I know I am 
+
+93
+00:06:40.894 --> 00:06:45.691
+typing fast in order to keep the video 
+short but you should think which concerts 
+
+94
+00:06:45.691 --> 00:06:48.629
+am I using. 
+And in this case if you are defining a 
+
+95
+00:06:48.629 --> 00:06:52.095
+function you put a parenthesis before the 
+function name. 
+
+96
+00:06:52.095 --> 00:06:55.492
+You do not put a parenthesis before the 
+argument list. 
+
+97
+00:06:55.492 --> 00:07:00.990
+Look how it up here in the correct 
+version I have this and then I have my 
+
+98
+00:07:00.990 --> 00:07:05.473
+function buddy. 
+Ok, alright lets do another one this one 
+
+99
+00:07:05.473 --> 00:07:11.288
+oh so I need to comment these out these 
+ones so I can get the other ones to go 
+
+100
+00:07:11.288 --> 00:07:14.589
+ahead and click run so I can test them 
+out. 
+
+101
+00:07:14.589 --> 00:07:20.532
+Here is my fourth version of fact how 
+about if equals zero one other wise 
+
+102
+00:07:20.532 --> 00:07:25.182
+Multiply n by my recursive call to fact 
+4, with -n and 1. 
+
+103
+00:07:25.182 --> 00:07:26.922
+[SOUND]. 
+Click run. 
+
+104
+00:07:26.922 --> 00:07:30.807
+This compiles just fine. 
+Call fact 4 was zero. 
+
+105
+00:07:30.807 --> 00:07:35.772
+I get the right thing, 1. 
+But if I call fact 4 with 5, I get an 
+
+106
+00:07:35.772 --> 00:07:39.602
+error message. 
+And it says that * expects type number as 
+
+107
+00:07:39.602 --> 00:07:43.387
+second argument, given procedure fact4. 
+That's exactly right. 
+
+108
+00:07:43.387 --> 00:07:48.192
+So, it turns out, that multiplication, we 
+saw back in our first or second segment 
+
+109
+00:07:48.192 --> 00:07:52.557
+on Racket, can take any number of 
+arguments, and here I'm passing it three 
+
+110
+00:07:52.557 --> 00:07:55.243
+arguments, n, the function fact4, and n - 
+1. 
+
+111
+00:07:55.243 --> 00:07:59.675
+Functions are first class, so you can 
+pass them to other functions, but then 
+
+112
+00:07:59.675 --> 00:08:03.314
+the body of multiply says wait a minute, 
+I don't have a number. 
+
+113
+00:08:03.314 --> 00:08:07.337
+I'm going to raise an error. 
+A typechecker in a language like ML would 
+
+114
+00:08:07.337 --> 00:08:10.389
+catch this. 
+In Racket, we have to test our functions 
+
+115
+00:08:10.389 --> 00:08:14.245
+to test this sort of error, then we need 
+to fix up our parentheses. 
+
+116
+00:08:14.245 --> 00:08:17.122
+we need an extra parenthesis before 
+fact4. 
+
+117
+00:08:17.122 --> 00:08:24.964
+And then a after it in order to call 
+multiply with two arguments not three. 
+
+118
+00:08:24.964 --> 00:08:33.100
+OK let's do a couple more here's fact 
+five n if equal n zero one otherwise 
+
+119
+00:08:33.100 --> 00:08:39.232
+multiply n by fact five minus N one. 
+So here, we saw in fact four we had too 
+
+120
+00:08:39.232 --> 00:08:42.222
+few parenthesis. 
+It made us annoyed. 
+
+121
+00:08:42.222 --> 00:08:47.072
+We just wanted to get our homework done 
+so we added some more. 
+
+122
+00:08:47.072 --> 00:08:52.217
+The problem of course is this still 
+works, but we added too many. 
+
+123
+00:08:52.217 --> 00:08:57.967
+And what it says is Procedure Fact five 
+expects one argument given zero. 
+
+124
+00:08:57.967 --> 00:09:03.931
+That's exactly right, right here. 
+I'm calling fact 5 with zero arguments. 
+
+125
+00:09:03.931 --> 00:09:09.261
+Fact 5 which I'm defining recursively 
+right here, expects one argument. 
+
+126
+00:09:09.261 --> 00:09:14.151
+You are not allowed to call functions 
+with the wrong number of arguments, and 
+
+127
+00:09:14.151 --> 00:09:17.821
+we get an error. 
+And then let's do one last one, just 
+
+128
+00:09:17.821 --> 00:09:22.844
+because it's good practice. 
+n times, so this is a very natural thing 
+
+129
+00:09:22.844 --> 00:09:28.742
+to do, because we've all grown accustomed 
+to writing arithmetic a certain way. 
+
+130
+00:09:28.742 --> 00:09:32.174
+And you can probably see the error this 
+time. 
+
+131
+00:09:32.174 --> 00:09:36.430
+I wrote * second. 
+That's supposed to be the function I'm 
+
+132
+00:09:36.430 --> 00:09:40.206
+calling. 
+Instead, what do you think would happen 
+
+133
+00:09:40.206 --> 00:09:46.113
+here? Well, again, the base case is fine, 
+but if n is not 0, then I'm going to try 
+
+134
+00:09:46.113 --> 00:09:51.322
+to treat n as a function. 
+So it expects some sort of error message 
+
+135
+00:09:51.322 --> 00:09:56.272
+where the number I called fact 6 with is 
+trying to be called with some arguments, 
+
+136
+00:09:56.272 --> 00:09:59.297
+alright? 
+When you look at your code carefully you 
+
+137
+00:09:59.297 --> 00:10:04.387
+can sometimes come up with a better error 
+message then you would get from a system 
+
+138
+00:10:04.387 --> 00:10:07.207
+that has no idea what it is your trying 
+to do. 
+
+139
+00:10:07.207 --> 00:10:10.377
+Here I think it will actually do a pretty 
+good job. 
+
+140
+00:10:10.377 --> 00:10:14.967
+So the procedure application, expected 
+procedure given one arguments where 
+
+141
+00:10:14.967 --> 00:10:18.581
+procedure times 1. 
+And, what actually happened is, you would 
+
+142
+00:10:18.581 --> 00:10:22.888
+think this happened when n would be 5. 
+Why, why does it say given 5? Well, it 
+
+143
+00:10:22.888 --> 00:10:26.487
+never got to this call. 
+It went ahead and did the recursion, and 
+
+144
+00:10:26.487 --> 00:10:30.967
+that did the recursion, and that did the 
+recursion, and it's on the way back out 
+
+145
+00:10:30.967 --> 00:10:34.092
+of the recursion that it first detects 
+the error. 
+
+146
+00:10:34.092 --> 00:10:37.660
+When it tries to say, 1 times, and the 
+recursive result, 1. 
+
+147
+00:10:37.660 --> 00:10:42.343
+And if, I'm going to write this out here 
+in Racket, you have 1*1, that's going to 
+
+148
+00:10:42.343 --> 00:10:46.389
+give the exact same error message, 
+because it's going to say that it 
+
+149
+00:10:46.389 --> 00:10:50.002
+expected a procedure in that first 
+position, and you have a 1. 

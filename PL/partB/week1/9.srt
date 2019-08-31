@@ -1,0 +1,634 @@
+WEBVTT
+
+1
+00:00:00.060 --> 00:00:04.923
+[MUSIC]
+
+2
+00:00:04.923 --> 00:00:09.432
+In this segment, I'm going to admit to
+you that Racket actually has mutation.
+
+3
+00:00:09.432 --> 00:00:13.130
+In fact it has assignment statements,
+because we need them for
+
+4
+00:00:13.130 --> 00:00:17.060
+some of the idioms we will be
+studying later in this section.
+
+5
+00:00:17.060 --> 00:00:19.832
+But in this segment,
+I'm going to show you how they work and
+
+6
+00:00:19.832 --> 00:00:21.391
+some of the problems they cause.
+
+7
+00:00:21.391 --> 00:00:24.170
+Because if you use mutation
+in places you should not,
+
+8
+00:00:24.170 --> 00:00:26.100
+bad things happen to your software.
+
+9
+00:00:27.150 --> 00:00:30.310
+So Racket really does have
+assignment statements and
+
+10
+00:00:30.310 --> 00:00:32.430
+we use them only where appropriate.
+
+11
+00:00:32.430 --> 00:00:35.622
+People generally programming a Racket,
+do not use them a lot.
+
+12
+00:00:35.622 --> 00:00:39.722
+But when they need them the Racket
+concert is called set!,
+
+13
+00:00:39.722 --> 00:00:45.200
+it's spelled S-E-T-!, and
+everyone pronounces it set bang.
+
+14
+00:00:45.200 --> 00:00:49.227
+And the way it works is set bang takes
+a variable that should already be
+
+15
+00:00:49.227 --> 00:00:51.600
+in the environment and an expression e.
+
+16
+00:00:51.600 --> 00:00:55.591
+It evaluates e to a result and it updates,
+
+17
+00:00:55.591 --> 00:00:59.850
+it actually mutates what x is bound to?
+
+18
+00:00:59.850 --> 00:01:04.725
+So anyone who's using that x in
+their environment after this
+
+19
+00:01:04.725 --> 00:01:09.037
+set bang will see the updated value for
+x, all right?
+
+20
+00:01:09.037 --> 00:01:13.314
+So any later look ups for
+x by anyone who's using that x,
+
+21
+00:01:13.314 --> 00:01:15.683
+they'll see the later value.
+
+22
+00:01:15.683 --> 00:01:19.980
+If they already looked up x, well they
+saw the value before we did the set bang.
+
+23
+00:01:19.980 --> 00:01:22.440
+And this really is like
+the assignment statement and
+
+24
+00:01:22.440 --> 00:01:26.320
+languages you may have seen before Java,
+C, Python and so forth.
+
+25
+00:01:26.320 --> 00:01:29.920
+The syntax is just set bang
+with parentheses around it.
+
+26
+00:01:29.920 --> 00:01:31.330
+Now once you have side effects like this,
+
+27
+00:01:31.330 --> 00:01:33.298
+some times you want to do
+a bunch of things in order.
+
+28
+00:01:33.298 --> 00:01:35.338
+I'm not going to use this in this segment,
+
+29
+00:01:35.338 --> 00:01:39.239
+but I should show you that Racket in
+general has this form where you say begin.
+
+30
+00:01:39.239 --> 00:01:43.441
+And then some sequence of expressions,
+and this is the sequencing operator.
+
+31
+00:01:43.441 --> 00:01:45.949
+You do each of these expressions in order,
+and
+
+32
+00:01:45.949 --> 00:01:49.438
+your overall result is just
+whatever the last one evaluates to.
+
+33
+00:01:49.438 --> 00:01:53.456
+So these earlier ones are useless,
+except if they do set banging,
+
+34
+00:01:53.456 --> 00:01:58.117
+they do any updating or any printing or
+anything with a side effect then we need
+
+35
+00:01:58.117 --> 00:02:00.866
+to execute those just for
+their side effect.
+
+36
+00:02:00.866 --> 00:02:06.800
+So let me show you an example of using set
+bang that's actually mutating a variable.
+
+37
+00:02:06.800 --> 00:02:11.072
+So imagine this is a file and
+I want to sort of emphasize to you
+
+38
+00:02:11.072 --> 00:02:15.523
+why this sort of assignment
+statement is probably a bad idea.
+
+39
+00:02:15.523 --> 00:02:17.451
+So let's go through this line by line.
+
+40
+00:02:17.451 --> 00:02:21.566
+On the first line, we create
+the environment where b is bound to 3.
+
+41
+00:02:21.566 --> 00:02:25.290
+On the second line,
+f is bound to a function.
+
+42
+00:02:25.290 --> 00:02:30.960
+But if this were ML, I would say f always,
+always, always adds 3 to its argument.
+
+43
+00:02:30.960 --> 00:02:36.786
+Because given x, it does multiply by 1 and
+the addition of x and b, all right?
+
+44
+00:02:36.786 --> 00:02:39.935
+So I made this big point
+that ML thanks to closures,
+
+45
+00:02:39.935 --> 00:02:43.850
+this function will always
+add 3 to it's argument.
+
+46
+00:02:43.850 --> 00:02:47.237
+Now, what I have to say is in fact,
+we still have closures.
+
+47
+00:02:47.237 --> 00:02:52.021
+And this function will always,
+when it looks that b at this b,
+
+48
+00:02:52.021 --> 00:02:54.330
+we still have lexical scope.
+
+49
+00:02:54.330 --> 00:02:55.651
+But when it looks up b,
+
+50
+00:02:55.651 --> 00:02:59.370
+it will get whatever the current
+contents of the b are.
+
+51
+00:02:59.370 --> 00:03:02.810
+Because with set bang, we have to
+start talking about current contents.
+
+52
+00:03:02.810 --> 00:03:06.576
+If you don't use set bang, you can
+forget that, the initial contents or
+
+53
+00:03:06.576 --> 00:03:08.384
+the contents for all time, okay?
+
+54
+00:03:08.384 --> 00:03:15.760
+Line 3, when we look up b for
+this expression, we use 3, so we get 7.
+
+55
+00:03:15.760 --> 00:03:20.400
+So in the environment, c is 7 period.
+
+56
+00:03:20.400 --> 00:03:23.380
+I have it here on the comment, c is 7.
+
+57
+00:03:23.380 --> 00:03:26.270
+At this point we set bang b to 5.
+
+58
+00:03:26.270 --> 00:03:31.159
+So hence forth b in this environment is 5.
+
+59
+00:03:31.159 --> 00:03:37.424
+So now when we call f with 4, when
+the body of this function is executed,
+
+60
+00:03:37.424 --> 00:03:41.450
+it looks up b in the environment and
+it sees 5.
+
+61
+00:03:41.450 --> 00:03:46.114
+So we end up with 5 + 4, that's
+the + x b multiplied by 1, we get 9.
+
+62
+00:03:47.650 --> 00:03:54.761
+On this last line however, where we just
+look up c and put the result in w, c is 7.
+
+63
+00:03:54.761 --> 00:03:59.226
+We already did this plus before
+a long time ago, three lines ago.
+
+64
+00:03:59.226 --> 00:04:01.908
+And what's in our environment is c is 7.
+
+65
+00:04:01.908 --> 00:04:06.889
+Having done that addition, any subsequent
+changes to be are not relevant.
+
+66
+00:04:06.889 --> 00:04:13.632
+So that is why z is bound to 9, because
+the call to f saw the new value for b.
+
+67
+00:04:13.632 --> 00:04:20.201
+But w is bound to 7 because c
+holds the result of adding b and
+
+68
+00:04:20.201 --> 00:04:26.110
+4, where we looked up b
+before the set bang, okay?
+
+69
+00:04:28.850 --> 00:04:33.260
+So when you can set bang,
+when you can assign to top level bindings,
+
+70
+00:04:33.260 --> 00:04:36.210
+a lot of things can start
+going really wrong.
+
+71
+00:04:36.210 --> 00:04:39.470
+So suppose that we thought that function
+f really was supposed to always add
+
+72
+00:04:39.470 --> 00:04:40.780
+3 to its argument.
+
+73
+00:04:40.780 --> 00:04:42.380
+How could we fix that?
+
+74
+00:04:42.380 --> 00:04:44.093
+Well no one programs this way in Racket.
+
+75
+00:04:44.093 --> 00:04:45.626
+Do not do this on your homework.
+
+76
+00:04:45.626 --> 00:04:50.443
+But I want to make a point about how if
+you had to deal with the potential of set
+
+77
+00:04:50.443 --> 00:04:55.730
+bang correctly, you'd have to do
+a lot of extra copying of bindings.
+
+78
+00:04:55.730 --> 00:04:58.660
+So a general principle in
+software development is if you're
+
+79
+00:04:58.660 --> 00:05:03.660
+worried something might change,
+make a copy of it before it can change.
+
+80
+00:05:03.660 --> 00:05:06.520
+And we can do that with
+our example function f.
+
+81
+00:05:06.520 --> 00:05:11.492
+If we wanted f to always add x
+to the value of b when f was
+
+82
+00:05:11.492 --> 00:05:17.147
+defined rather than the updated
+value of b when f is called.
+
+83
+00:05:17.147 --> 00:05:20.140
+And what we can do is we
+can make a local copy.
+
+84
+00:05:20.140 --> 00:05:24.460
+We can define f to be the result
+of this let expression.
+
+85
+00:05:24.460 --> 00:05:26.520
+What this let expression does,
+
+86
+00:05:26.520 --> 00:05:30.790
+is it initializes some local b that the
+outside world cannot get to in there for
+
+87
+00:05:30.790 --> 00:05:35.780
+cannot set bang to be whatever
+the outer b currently is.
+
+88
+00:05:35.780 --> 00:05:39.739
+So we have that 3 and
+now this function whenever called,
+
+89
+00:05:39.739 --> 00:05:42.136
+we'll look up the find us local b.
+
+90
+00:05:42.136 --> 00:05:45.350
+We already copied the outer one and
+we're fine.
+
+91
+00:05:45.350 --> 00:05:48.560
+So you normally use the same variable
+when you use this technique.
+
+92
+00:05:48.560 --> 00:05:53.692
+But if it confuses you this inner b does
+not have to be the same as the outer b,
+
+93
+00:05:53.692 --> 00:05:57.456
+we could have said let c be b
+when the x times 1 + x and c.
+
+94
+00:05:57.456 --> 00:06:02.572
+And that would've still made
+an appropriate local copy that would make
+
+95
+00:06:02.572 --> 00:06:08.130
+sure that this closure is unaffected by
+any later set bang of this top level b.
+
+96
+00:06:09.460 --> 00:06:12.350
+But it turns out that wouldn't
+necessarily be good enough,
+
+97
+00:06:13.420 --> 00:06:16.650
+in a simple elegant languages
+design you'd say wait a minute.
+
+98
+00:06:16.650 --> 00:06:20.330
+That function also uses addition and
+multiplication and
+
+99
+00:06:20.330 --> 00:06:22.810
+those are just variables
+bound to functions.
+
+100
+00:06:22.810 --> 00:06:24.488
+And if we have set bang, we have set bang.
+
+101
+00:06:24.488 --> 00:06:28.495
+What would stop someone from set
+banging the plus variable to
+
+102
+00:06:28.495 --> 00:06:33.800
+be bound to some different thing
+no longer the addition function?
+
+103
+00:06:33.800 --> 00:06:38.186
+So now for our function f to be safe,
+we have to make a local copy of b and
+
+104
+00:06:38.186 --> 00:06:41.073
+a local copy of plus and
+a local copy of times.
+
+105
+00:06:41.073 --> 00:06:46.270
+So that we know that this function body
+down here when it looks up times and
+
+106
+00:06:46.270 --> 00:06:51.160
+plus and b will get the code we want
+even if there's a later set bang.
+
+107
+00:06:51.160 --> 00:06:53.630
+Nobody programs like this,
+don't worry about it.
+
+108
+00:06:53.630 --> 00:06:56.804
+But semantically this is what you
+would think you would have to do.
+
+109
+00:06:56.804 --> 00:07:02.160
+And then older Racket like languages like
+scheme, this would actually be a problem.
+
+110
+00:07:02.160 --> 00:07:06.710
+If someone did a set bang of plus,
+all sorts of codes would start breaking,
+
+111
+00:07:06.710 --> 00:07:08.920
+because they all assumed it was
+still the addition function.
+
+112
+00:07:09.980 --> 00:07:13.800
+So the designers of Racket decided,
+this was just too much.
+
+113
+00:07:13.800 --> 00:07:17.490
+We don't want to have these sort of
+problems creeping into our software.
+
+114
+00:07:17.490 --> 00:07:21.010
+So in Racket you cannot
+set bang things like plus.
+
+115
+00:07:21.010 --> 00:07:26.014
+They made a strange compromise
+that if the file that defines
+
+116
+00:07:26.014 --> 00:07:32.033
+something does not set bang it in that
+file then nobody else can either.
+
+117
+00:07:32.033 --> 00:07:36.437
+And since the file where plus is bound to
+the addition function does not have any
+
+118
+00:07:36.437 --> 00:07:37.790
+set bang for addition.
+
+119
+00:07:37.790 --> 00:07:40.460
+We don't have to worry about anyone
+else assigning to it either.
+
+120
+00:07:41.480 --> 00:07:43.810
+Okay, let me be clear about this.
+
+121
+00:07:43.810 --> 00:07:46.567
+I did not want you on the homework
+making local copies this.
+
+122
+00:07:46.567 --> 00:07:49.794
+It's a strange idiom, it's not necessary.
+
+123
+00:07:49.794 --> 00:07:54.565
+What everyone does in Racket is just
+assume that no one is going to do set bang
+
+124
+00:07:54.565 --> 00:07:56.880
+of top level bindings.
+
+125
+00:07:56.880 --> 00:07:58.530
+So why did I show this to you?
+
+126
+00:07:58.530 --> 00:08:02.480
+Because I don't want you to use set bang
+on top level bindings in any language.
+
+127
+00:08:02.480 --> 00:08:05.760
+Assigning to top level things
+that lots of your code might be
+
+128
+00:08:05.760 --> 00:08:08.440
+relying on is just a bad idea.
+
+129
+00:08:08.440 --> 00:08:12.390
+And if you don't mutate things,
+then you have much simpler semantics.
+
+130
+00:08:12.390 --> 00:08:16.669
+And it's actually quite dubious whether in
+your language, you should even allow top
+
+131
+00:08:16.669 --> 00:08:21.070
+level bindings to be mutated,
+and that's why we have set bang.
+
+132
+00:08:21.070 --> 00:08:25.140
+But Racket went ahead and
+had some reasonable compromises
+
+133
+00:08:25.140 --> 00:08:27.550
+about what you're allowed to set bang and
+what you're not.

@@ -1,0 +1,635 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:05.364
+[MUSIC] At this point in our study of 
+Racket, you probably notice that there 
+
+2
+00:00:05.364 --> 00:00:09.847
+are a lot of parentheses. 
+So, in this segment, I want to talk about 
+
+3
+00:00:09.847 --> 00:00:13.099
+why that's actually a good thing in many 
+ways. 
+
+4
+00:00:13.099 --> 00:00:18.264
+And then, in the next segment, I want to 
+teach you how to really think about 
+
+5
+00:00:18.264 --> 00:00:23.565
+parentheses carefully and debug when you 
+make mistakes with your parentheses. 
+
+6
+00:00:23.565 --> 00:00:28.268
+So, ignoring a few bells and whistles, a 
+few corners of the language that we 
+
+7
+00:00:28.268 --> 00:00:31.228
+haven't encountered and won't really 
+focus on, 
+
+8
+00:00:31.228 --> 00:00:36.182
+Racket has an amazingly simple syntax. 
+The way we write programs does not have a 
+
+9
+00:00:36.182 --> 00:00:40.214
+lot of complicated rules. 
+In fact, I can pretty much put them all 
+
+10
+00:00:40.214 --> 00:00:42.541
+on this slide. 
+That's amazing. 
+
+11
+00:00:42.541 --> 00:00:47.046
+So, let's go through what the rules of 
+writing Racket programs are. 
+
+12
+00:00:47.046 --> 00:00:52.158
+So, anything you write in a language, 
+what racket people would call a term is 
+
+13
+00:00:52.158 --> 00:00:57.692
+either some primitive atom, atom as in 
+the word for indivisible, coming from the 
+
+14
+00:00:57.692 --> 00:01:03.377
+Greek, right? So, true and false, I 
+haven't shown these to you yet, but you 
+
+15
+00:01:03.377 --> 00:01:08.137
+write them #t and #f, 
+a number, a string, 4.0, variable names, 
+
+16
+00:01:08.137 --> 00:01:12.534
+these are all atoms. 
+There are also certain atoms that are 
+
+17
+00:01:12.534 --> 00:01:15.411
+special forms. 
+Define is a special form, 
+
+18
+00:01:15.411 --> 00:01:16.241
+lambda, 
+if. 
+
+19
+00:01:16.241 --> 00:01:21.399
+Here, I'm just talking about the words, 
+okay? And when we study macros in the 
+
+20
+00:01:21.399 --> 00:01:26.372
+next section we'll be able to define our 
+own special forms, 
+
+21
+00:01:26.372 --> 00:01:30.147
+that's essentailly what macros are but 
+we'll get there. 
+
+22
+00:01:30.147 --> 00:01:35.097
+So, we have atoms, a very small set of 
+them are special forms and then we have 
+
+23
+00:01:35.097 --> 00:01:39.897
+sequences which is just putting some 
+sequence of terms in parentheses. 
+
+24
+00:01:39.897 --> 00:01:45.322
+So, term is a recursive definition, each 
+of these terms could itself be a sequence 
+
+25
+00:01:45.322 --> 00:01:50.240
+or be an atom or a special form. 
+So, the semantics comes straight from 
+
+26
+00:01:50.240 --> 00:01:54.562
+this syntax as follows, if t1 is a 
+special form, well then, we have 
+
+27
+00:01:54.562 --> 00:01:59.451
+different semantics for each special 
+form, if has a meaning, lambda has a 
+
+28
+00:01:59.451 --> 00:02:04.761
+meaning, define has a meaning, and so on. 
+Otherwise, if t1 is not a special form, 
+
+29
+00:02:04.761 --> 00:02:10.098
+it's not one of these special words, 
+then this is a function call and that's 
+
+30
+00:02:10.098 --> 00:02:13.181
+really it. 
+So, let's do a couple of examples. 
+
+31
+00:02:13.181 --> 00:02:18.074
+If I have + 3 car of xs, this is a 
+sequence with three terms + 3 and car of 
+
+32
+00:02:18.074 --> 00:02:21.104
+xs. 
+Plus, it turns out is not a special form, 
+
+33
+00:02:21.104 --> 00:02:24.532
+so this is a function call just like we 
+expect. 
+
+34
+00:02:24.532 --> 00:02:29.933
+Here, I have a lambda, so I also have a 
+sequence of 3 terms, and I'm missing a 
+
+35
+00:02:29.933 --> 00:02:33.263
+parenthesis here. 
+I'll fix that after I record. 
+
+36
+00:02:33.263 --> 00:02:38.204
+So, I have lambda, then this sequence 
+with the x, then an if, and I should 
+
+37
+00:02:38.204 --> 00:02:41.422
+close this with one more round 
+parenthesis, 
+
+38
+00:02:41.422 --> 00:02:45.790
+okay? Since lambda is a special form, 
+that effects the meaning of the rest of 
+
+39
+00:02:45.790 --> 00:02:48.216
+this. 
+So, this next thing is not a function 
+
+40
+00:02:48.216 --> 00:02:52.776
+call, it's the list of parameters and the 
+thing after that is the function body 
+
+41
+00:02:52.776 --> 00:02:56.877
+which is treated as something that we 
+would evaluate as an expression. 
+
+42
+00:02:56.877 --> 00:03:01.067
+That's really all there is to Racket 
+syntax and it's because of all those 
+
+43
+00:03:01.067 --> 00:03:05.365
+parenthesis that it's so simple. 
+One minor note, as long as we're talking 
+
+44
+00:03:05.365 --> 00:03:09.646
+about syntax, you can also use the square 
+bracket anywhere you use the round 
+
+45
+00:03:09.646 --> 00:03:12.438
+bracket. 
+It's really just a matter of style where 
+
+46
+00:03:12.438 --> 00:03:16.868
+you use square, where you use round, 
+never affects the meaning of everything. 
+
+47
+00:03:16.868 --> 00:03:21.013
+We won't be picky about this, but I will 
+show you a few places where square 
+
+48
+00:03:21.013 --> 00:03:25.232
+brackets are the convention. 
+DrRacket is actually kind of nice on this 
+
+49
+00:03:25.232 --> 00:03:28.877
+one if you're writing a bunch of close 
+parentheses. 
+
+50
+00:03:28.877 --> 00:03:31.997
+don't worry about which kind you're 
+closing. 
+
+51
+00:03:31.997 --> 00:03:37.112
+If you, on your keyboard, hit the round 
+parenthesis, but there's a matching open 
+
+52
+00:03:37.112 --> 00:03:42.272
+square bracket, DrRacket will just change 
+it to a closing square bracket for you. 
+
+53
+00:03:42.272 --> 00:03:46.177
+It's just a convenient keyboard DrRacket 
+thing, okay? 
+
+54
+00:03:46.177 --> 00:03:51.602
+So, why are all these parentheses good? 
+There's a few reasons, but the one I want 
+
+55
+00:03:51.602 --> 00:03:56.727
+to emphasize is that converting the 
+program text into a tree that represents 
+
+56
+00:03:56.727 --> 00:04:01.652
+the program is completely trivial. 
+So, let's go straight to the example you 
+
+57
+00:04:01.652 --> 00:04:04.552
+see here, kind of in the middle of the 
+slide. 
+
+58
+00:04:04.552 --> 00:04:09.577
+Here's one of the version of the cube 
+function we wrote a couple of segments 
+
+59
+00:04:09.577 --> 00:04:12.490
+ago. 
+And when you write it, it's just lines of 
+
+60
+00:04:12.490 --> 00:04:15.191
+text, 
+right? It's just, you know, rows and, 
+
+61
+00:04:15.191 --> 00:04:19.956
+and, and columns of, of characters, 
+right? Parenthesis, define, cube, and so 
+
+62
+00:04:19.956 --> 00:04:22.623
+on. 
+Anything that wants to reason about your 
+
+63
+00:04:22.623 --> 00:04:27.420
+program for compiling it, running it, 
+indenting it automatically for you when 
+
+64
+00:04:27.420 --> 00:04:30.599
+you hit Tab, 
+really wants to think about your program 
+
+65
+00:04:30.599 --> 00:04:34.583
+in terms of this tree. 
+You have defined with two children, cube 
+
+66
+00:04:34.583 --> 00:04:37.982
+and lambda. 
+Lambda with 2 children, the argument and 
+
+67
+00:04:37.982 --> 00:04:41.335
+then the body. 
+This body is just a function call with 
+
+68
+00:04:41.335 --> 00:04:46.233
+star in the first position and then 3 
+children that, in this case, all happen 
+
+69
+00:04:46.233 --> 00:04:49.327
+to be x. 
+The process of going from the code on the 
+
+70
+00:04:49.327 --> 00:04:53.355
+left to the tree on the right, is 
+incredibly easy when all those 
+
+71
+00:04:53.355 --> 00:04:57.037
+parenthesis are there. 
+This is called parsing in programming 
+
+72
+00:04:57.037 --> 00:05:01.702
+languages speak, taking the string of a 
+program and converting it to the right 
+
+73
+00:05:01.702 --> 00:05:04.435
+tree. 
+And when you have all these parentheses, 
+
+74
+00:05:04.435 --> 00:05:09.116
+it's easy enough that there's never any 
+confusion on the programmers part with 
+
+75
+00:05:09.116 --> 00:05:13.451
+how these things are organized. 
+We simply don't have issues like we do in 
+
+76
+00:05:13.451 --> 00:05:18.636
+other languages of things if you have x 
+plus y times z, is that the tree with 
+
+77
+00:05:18.636 --> 00:05:23.835
+plus at the top or the subtree with the 
+multiplication or is the multiplication 
+
+78
+00:05:23.835 --> 00:05:28.918
+at the top with the plus as a subtree? In 
+other languages, we have to come up with 
+
+79
+00:05:28.918 --> 00:05:33.804
+rules for this. In school, you had to 
+learn the mathematical convention that 
+
+80
+00:05:33.804 --> 00:05:37.772
+multiplication binds more tightly than 
+addition. 
+
+81
+00:05:37.772 --> 00:05:41.912
+But in a syntax like Rackets, just use 
+extra parentheses, 
+
+82
+00:05:41.912 --> 00:05:46.957
+put everything in prefix notation, 
+put the times before its argument, 
+
+83
+00:05:46.957 --> 00:05:50.062
+and there's never a bunch of special 
+rules. 
+
+84
+00:05:50.062 --> 00:05:54.062
+Okay. So, it turns out that people tend 
+to not like this. 
+
+85
+00:05:54.062 --> 00:05:57.492
+I don't mind it. 
+Well, some people do but a lot of people 
+
+86
+00:05:57.492 --> 00:06:02.151
+don't like all these parenthesis. 
+So, let me defend the parenthesis for one 
+
+87
+00:06:02.151 --> 00:06:04.367
+slide. 
+First of all, I never hear anyone 
+
+88
+00:06:04.367 --> 00:06:08.007
+complain about HTML. 
+If you go to a webpage and you look at 
+
+89
+00:06:08.007 --> 00:06:12.112
+the source for that webpage, it takes 
+exactly the same approach. 
+
+90
+00:06:12.112 --> 00:06:16.942
+Instead of things like open parenthesis 
+foo, where foo is some kind of special 
+
+91
+00:06:16.942 --> 00:06:19.533
+form, 
+it actually does something even longer. 
+
+92
+00:06:19.533 --> 00:06:22.783
+It writes foo in angle brackets. 
+It's one character longer. 
+
+93
+00:06:22.783 --> 00:06:26.235
+And then, instead of the closed 
+parenthesis, it's much longer. 
+
+94
+00:06:26.235 --> 00:06:30.302
+It writes a slash and it repeats whatever 
+opened the corresponding thing. 
+
+95
+00:06:30.302 --> 00:06:33.720
+And in HTML, you're not allowed to leave 
+off the closed things. 
+
+96
+00:06:33.720 --> 00:06:37.769
+We don't have a bunch of rules where you 
+get to write plus in the middle, but 
+
+97
+00:06:37.769 --> 00:06:42.429
+other things have to go at the beginning. 
+And yet, no one seems to complain about 
+
+98
+00:06:42.429 --> 00:06:44.986
+this. 
+I agree, at first, it's a little harder 
+
+99
+00:06:44.986 --> 00:06:47.554
+to read. 
+It's nice to have an environment that 
+
+100
+00:06:47.554 --> 00:06:52.030
+colors things and indents things for you. 
+But we have all that for Racket and we 
+
+101
+00:06:52.030 --> 00:06:55.627
+have all that for HTML. 
+And yet, all that, going all the way back 
+
+102
+00:06:55.627 --> 00:06:59.271
+to LISP and Scheme and all these 
+languages that, like Racket, use 
+
+103
+00:06:59.271 --> 00:07:02.926
+parentheses for everything, 
+people seem to have what I would even 
+
+104
+00:07:02.926 --> 00:07:07.298
+call an irrational dislike of them. 
+Now, I can have an irrational like and 
+
+105
+00:07:07.298 --> 00:07:10.735
+you can have an irrational dislike 
+because it's just syntax. 
+
+106
+00:07:10.735 --> 00:07:15.016
+This course is not about teaching you 
+which syntax is good or which syntax is 
+
+107
+00:07:15.016 --> 00:07:17.262
+bad. 
+So, we're allowed to have different 
+
+108
+00:07:17.262 --> 00:07:19.781
+opinions. 
+I can like parentheses and you can 
+
+109
+00:07:19.781 --> 00:07:24.444
+dislike parentheses and that's okay. 
+What I think is inappropriate to do is to 
+
+110
+00:07:24.444 --> 00:07:29.392
+dismiss the entire language of Racket 
+just because you don't like parenthesis. 
+
+111
+00:07:29.392 --> 00:07:33.970
+It has a number of interesting 
+constructs, prospectives, semantics that 
+
+112
+00:07:33.970 --> 00:07:37.538
+we want to study. 
+And even if you don't like parenthesis I 
+
+113
+00:07:37.538 --> 00:07:41.710
+ask you to look past them. 
+The analogy I have on this slide is, it 
+
+114
+00:07:41.710 --> 00:07:46.276
+would be like if someone was a historian 
+and wanted to learn about European 
+
+115
+00:07:46.276 --> 00:07:49.203
+History. 
+So, they wanted to learn all about the 
+
+116
+00:07:49.203 --> 00:07:54.048
+different countries, how they came to be, 
+the wars, the social changes and all 
+
+117
+00:07:54.048 --> 00:07:56.702
+that. 
+But there is one particular country where 
+
+118
+00:07:56.702 --> 00:08:01.005
+they didn't like that people's accent. 
+They found that accent hard to understand 
+
+119
+00:08:01.005 --> 00:08:03.733
+and they wished that people didn't talk 
+like that. 
+
+120
+00:08:03.733 --> 00:08:06.899
+And as a result, they never studied that 
+country's history. 
+
+121
+00:08:06.899 --> 00:08:10.092
+I would argue that that would make you a 
+poor historian. 
+
+122
+00:08:10.092 --> 00:08:14.844
+And dismissing all of Racket just because 
+you happen to not like looking at a bunch 
+
+123
+00:08:14.844 --> 00:08:19.557
+of parentheses on your screen, would make 
+you a bit of a poor computer scientist, 
+
+124
+00:08:19.557 --> 00:08:24.420
+okay? And just to finish up, now that 
+I've been a little vigorous and, and 
+
+125
+00:08:24.420 --> 00:08:28.560
+attacking of people's dislikes or 
+preferences, there is a fun cartoon I'm 
+
+126
+00:08:28.560 --> 00:08:33.042
+linked to here that talks about this 
+age-old issue of there being lots of 
+
+127
+00:08:33.042 --> 00:08:35.203
+parentheses in languages like Racket. 

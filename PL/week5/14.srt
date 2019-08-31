@@ -1,0 +1,237 @@
+WEBVTT
+
+1
+00:00:04.120 --> 00:00:09.980
+Let's finish our study of module systems in this segment by just avoiding
+
+2
+00:00:09.980 --> 00:00:15.289
+one common misunderstanding about multiple structures with the same signature.
+
+3
+00:00:15.289 --> 00:00:19.070
+We've seen you can have multiple structures with the same signature,
+
+4
+00:00:19.070 --> 00:00:21.610
+that signature can have an abstract type.
+
+5
+00:00:21.610 --> 00:00:25.250
+But each implementation of the signature,
+
+6
+00:00:25.250 --> 00:00:30.500
+introduces a new type which is different from the other structure's types.
+
+7
+00:00:30.500 --> 00:00:33.350
+So let me show you what's going on here in the REPL.
+
+8
+00:00:33.350 --> 00:00:37.550
+I've already loaded a file that defines all three signatures.
+
+9
+00:00:37.550 --> 00:00:39.950
+So here's signature A, then signature B,
+
+10
+00:00:39.950 --> 00:00:42.230
+then signature C. And it defines
+
+11
+00:00:42.230 --> 00:00:45.845
+all three structures which I've already shown you and I made
+
+12
+00:00:45.845 --> 00:00:52.189
+each of them specifically say that they provide signature rational C. So,
+
+13
+00:00:52.189 --> 00:00:54.350
+they all provide the same signature.
+
+14
+00:00:54.350 --> 00:00:56.420
+Now, of course, I can do something like
+
+15
+00:00:56.420 --> 00:01:02.638
+Rational1.toString(Rational1.make_frac(9,-6))
+
+16
+00:01:02.638 --> 00:01:07.130
+and I should
+
+17
+00:01:07.130 --> 00:01:10.240
+get back negative three over two.
+
+18
+00:01:10.240 --> 00:01:14.210
+Okay. And I could use the other structures as well like here's maybe rational
+
+19
+00:01:14.210 --> 00:01:18.400
+three which we know implements the fractions in a different way,
+
+20
+00:01:18.400 --> 00:01:19.785
+but they're equivalent structures,
+
+21
+00:01:19.785 --> 00:01:21.670
+I always get the same result.
+
+22
+00:01:21.670 --> 00:01:26.060
+What you cannot do is mix and match your modules.
+
+23
+00:01:26.060 --> 00:01:28.730
+This is simply not going to type check.
+
+24
+00:01:28.730 --> 00:01:30.230
+You cannot take the result of
+
+25
+00:01:30.230 --> 00:01:34.625
+rational ones make_frac and pass it to rational threes toString.
+
+26
+00:01:34.625 --> 00:01:36.555
+After all, that better not type check.
+
+27
+00:01:36.555 --> 00:01:39.225
+They're not even implemented the same way.
+
+28
+00:01:39.225 --> 00:01:44.035
+This would be passing an int*int where we expect a data type.
+
+29
+00:01:44.035 --> 00:01:46.850
+But even if they were implemented the same way like with
+
+30
+00:01:46.850 --> 00:01:50.780
+rational two and rational one it still doesn't type check.
+
+31
+00:01:50.780 --> 00:01:52.235
+That is also a good thing.
+
+32
+00:01:52.235 --> 00:01:53.735
+If we allowed this,
+
+33
+00:01:53.735 --> 00:01:56.105
+we would be breaking our abstractions.
+
+34
+00:01:56.105 --> 00:01:57.778
+I believe something like this,
+
+35
+00:01:57.778 --> 00:02:01.700
+especially if I flipped it around and did it the other way,
+
+36
+00:02:01.700 --> 00:02:04.445
+would not do what we want.
+
+37
+00:02:04.445 --> 00:02:08.300
+Because we know that Rational2.make_frac doesn't reduce
+
+38
+00:02:08.300 --> 00:02:12.440
+the fraction and we know Rational1.toString doesn't reduce the fraction.
+
+39
+00:02:12.440 --> 00:02:15.320
+So if we allowed this it would print
+
+40
+00:02:15.320 --> 00:02:19.395
+out negative 9 slash 6 which is not what is supposed to happen.
+
+41
+00:02:19.395 --> 00:02:23.990
+And the reason why this doesn't type check is entirely straightforward.
+
+42
+00:02:23.990 --> 00:02:30.625
+If I look at Rational1.toString it has type Rational1.Rational arrow
+
+43
+00:02:30.625 --> 00:02:38.070
+string whereas Rational2.toString has type Rational2.Rational arrow string.
+
+44
+00:02:38.070 --> 00:02:39.785
+They're not the same type.
+
+45
+00:02:39.785 --> 00:02:41.945
+They are two abstract types.
+
+46
+00:02:41.945 --> 00:02:44.410
+We do not know if they are the same or different.
+
+47
+00:02:44.410 --> 00:02:45.905
+They may be different.
+
+48
+00:02:45.905 --> 00:02:48.620
+They are not allowed to be confused with each other and
+
+49
+00:02:48.620 --> 00:02:51.930
+that's essential for enforcing our abstractions.
+
+50
+00:02:51.930 --> 00:03:00.230
+Two modules can have
+
+51
+00:03:00.230 --> 00:03:03.460
+the same signature but they still define different types.
+
+52
+00:03:03.460 --> 00:03:06.615
+As a result if you try to mix and match things don't type check,
+
+53
+00:03:06.615 --> 00:03:11.690
+and that's good because each library expects the values it's passed to
+
+54
+00:03:11.690 --> 00:03:13.040
+be from itself not from
+
+55
+00:03:13.040 --> 00:03:17.600
+some other library that can be enforcing different properties or different invariants.
+
+56
+00:03:17.600 --> 00:03:20.545
+This is a crucial feature for your type system.
+
+57
+00:03:20.545 --> 00:03:24.675
+And in fact it's essential both for ML's type system to not allow
+
+58
+00:03:24.675 --> 00:03:27.950
+confusing instance strings as well as for making sure that
+
+59
+00:03:27.950 --> 00:03:32.149
+abstractions are actually enforced and your libraries behave properly.

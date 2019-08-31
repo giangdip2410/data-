@@ -1,0 +1,565 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:07.100
+, In this segment and the next, we're
+going to talk about streams which are a
+
+2
+00:00:07.112 --> 00:00:14.175
+different programming idiom that also
+needs some notion of delaying evaluation
+
+3
+00:00:14.187 --> 00:00:20.925
+and the implementation will use thunks. In
+order to accomplish that. So, a stream is
+
+4
+00:00:20.937 --> 00:00:26.710
+a word that we use in computer science to
+mean an infinite sequence of values. All
+
+5
+00:00:26.722 --> 00:00:31.775
+right, something that can go on for as
+long as you need. It behaves like
+
+6
+00:00:31.787 --> 00:00:37.670
+somethings infinitely big. Now, one thing
+about infinite sized things, you can't
+
+7
+00:00:37.682 --> 00:00:42.949
+actually make them. Right? We need
+something that's going to represent
+
+8
+00:00:42.961 --> 00:00:48.469
+something that could go on forever. And
+the key idea we're going to use is to use
+
+9
+00:00:48.481 --> 00:00:54.613
+a thunk to delay the evaluation of most of
+the sequence and only generate some prefix
+
+10
+00:00:54.625 --> 00:00:59.281
+of the sequence That some other
+computation needs. We're not going to need
+
+11
+00:00:59.293 --> 00:01:04.008
+any new language constructs. This is just
+a program idiom using thunks and things
+
+12
+00:01:04.020 --> 00:01:08.835
+like that. But it's a powerful concept for
+dividing labor up in a way that works in a
+
+13
+00:01:08.847 --> 00:01:14.476
+lot of different software systems. So, the
+idea is that. The, the program, part of
+
+14
+00:01:14.488 --> 00:01:19.562
+the program producting the stream,
+creating the stream, knows how to create
+
+15
+00:01:19.574 --> 00:01:24.748
+any number of values you need. But does
+not know how many you need. Whereas the
+
+16
+00:01:24.760 --> 00:01:30.303
+stream consumer can ask for these values
+as it goes along, without knowing anything
+
+17
+00:01:30.315 --> 00:01:35.274
+about the process that is generating So it
+turns out this comes up a lot in software
+
+18
+00:01:35.286 --> 00:01:39.518
+systems. It's okay if you're not familiar
+with any of these examples, but I thought
+
+19
+00:01:39.530 --> 00:01:43.869
+I would mention them for those of you who
+are. one way is if you're implementing
+
+20
+00:01:43.881 --> 00:01:48.113
+code that need to respond to a whole bunch
+of user events, mouse clicks, keyboard
+
+21
+00:01:48.125 --> 00:01:52.382
+presses, things like that, we saw earlier
+in the course we could do that will call
+
+22
+00:01:52.394 --> 00:01:57.028
+backs. But another way to do it is to
+think of that as some stream of events.
+
+23
+00:01:57.132 --> 00:02:01.925
+We'll as for each one as we need it, and
+then we'll compute some result with that
+
+24
+00:02:01.937 --> 00:02:06.647
+thing so far. And someone else will
+generate those events as they occur. Have
+
+25
+00:02:06.659 --> 00:02:11.832
+you ever programmed with pipes in the UNIX
+shell system? It turns out that the second
+
+26
+00:02:11.832 --> 00:02:16.498
+c ommand, pulls data from the first
+command as it needs it so it views the
+
+27
+00:02:16.510 --> 00:02:21.200
+first command as a stream. And the first
+command's output is generating that
+
+28
+00:02:21.212 --> 00:02:26.185
+stream. There's also a nice connection
+with electrical engineering and circuits,
+
+29
+00:02:26.283 --> 00:02:30.783
+that if you think of a timed circuit with
+feedback. You can think of the different
+
+30
+00:02:30.795 --> 00:02:35.073
+output values it's sending on it's output
+wires as forming an infinitely long
+
+31
+00:02:35.085 --> 00:02:39.522
+sequence. And then the, the circuits
+reading those values Can read the ones
+
+32
+00:02:39.534 --> 00:02:44.206
+that they're interested in. Anyway, just
+optional things just showing this is kind
+
+33
+00:02:44.206 --> 00:02:48.550
+of, of a universal concept even if you
+find it a bit abstract. You'll also see
+
+34
+00:02:48.562 --> 00:02:53.285
+some simpler and more fun examples on the
+homeowrk assignment associated with this
+
+35
+00:02:53.297 --> 00:02:58.587
+material. Okay, so we want to represent a
+stream. In some way that we don't actually
+
+36
+00:02:58.599 --> 00:03:04.097
+generate an infinitely long list or
+something like that. So here's how we will
+
+37
+00:03:04.109 --> 00:03:09.495
+do it. We're going to represent a stream
+as a thunk. So a stream will just be a
+
+38
+00:03:09.507 --> 00:03:15.345
+thunk, but not just any kind of thunk, a
+thunk that, when you call it gives back a
+
+39
+00:03:15.357 --> 00:03:21.809
+pair, where the car is the next thing in
+the sequence. The first thing in the
+
+40
+00:03:21.821 --> 00:03:28.201
+sequence. And the CDR, is a stream for
+values 2 through infinity. So it is a
+
+41
+00:03:28.213 --> 00:03:34.934
+stream that, if you use it, you get the
+next value. So in this segment, I'm just
+
+42
+00:03:34.946 --> 00:03:40.730
+going to show you how to use this thing
+Then in the next segment, we'll see how to
+
+43
+00:03:40.742 --> 00:03:45.355
+define our own. Using them usually helps
+explain what they are and get a little
+
+44
+00:03:45.367 --> 00:03:50.330
+better sense before we try to create them.
+So I've already loaded the file where I've
+
+45
+00:03:50.342 --> 00:03:55.070
+created the streams I will show you in the
+next segment. And one of the streams is
+
+46
+00:03:55.082 --> 00:03:58.069
+the infinite sequence of powers-of-two.
+Two.
+
+47
+00:03:58.070 --> 00:04:03.191
+So you know, the first thing this thing
+returns - I, I forget if it starts at 1 or
+
+48
+00:04:03.203 --> 00:04:08.640
+2. And the 4, and then 8, and then 16, and
+then 32, on forever. Because we don't know
+
+49
+00:04:08.652 --> 00:04:13.917
+how many powers of 2 we need. But when I
+said powers-of-two, as you saw here, all I
+
+50
+00:04:13.929 --> 00:04:19.250
+got back was a procedure. Because our
+streams are thunks. That when you call
+
+51
+00:04:19.262 --> 00:04:24.799
+them return a pair. So, how do you call a
+thunk? You put it in parentheses,
+
+52
+00:04:24.922 --> 00:04:30.864
+powers-of-two. And look at that. I got
+back a pair, who's first component is 2,
+
+53
+00:04:30.987 --> 00:04:36.671
+so I did set it up to start at 2, and a
+second component is another procedure.
+
+54
+00:04:36.794 --> 00:04:42.958
+Turns out that's a thunk. So, if I wanted
+the first thing in the sequence, I could
+
+55
+00:04:42.970 --> 00:04:50.678
+just say car. Of calling that. And if I
+wanted the second sequence. Let's think
+
+56
+00:04:50.690 --> 00:04:58.570
+about this. Need to call the cutter to get
+another stream, a stream is a thunk so I
+
+57
+00:04:58.582 --> 00:05:06.075
+need to call it. And then I need the car
+of that. And that gets me four. What if I
+
+58
+00:05:06.087 --> 00:05:13.072
+wanted the next element of the sequence?
+Well this thing is four, the cdr is
+
+59
+00:05:13.084 --> 00:05:20.699
+another stream, a stream is a thunk so you
+call it. That gives back a pair and I made
+
+60
+00:05:20.711 --> 00:05:25.180
+the car. of that.
+And that would give me 8. Now of course we
+
+61
+00:05:25.192 --> 00:05:30.990
+wouldn't keep programming like this to get
+16 or 32. The idea is we would have some
+
+62
+00:05:31.002 --> 00:05:36.940
+sort of recursive function that is passing
+this next stream onto say some recursive
+
+63
+00:05:36.952 --> 00:05:42.320
+call. And then we. Apply that string, to
+get a pair, and we take car to get the
+
+64
+00:05:42.332 --> 00:05:47.140
+next thing. And so if you wanted to say
+add up the first 100 powers of 2, you
+
+65
+00:05:47.152 --> 00:05:52.314
+would just have some little recursive
+function, that would be using this string
+
+66
+00:05:52.326 --> 00:05:58.205
+as you go along. So what I thought I would
+do instead of showing you that is show you
+
+67
+00:05:58.217 --> 00:06:04.315
+something even more general. Let's define
+a recursive function that I'll call number
+
+68
+00:06:04.327 --> 00:06:09.683
+until. That's going to take in a stream.
+And the function which I'll call tester,
+
+69
+00:06:09.786 --> 00:06:14.027
+alright, and the idea of what this is
+going to do is it's going to count how
+
+70
+00:06:14.039 --> 00:06:18.865
+many stream elements you need to process
+before tester returns true for the first
+
+71
+00:06:18.877 --> 00:06:23.710
+time. So if it doesn't ever returns true,
+we're going to an infinite loop. But
+
+72
+00:06:23.722 --> 00:06:28.425
+otherwise, we'll stop as soon as we get
+our first true and we'll return the count
+
+73
+00:06:28.437 --> 00:06:33.010
+of how many we've got. So I'm going to do
+this with a little tail recursive helper
+
+74
+00:06:33.022 --> 00:06:37.685
+function. So I have a little letrec here.
+So I'm going to take in my current stream,
+
+75
+00:06:37.787 --> 00:06:42.002
+the stream that has all the elements I
+haven't processed so, So far, my
+
+76
+00:06:42.014 --> 00:06:47.163
+accumulator which is my answer so far, I'm
+goi ng to have to put some stuff in here.
+
+77
+00:06:47.274 --> 00:06:52.251
+and then I'm just going to call F the
+stream I started with, and 1, that's my
+
+78
+00:06:52.263 --> 00:06:57.388
+initial accumulator. So now the idea is
+all the body of F has to do, where I've
+
+79
+00:06:57.400 --> 00:07:02.575
+left this dot, dot, dot. is see well, what
+does tester have to say on the first
+
+80
+00:07:02.587 --> 00:07:08.115
+element of the stream. If that's true,
+return answer. Ohterwise, call f again
+
+81
+00:07:08.127 --> 00:07:13.841
+with one more and with the tail, if you
+will of the stream. The rest of the
+
+82
+00:07:13.853 --> 00:07:19.987
+values. So here's how I'm going to do
+this. Let's first of all call that stream.
+
+83
+00:07:20.113 --> 00:07:26.011
+We know a stream is a thunk. All right?
+I'll get rid of these so you can see it.
+
+84
+00:07:26.132 --> 00:07:31.433
+So I know a stream is a thunk. So if I
+call it, I should get back this pair.
+
+85
+00:07:31.554 --> 00:07:37.536
+Right, of the first element, and then the
+stream that is the rest of the elements.
+
+86
+00:07:37.536 --> 00:07:40.860
+'Kay.
+Now that I have that pair, let's call
+
+87
+00:07:40.872 --> 00:07:45.327
+tester on the car. If I get back true, I'm
+done. Return ans.
+
+88
+00:07:45.329 --> 00:07:51.849
+All right? Otherwise, call f. On the cdr
+of the pair, that's my new stream, right?
+
+89
+00:07:51.980 --> 00:07:58.653
+Don't call it yet, right? We don't want a
+pair, right? This would be a pair. But f
+
+90
+00:07:58.665 --> 00:08:05.401
+expects the stream and then f itself calls
+that thunk to get back the pair. So just
+
+91
+00:08:05.413 --> 00:08:11.335
+with the cdr and then one more for the
+accumulator. That's my call to f. That
+
+92
+00:08:11.347 --> 00:08:16.515
+finishes my if, my let, my definition of
+the lambda for f, and this letrec that I
+
+93
+00:08:16.527 --> 00:08:21.911
+then to use to start by calling f with the
+stream that was passed a number, until.
+
+94
+00:08:21.911 --> 00:08:28.539
+End 1. So, and then I need to end my
+define, my letrec, and my define, and now
+
+95
+00:08:28.551 --> 00:08:32.877
+I've just defined a function, that's all I
+did. Okay.
+
+96
+00:08:32.880 --> 00:08:39.707
+So now if I call number-until with the
+stream powers of 2. Alright? And how about
+
+97
+00:08:39.719 --> 00:08:46.188
+a little function that takes in a number
+and says, does that number equal 16? I go
+
+98
+00:08:46.200 --> 00:08:52.346
+back to 4. It took me four times through
+the stream until I got something that
+
+99
+00:08:52.358 --> 00:08:58.463
+equaled 16. Let's have a little more fun.
+How about I keep going until I get a
+
+100
+00:08:58.475 --> 00:09:04.930
+number that is bigger than This number.
+Ok? The great thing about powers of two is
+
+101
+00:09:04.942 --> 00:09:10.870
+they grow really fast, so that took 339
+tries. If I had come up with a number ten
+
+102
+00:09:10.882 --> 00:09:17.305
+times bigger it'll take 343 tries, and ten
+times better than that it'll probably take
+
+103
+00:09:17.317 --> 00:09:22.344
+346 tries. because powers-of-two multiply
+really fast. Let me point out that when
+
+104
+00:09:22.356 --> 00:09:27.574
+you program your streams, you tend to make
+lots of mistakes with parenthesis. Think
+
+105
+00:09:27.586 --> 00:09:32.490
+very carefully about, do I want to pass in
+a stream or a pair that I get back when I
+
+106
+00:09:32.502 --> 00:09:37.670
+call the thunk? If I get this wrong and I
+put parenthesis here And are passing to
+
+107
+00:09:37.682 --> 00:09:42.728
+number until a pair. And therefore right
+here you can just see at the top of the
+
+108
+00:09:42.740 --> 00:09:47.811
+screen. That's going to be pair when you
+try to treat a pair as a function, you get
+
+109
+00:09:47.823 --> 00:09:52.888
+a big nasty error function. It says,
+procedure obligation expected procedure
+
+110
+00:09:52.900 --> 00:09:58.065
+given the pair two and some string. So you
+have to think very carefully about the
+
+111
+00:09:58.077 --> 00:10:03.727
+difference between a thunk and a pair. And
+if you do that, you can do some beautiful
+
+112
+00:10:03.739 --> 00:10:08.369
+programming by using streams with
+beautiful recursive functions to get
+
+113
+00:10:08.381 --> 00:10:09.715
+interesting results.

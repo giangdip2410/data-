@@ -1,0 +1,461 @@
+WEBVTT
+
+1
+00:00:00.012 --> 00:00:03.501
+[MUSIC]. 
+In this segment we'll start our study of 
+
+2
+00:00:03.501 --> 00:00:07.643
+ML's module system. 
+This is a pretty big topic, it'll go on 
+
+3
+00:00:07.643 --> 00:00:11.843
+for several segments. 
+Even though we're just going to scratch 
+
+4
+00:00:11.843 --> 00:00:17.262
+the surface and get the basic ideas of 
+what we can do with the module system. 
+
+5
+00:00:17.262 --> 00:00:22.039
+So the motivation here is that so far all 
+of our programs have just been one top 
+
+6
+00:00:22.039 --> 00:00:26.215
+level sequence of bindings. 
+We might have helper functions or local 
+
+7
+00:00:26.215 --> 00:00:30.416
+bindings inside of functions, but we've 
+just had that one sequence. 
+
+8
+00:00:30.416 --> 00:00:34.732
+And this is really not a good 
+organization for larger programs you 
+
+9
+00:00:34.732 --> 00:00:39.498
+might write, and ML realizes this, and 
+like many programming languages, it has 
+
+10
+00:00:39.498 --> 00:00:42.621
+more support for organizing larger 
+programs. 
+
+11
+00:00:42.621 --> 00:00:45.932
+So the main thing we'll focus on are ML's 
+structures. 
+
+12
+00:00:45.932 --> 00:00:50.585
+A structure defines a module where you 
+can have a bunch of bindings that are 
+
+13
+00:00:50.585 --> 00:00:53.632
+separate from other modules and their 
+bindings. 
+
+14
+00:00:53.632 --> 00:00:57.986
+So, in this segment we'll just go over 
+the syntax, and discuss the basics, and 
+
+15
+00:00:57.986 --> 00:01:01.838
+then we'll move on from there. 
+The main, construct we'll have in this 
+
+16
+00:01:01.838 --> 00:01:05.959
+segment, is the structure binding. 
+So you say structure, the name of your 
+
+17
+00:01:05.959 --> 00:01:08.746
+module. 
+It's conventional to start with a capital 
+
+18
+00:01:08.746 --> 00:01:13.124
+letter, but it doesn't really matter. 
+Equals, struct, then any bindings you 
+
+19
+00:01:13.124 --> 00:01:17.837
+want, any kind of bindings, data types, 
+exceptions, variables, functions, and 
+
+20
+00:01:17.837 --> 00:01:20.608
+then n. 
+And then inside a module, that sequence 
+
+21
+00:01:20.608 --> 00:01:23.788
+of bindings is just like we've been 
+seeing a top level. 
+
+22
+00:01:23.788 --> 00:01:27.313
+You evaluate each in order, later ones 
+can use earlier ones. 
+
+23
+00:01:27.313 --> 00:01:32.007
+And then after you've defined the module 
+Outside the module, you can use those 
+
+24
+00:01:32.007 --> 00:01:34.572
+bindings, but you can't use them 
+directly. 
+
+25
+00:01:34.572 --> 00:01:39.057
+Syntactically, if there's a binding in 
+there called bindingName, you write 
+
+26
+00:01:39.057 --> 00:01:42.532
+Module.bindingName. 
+This is probably not surprising to us 
+
+27
+00:01:42.532 --> 00:01:47.327
+because we've already been using some of 
+the modules in the standard library, and 
+
+28
+00:01:47.327 --> 00:01:51.552
+that's why when used a function like 
+String.toUpper, it was the toUpper 
+
+29
+00:01:51.552 --> 00:01:56.272
+function definied in the string module. 
+So what we're learning here is how to 
+
+30
+00:01:56.272 --> 00:02:00.158
+define our own modules. 
+So I have an example here that I already 
+
+31
+00:02:00.158 --> 00:02:04.019
+had written out. 
+this is a structure that I've highlighted 
+
+32
+00:02:04.019 --> 00:02:08.865
+right here, it's just a silly example. 
+I've called it MyMathLib, and in it I've 
+
+33
+00:02:08.865 --> 00:02:13.746
+got three bindings, a little factorial 
+function, a variable that's initialized 
+
+34
+00:02:13.746 --> 00:02:18.342
+through half of pi, notice I'm using the 
+math library here which has already 
+
+35
+00:02:18.342 --> 00:02:21.473
+defined pi. 
+And then a little function that doubles 
+
+36
+00:02:21.473 --> 00:02:25.072
+it's arguments. 
+And now that's the end of my module here. 
+
+37
+00:02:25.072 --> 00:02:30.952
+And then outside the module I'm 
+continuing my program and I can use 
+
+38
+00:02:30.952 --> 00:02:34.989
+bindings in the module. 
+So I could say val pi equals 
+
+39
+00:02:34.989 --> 00:02:39.812
+MyMathLib.half_pi plus MyMathLib.half_pi, 
+and val 28 equals mathlib.doubler of 14. 
+
+40
+00:02:39.812 --> 00:02:44.349
+So we can evaluate this program just like 
+any other program. 
+
+41
+00:02:44.349 --> 00:02:50.009
+We can say name, space, management, dot 
+SML and if we do that, we'll see that the 
+
+42
+00:02:50.009 --> 00:02:54.432
+rupple is telling us that there is indeed 
+a structure my math. 
+
+43
+00:02:54.432 --> 00:03:00.766
+Lid, that has in it, a fact binding and 
+half pi binding, and a dobbler binding 
+
+44
+00:03:00.766 --> 00:03:06.914
+then at top level, we have pi, which 
+turns out to be 3.14159 and 28 which has 
+
+45
+00:03:06.914 --> 00:03:10.285
+value 28. 
+I just want to emphasize here what is in 
+
+46
+00:03:10.285 --> 00:03:14.060
+our environment. 
+We have, things like MyMathLib and dot 
+
+47
+00:03:14.060 --> 00:03:16.587
+fact. 
+That's a function from int to int. 
+
+48
+00:03:16.587 --> 00:03:19.716
+We do not have in our top level 
+environment, fact. 
+
+49
+00:03:19.716 --> 00:03:23.560
+That's simply not bound. 
+Nor do we have a variable MyMathLib. 
+
+50
+00:03:23.560 --> 00:03:28.863
+These structure names are not variables. 
+They're different thing and we have the 
+
+51
+00:03:28.863 --> 00:03:31.829
+modules but we have to use the bindings 
+in them. 
+
+52
+00:03:31.829 --> 00:03:35.328
+We can't use the whole binding at once 
+like you see here. 
+
+53
+00:03:35.328 --> 00:03:40.056
+There is no such thing as my math lib. 
+That's just part of the module system. 
+
+54
+00:03:40.056 --> 00:03:43.900
+Which is a little bit different from the 
+rest of the language. 
+
+55
+00:03:43.900 --> 00:03:50.538
+Okay, and of course, we can you know, say 
+MyMathLib, mat, [LAUGH] MyMathLib.half_pi 
+
+56
+00:03:50.538 --> 00:03:57.758
+plus 1, and that will work just fine. 
+except that I have to say 1.0 and then it 
+
+57
+00:03:57.758 --> 00:04:02.148
+will work just fine. 
+Okay? So, what we have done so far is 
+
+58
+00:04:02.148 --> 00:04:06.939
+what I'll call namespace management. 
+By using modules, we can keep the names 
+
+59
+00:04:06.939 --> 00:04:11.705
+for different bindings separate and this 
+makes it much easier when you have a 
+
+60
+00:04:11.705 --> 00:04:15.267
+large number of functions and variables 
+in your program. 
+
+61
+00:04:15.267 --> 00:04:20.240
+You can even have a whole hierarchy ML 
+supports defining modules inside of other 
+
+62
+00:04:20.240 --> 00:04:23.083
+modules. 
+And this is great so that a list library 
+
+63
+00:04:23.083 --> 00:04:26.938
+could have a map function and the tree 
+library could have a map function. 
+
+64
+00:04:26.938 --> 00:04:30.876
+And they don't have to worry about 
+calling them list map and tree map, each 
+
+65
+00:04:30.876 --> 00:04:34.582
+one can have a map in its module. 
+Now this is very important for larger 
+
+66
+00:04:34.582 --> 00:04:37.069
+programs, but it's just not very 
+interesting. 
+
+67
+00:04:37.069 --> 00:04:41.397
+this segment is only a few minutes long 
+and it's kind of all I have to say about 
+
+68
+00:04:41.397 --> 00:04:43.959
+it. 
+Yes you should use name spaces and we're 
+
+69
+00:04:43.959 --> 00:04:48.742
+glad that language is have them, okay. 
+So, to finish up this segment just one 
+
+70
+00:04:48.742 --> 00:04:53.489
+optional feature because people always 
+ask about it sometimes people want to 
+
+71
+00:04:53.489 --> 00:04:58.214
+know is there a way to say I want to to 
+be able to use everything in a module 
+
+72
+00:04:58.214 --> 00:05:00.743
+without having to type out the module 
+name. 
+
+73
+00:05:00.743 --> 00:05:03.425
+And you can. 
+It's with this Open feature that is 
+
+74
+00:05:03.425 --> 00:05:07.907
+supporting the mail. You can put this 
+inside of modules, you can put it in the 
+
+75
+00:05:07.907 --> 00:05:10.792
+REPL. 
+I'm not a huge fan of it, because it 
+
+76
+00:05:10.792 --> 00:05:15.505
+tends to take all those well named things 
+that were nicely in a name space and then 
+
+77
+00:05:15.505 --> 00:05:19.922
+open the whole module, which often has 
+more than just what you want. 
+
+78
+00:05:19.922 --> 00:05:25.744
+But nonetheless, let me show how it works 
+and how it's really not very necessary. 
+
+79
+00:05:25.744 --> 00:05:31.142
+For example, if I thought I was going to 
+call half_pi a lot, I could just say 
+
+80
+00:05:31.142 --> 00:05:35.970
+val_hp equals MyMathlib.half_pi. 
+And this works totally fine, and now we 
+
+81
+00:05:35.970 --> 00:05:38.922
+can say half_hp plus 1.0, and it works 
+fine. 
+
+82
+00:05:38.922 --> 00:05:44.662
+Now, if you really did want everything in 
+the module, then you can say open 
+
+83
+00:05:44.662 --> 00:05:50.338
+MyMathLib, and now, I have a top level 
+binding for fact half_pi in doubler. 
+
+84
+00:05:50.338 --> 00:05:55.214
+In fact, is now in my environment. 
+I think this is really useful for REPL 
+
+85
+00:05:55.214 --> 00:05:59.036
+when you are testing outer module, but 
+other than that, I don't find it 
+
+86
+00:05:59.036 --> 00:06:03.478
+particularly useful, especially if you 
+are thinking oh I really want to use fact 
+
+87
+00:06:03.478 --> 00:06:06.357
+a lot and you forgot that the module also 
+has the binding doubler. 
+
+88
+00:06:06.357 --> 00:06:10.923
+You're actually, when you say open, going 
+to shadow any doubler that might already 
+
+89
+00:06:10.923 --> 00:06:14.584
+be in your environment, None the less, if 
+you want to use open, you can. 
+
+90
+00:06:14.584 --> 00:06:18.257
+It's in ML, it's in there for a reason. 
+People find it convenient. 
+
+91
+00:06:18.257 --> 00:06:22.381
+I consider it an optional topic. 
+And that's our introduction to module 
+
+92
+00:06:22.381 --> 00:06:24.501
+systems and using them for name space 
+management. 
